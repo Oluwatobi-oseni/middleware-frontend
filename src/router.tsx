@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import GeneralError from './pages/errors/general-error'
 import NotFoundError from './pages/errors/not-found-error'
 import MaintenanceError from './pages/errors/maintenance-error'
@@ -48,26 +48,24 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Navigate to='/sign-in' replace />, // Redirect to /sign-in
+      },
+      // {
+      //   index: true,
+      //   lazy: async () => ({
+      //     Component: (await import('./pages/dashboard')).default,
+      //   }),
+      // },
+      {
+        path: 'dashboard',
         lazy: async () => ({
           Component: (await import('./pages/dashboard')).default,
         }),
       },
       {
-        path: 'tasks',
+        path: 'products',
         lazy: async () => ({
-          Component: (await import('@/pages/tasks')).default,
-        }),
-      },
-      {
-        path: 'chats',
-        lazy: async () => ({
-          Component: (await import('@/pages/chats')).default,
-        }),
-      },
-      {
-        path: 'apps',
-        lazy: async () => ({
-          Component: (await import('@/pages/apps')).default,
+          Component: (await import('@/pages/products/index.tsx')).default,
         }),
       },
       {
@@ -77,15 +75,9 @@ const router = createBrowserRouter([
         }),
       },
       {
-        path: 'analysis',
+        path: 'analytics',
         lazy: async () => ({
           Component: (await import('@/components/coming-soon')).default,
-        }),
-      },
-      {
-        path: 'extra-components',
-        lazy: async () => ({
-          Component: (await import('@/pages/extra-components')).default,
         }),
       },
       {
