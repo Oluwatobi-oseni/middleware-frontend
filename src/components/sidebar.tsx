@@ -5,7 +5,7 @@ import { Button } from './custom/button'
 import Nav from './nav'
 import { cn } from '@/lib/utils'
 import { sidelinks } from '@/data/sidelinks'
-import AlertLogo from '@/assets/Alert.png'
+// import AlertLogo from '@/assets/Alert.png'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   isCollapsed: boolean
@@ -49,9 +49,9 @@ export default function Sidebar({
         >
           <div className={`flex items-center ${!isCollapsed ? 'gap-2' : ''}`}>
             <img
-              src={AlertLogo}
+              src='https://alertmfb.com.ng/Logo.svg'
               alt='Alert MFB Logo'
-              className={`transition-all ${isCollapsed ? 'h-6 w-6' : 'h-8 w-8'}`}
+              className={`transition-all ${isCollapsed ? 'h-8 w-8' : 'h-10 w-10'} object-contain`}
             />
             <div
               className={`flex flex-col justify-end truncate ${isCollapsed ? 'invisible w-0' : 'visible w-auto'}`}

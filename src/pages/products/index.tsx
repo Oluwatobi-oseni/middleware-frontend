@@ -23,8 +23,8 @@ import POSModal from './POSModal' // Import the POS modal component
 
 const productText = new Map<string, string>([
   ['all', 'All Products'],
-  ['connected', 'Connected'],
-  ['notConnected', 'Not Connected'],
+  ['signedIn', 'Signed In'],
+  ['notSignedIn', 'Not Signed In'],
 ])
 
 export default function Apps() {
@@ -41,9 +41,9 @@ export default function Apps() {
     )
     .filter((product) =>
       productType === 'connected'
-        ? product.connected
+        ? product.signedIn
         : productType === 'notConnected'
-          ? !product.connected
+          ? !product.signedIn
           : true
     )
     .filter((product) =>
@@ -87,8 +87,8 @@ export default function Apps() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='all'>All Products</SelectItem>
-                <SelectItem value='connected'>Connected</SelectItem>
-                <SelectItem value='notConnected'>Not Connected</SelectItem>
+                <SelectItem value='connected'>Signed In</SelectItem>
+                <SelectItem value='notConnected'>Not Signed In</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -138,11 +138,11 @@ export default function Apps() {
                       // handleSignInOut(app); // Sign in/out logic
                     }
                   }}
-                  className={`${product.connected ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
+                  className={`${product.signedIn ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
                 >
                   {product.name === 'POS'
                     ? 'View POS'
-                    : product.connected
+                    : product.signedIn
                       ? 'Sign Out'
                       : 'Sign In'}
                 </Button>

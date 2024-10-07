@@ -1,48 +1,50 @@
 import {
   IconCamera,
   IconCards,
+  // IconCode,
   IconCreditCard,
   IconCurrencyNaira,
   IconLock,
+  IconQrcode,
 } from '@tabler/icons-react'
 
 export const products = [
   {
     name: 'E-cam',
     logo: <IconCamera />,
-    connected: false,
+    signedIn: false,
     desc: 'Sign in to E-cam for enhanced video surveillance and monitoring.',
   },
   {
     name: 'POS',
     logo: <IconCreditCard />,
-    connected: false,
+    signedIn: true,
     desc: 'Sign in to POS for seamless point-of-sale transactions.',
   },
   {
     name: 'Card Request',
     logo: <IconCards />,
-    connected: false,
+    signedIn: false,
     desc: 'Sign in to request and manage your cards efficiently.',
   },
   {
     name: 'Loans',
     logo: <IconCurrencyNaira />,
-    connected: false,
+    signedIn: false,
     desc: 'Sign in to apply for and manage your loans quickly and easily.',
   },
   {
     name: 'Savings',
     logo: <IconLock />,
-    connected: false,
+    signedIn: false,
     desc: 'Sign in to save and grow your money with our Savings service.',
   },
-  // {
-  //   name: 'Zoom',
-  //   logo: <IconBrandZoom />,
-  //   connected: true,
-  //   desc: 'Host Zoom meetings directly from the dashboard.',
-  // },
+  {
+    name: 'AlertQR',
+    logo: <IconQrcode />,
+    connected: false,
+    desc: 'Generate and manage QR codes easily from the dashboard.',
+  },
   // {
   //   name: 'Stripe',
   //   logo: <IconBrandStripe />,
