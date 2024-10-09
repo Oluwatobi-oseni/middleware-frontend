@@ -28,8 +28,10 @@ export default function SignIn() {
 
           <div className='relative z-20 mt-auto'>
             <blockquote className='space-y-2'>
-              <p className='text-lg'>&ldquo;If it works dont break it&rdquo;</p>
-              <footer className='text-sm'>Mr Tobi</footer>
+              <p className='text-lg'>
+                &ldquo;We fix it even if its not broken&rdquo;
+              </p>
+              <footer className='text-sm'>Alert group</footer>
             </blockquote>
           </div>
         </div>
@@ -39,7 +41,7 @@ export default function SignIn() {
               <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
               <p className='text-sm text-muted-foreground'>
                 Enter your email and password <br />
-                to access your account
+                to access yourtouch account
               </p>
             </div>
             <UserAuthForm />
