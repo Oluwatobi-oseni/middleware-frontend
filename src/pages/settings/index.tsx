@@ -1,11 +1,10 @@
 import { Outlet } from 'react-router-dom'
 import {
-  IconBrowserCheck,
-  IconExclamationCircle,
   IconNotification,
   IconPalette,
   IconTool,
   IconUser,
+  IconUsers,
 } from '@tabler/icons-react'
 import { Layout } from '@/components/custom/layout'
 import { Search } from '@/components/search'
@@ -61,9 +60,9 @@ const sidebarNavItems = [
     href: '/settings/account',
   },
   {
-    title: 'Appearance',
-    icon: <IconPalette size={18} />,
-    href: '/settings/appearance',
+    title: 'Team',
+    icon: <IconUsers size={18} />,
+    href: '/settings/team',
   },
   {
     title: 'Notifications',
@@ -71,13 +70,13 @@ const sidebarNavItems = [
     href: '/settings/notifications',
   },
   {
-    title: 'Display',
-    icon: <IconBrowserCheck size={18} />,
-    href: '/settings/display',
+    title: 'Appearance',
+    icon: <IconPalette size={18} />,
+    href: '/settings/appearance',
   },
-  {
-    title: 'Error Example',
-    icon: <IconExclamationCircle size={18} />,
-    href: '/settings/error-example',
-  },
+  // {
+  //   title: 'Error Example',
+  //   icon: <IconExclamationCircle size={18} />,
+  //   href: '/settings/error-example',
+  // },
 ]

@@ -113,19 +113,20 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'display',
+            path: 'team',
             lazy: async () => ({
-              Component: (await import('./pages/settings/display')).default,
-            }),
-          },
-          {
-            path: 'error-example',
-            lazy: async () => ({
-              Component: (await import('./pages/settings/error-example'))
+              Component: (await import('./pages/settings/team/index.tsx'))
                 .default,
             }),
-            errorElement: <GeneralError className='h-[50svh]' minimal />,
           },
+          // {
+          //   path: 'error-example',
+          //   lazy: async () => ({
+          //     Component: (await import('./pages/settings/error-example'))
+          //       .default,
+          //   }),
+          //   errorElement: <GeneralError className='h-[50svh]' minimal />,
+          // },
         ],
       },
     ],
