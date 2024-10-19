@@ -21,7 +21,6 @@ export const useAuth = (): AuthState => {
 // SignIn Hook
 const signInAsync = async (payload: { email: string; password: string }) => {
   const data = await apiSignIn(payload)
-  console.log('Login Response:', data)
   return data
 }
 export const useSignIn = () => {
@@ -30,8 +29,6 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: signInAsync,
     onSuccess: (data) => {
-      console.log('Data on success:', data)
-
       if (data && data.access_token) {
         sessionStorage.setItem('hasPassedLogin', 'true')
         cookies.set(SES_TOKEN_NAME, data.access_token, { path: '/' })
@@ -80,7 +77,6 @@ export const useVerifyOTP = () => {
   const mutation = useMutation({
     mutationFn: async (payload: { otp: string }) => {
       const data = await apiVerifyOTP(payload)
-      console.log('OTP Verification Response:', data)
       return data
     },
     onSuccess(data) {

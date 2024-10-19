@@ -18,10 +18,6 @@ import { Navigate } from 'react-router-dom'
 
 export default function Dashboard() {
   const { isSignedIn } = useAuth()
-  {
-    console.log('isSignedInPlease', isSignedIn)
-  }
-
   if (!isSignedIn) {
     return <Navigate to={'/sign-in'} replace={true} />
   }

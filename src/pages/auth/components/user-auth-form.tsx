@@ -58,7 +58,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('Form data:', data)
     signInMutation.mutate({ email: data.email, password: data.password })
   }
 
