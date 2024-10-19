@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import {
   IconNotification,
   IconPalette,
@@ -7,18 +7,25 @@ import {
   IconUsers,
 } from '@tabler/icons-react'
 import { Layout } from '@/components/custom/layout'
-import { Search } from '@/components/search'
 import { Separator } from '@/components/ui/separator'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import SidebarNav from './components/sidebar-nav'
+import { useAuth } from '@/lib/auth/hook'
 
 export default function Settings() {
+  const { isSignedIn } = useAuth()
+
+  if (!isSignedIn) {
+    return <Navigate to={'/sign-in'} replace={true} />
+  }
   return (
     <Layout fixed>
       {/* ===== Top Heading ===== */}
       <Layout.Header>
-        <Search />
+        <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
+          Settings
+        </h1>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <UserNav />
@@ -27,11 +34,8 @@ export default function Settings() {
 
       <Layout.Body className='flex flex-col'>
         <div className='space-y-0.5'>
-          <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Settings
-          </h1>
-          <p className='text-muted-foreground'>
-            Manage your account settings and set e-mail preferences.
+          <p className='text-[14px] font-normal text-muted-foreground'>
+            Manage your account settings.
           </p>
         </div>
         <Separator className='my-4 lg:my-6' />

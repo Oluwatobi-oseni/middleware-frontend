@@ -14,38 +14,35 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { Search } from '@/components/search'
+// import { Search } from '@/components/search'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { Button } from '@/components/custom/button'
 import { products } from './data'
 import POSModal from './POSModal' // Import the POS modal component
+import { useAuth } from '@/lib/auth/hook'
+import { Navigate } from 'react-router-dom'
 
-const productText = new Map<string, string>([
-  ['all', 'All Products'],
-  ['signedIn', 'Signed In'],
-  ['notSignedIn', 'Not Signed In'],
-])
+// const productText = new Map<string, string>([['all', 'All Products']])
 
-export default function Apps() {
+export default function Products() {
+  const { isSignedIn } = useAuth()
+
   const [sort, setSort] = useState('ascending')
-  const [productType, setProductType] = useState('all')
+  // const [productType, setProductType] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [showPOSModal, setShowPOSModal] = useState(false)
 
+  if (!isSignedIn) {
+    return <Navigate to={'/sign-in'} replace={true} />
+  }
   const filteredProducts = products
     .sort((a, b) =>
       sort === 'ascending'
         ? a.name.localeCompare(b.name)
         : b.name.localeCompare(a.name)
     )
-    .filter((product) =>
-      productType === 'connected'
-        ? product.signedIn
-        : productType === 'notConnected'
-          ? !product.signedIn
-          : true
-    )
+
     .filter((product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -55,7 +52,9 @@ export default function Apps() {
       {/* ===== Top Heading ===== */}
       <Layout.Header>
         <div className='flex w-full items-center justify-between'>
-          <Search />
+          <h1 className='text-2xl font-bold tracking-tight'>
+            Products Integrations
+          </h1>
           <div className='flex items-center space-x-4'>
             <ThemeSwitch />
             <UserNav />
@@ -66,11 +65,8 @@ export default function Apps() {
       {/* ===== Content ===== */}
       <Layout.Body className='flex flex-col'>
         <div>
-          <h1 className='text-2xl font-bold tracking-tight'>
-            Products Integrations
-          </h1>
           <p className='text-muted-foreground'>
-            Here&apos;s a list of your products for the integration!
+            Discover the Tools That Empower Your Banking Operations
           </p>
         </div>
         <div className='my-4 flex items-end justify-between sm:my-0 sm:items-center'>
@@ -81,7 +77,7 @@ export default function Apps() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Select value={productType} onValueChange={setProductType}>
+            {/* <Select value={productType} onValueChange={setProductType}>
               <SelectTrigger className='w-36'>
                 <SelectValue>{productText.get(productType)}</SelectValue>
               </SelectTrigger>
@@ -90,7 +86,7 @@ export default function Apps() {
                 <SelectItem value='connected'>Signed In</SelectItem>
                 <SelectItem value='notConnected'>Not Signed In</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
 
           <Select value={sort} onValueChange={setSort}>
@@ -128,28 +124,21 @@ export default function Apps() {
                 >
                   {product.logo}
                 </div>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => {
-                    if (product.name === 'POS') {
-                      setShowPOSModal(true)
-                    } else {
-                      // handleSignInOut(app); // Sign in/out logic
-                    }
-                  }}
-                  className={`${product.signedIn ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
-                >
-                  {product.name === 'POS'
-                    ? 'View POS'
-                    : product.signedIn
-                      ? 'Sign Out'
-                      : 'Sign In'}
-                </Button>
+                {product.name === 'POS' && (
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => setShowPOSModal(true)}
+                  >
+                    View POS
+                  </Button>
+                )}
               </div>
               <div>
                 <h2 className='mb-1 font-semibold'>{product.name}</h2>
-                <p className='line-clamp-2 text-gray-500'>{product.desc}</p>
+                <p className='line-clamp-2 text-xs text-gray-500'>
+                  {product.desc}
+                </p>
               </div>
             </li>
           ))}

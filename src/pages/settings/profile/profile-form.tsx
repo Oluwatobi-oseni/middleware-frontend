@@ -147,18 +147,18 @@ export default function ProfileForm() {
             name='bio'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bio</FormLabel>
+                <FormLabel>Role</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder='Tell us a little bit about yourself'
                     className='resize-none'
-                    rows={5}
+                    rows={2}
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
+                {/* <FormDescription>
                   Brief description of your profile. URLs are hyperlinked
-                </FormDescription>
+                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}

@@ -48,8 +48,8 @@ export function MemberDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'default'} className='flex gap-2'>
-          <IconPlus />
+        <Button variant={'default'} className='flex gap-1 font-[Geist] text-xs'>
+          <IconPlus className='h-4 w-4' />
           <span>Add a member</span>
         </Button>
       </DialogTrigger>

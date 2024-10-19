@@ -1,3 +1,37 @@
+/* Add your custom font-face declarations here */
+@font-face {
+  font-family: 'Geist';
+  src:
+    url('/src/fonts/Geist/webfont/Geist-Regular.woff2') format('woff2'),
+    url('/src/fonts/Geist/webfont/Geist-Regular.woff') format('woff'),
+    url('/src/fonts/Geist/ttf/Geist-Regular.ttf') format('truetype'),
+    url('/src/fonts/Geist/otf/Geist-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src:
+    url('/src/fonts/Geist/webfont/Geist-Semibold.woff2') format('woff2'),
+    url('/src/fonts/Geist/webfont/Geist-Semibold.woff') format('woff'),
+    url('/src/fonts/Geist/ttf/Geist-Semibold.ttf') format('truetype'),
+    url('/src/fonts/Geist/otf/Geist-Semibold.otf') format('opentype');
+  font-weight: 600; /* Semibold weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GeistMono';
+  src:
+    url('/src/fonts/GeistMono/webfont/GeistMono-Regular.woff2') format('woff2'),
+    url('/src/fonts/GeistMono/webfont/GeistMono-Regular.woff') format('woff'),
+    url('/src/fonts/GeistMono/ttf/GeistMono-Regular.ttf') format('truetype'),
+    url('/src/fonts/GeistMono/otf/GeistMono-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -80,6 +114,10 @@
     animation: slideUp 200ms ease-out;
   }
 
+  .font-geist-mono {
+    font-family: 'GeistMono', monospace; /* Use the GeistMono font */
+  }
+
   @keyframes slideDown {
     from {
       height: 0;
@@ -99,9 +137,11 @@
   }
 
   * {
+    font-family: 'Geist', sans-serif;
     @apply border-border;
   }
   body {
+    font-family: 'Geist', sans-serif;
     @apply min-h-svh w-full bg-background text-foreground;
   }
   body > #root {
