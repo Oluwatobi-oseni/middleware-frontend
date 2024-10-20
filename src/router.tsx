@@ -3,6 +3,10 @@ import GeneralError from './pages/errors/general-error'
 import NotFoundError from './pages/errors/not-found-error'
 import MaintenanceError from './pages/errors/maintenance-error'
 import UnauthorisedError from './pages/errors/unauthorised-error.tsx'
+import ProtectedRoute from './lib/auth/protected-route.tsx'
+import ForgotPassword from './pages/auth/forgot-password'
+import Otp from './pages/auth/otp'
+import TwoFactorAuthenticationPage from './pages/auth/two-factor-auth'
 
 const router = createBrowserRouter([
   // Auth routes
@@ -13,33 +17,45 @@ const router = createBrowserRouter([
     }),
   },
   {
-    path: '/sign-in-2',
-    lazy: async () => ({
-      Component: (await import('./pages/auth/sign-in-2')).default,
-    }),
-  },
-  {
-    path: '/sign-up',
-    lazy: async () => ({
-      Component: (await import('./pages/auth/sign-up')).default,
-    }),
-  },
-  {
     path: '/forgot-password',
+    element: (
+      <ProtectedRoute>
+        <ForgotPassword />{' '}
+        {/* Make sure to import your ForgotPassword component here */}
+      </ProtectedRoute>
+    ),
     lazy: async () => ({
       Component: (await import('./pages/auth/forgot-password')).default,
     }),
   },
   {
     path: '/otp',
+    element: (
+      <ProtectedRoute>
+        <Otp /> {/* Make sure to import your OTP component here */}
+      </ProtectedRoute>
+    ),
     lazy: async () => ({
       Component: (await import('./pages/auth/otp')).default,
     }),
   },
+  {
+    path: '/two-factor-auth',
+    element: (
+      <ProtectedRoute>
+        <TwoFactorAuthenticationPage />{' '}
+        {/* Make sure to import your TwoFactorAuth component here */}
+      </ProtectedRoute>
+    ),
+    lazy: async () => ({
+      Component: (await import('./pages/auth/two-factor-auth')).default,
+    }),
+  },
 
-  // Main routes
+  // Main routes (protected)
   {
     path: '/',
+    element: <ProtectedRoute />,
     lazy: async () => {
       const AppShell = await import('./components/app-shell')
       return { Component: AppShell.default }
@@ -48,14 +64,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to='/sign-in' replace />, // Redirect to /sign-in
+        element: <Navigate to='/dashboard' replace />,
       },
-      // {
-      //   index: true,
-      //   lazy: async () => ({
-      //     Component: (await import('./pages/dashboard')).default,
-      //   }),
-      // },
       {
         path: 'dashboard',
         lazy: async () => ({
@@ -113,18 +123,11 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'display',
+            path: 'team',
             lazy: async () => ({
-              Component: (await import('./pages/settings/display')).default,
-            }),
-          },
-          {
-            path: 'error-example',
-            lazy: async () => ({
-              Component: (await import('./pages/settings/error-example'))
+              Component: (await import('./pages/settings/team/index.tsx'))
                 .default,
             }),
-            errorElement: <GeneralError className='h-[50svh]' minimal />,
           },
         ],
       },
@@ -142,3 +145,37 @@ const router = createBrowserRouter([
 ])
 
 export default router
+
+// {
+//   path: 'error-example',
+//   lazy: async () => ({
+//     Component: (await import('./pages/settings/error-example'))
+//       .default,
+//   }),
+//   errorElement: <GeneralError className='h-[50svh]' minimal />,
+// },
+
+// {
+//   path: '/sign-in-2',
+//   lazy: async () => ({
+//     Component: (await import('./pages/auth/sign-in-2')).default,
+//   }),
+// },
+// {
+//   path: '/sign-up',
+//   lazy: async () => ({
+//     Component: (await import('./pages/auth/sign-up')).default,
+//   }),
+// },
+// {
+//   path: '/forgot-password',
+//   lazy: async () => ({
+//     Component: (await import('./pages/auth/forgot-password')).default,
+//   }),
+// },
+// {
+//   path: '/otp',
+//   lazy: async () => ({
+//     Component: (await import('./pages/auth/otp')).default,
+//   }),
+// },

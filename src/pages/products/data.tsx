@@ -1,49 +1,42 @@
 import {
+  IconBriefcase,
   IconCamera,
   IconCards,
-  // IconCode,
   IconCreditCard,
-  IconCurrencyNaira,
   IconLock,
-  IconQrcode,
+  IconUser,
 } from '@tabler/icons-react'
 
 export const products = [
   {
     name: 'E-cam',
     logo: <IconCamera />,
-    signedIn: false,
-    desc: 'Sign in to E-cam for enhanced video surveillance and monitoring.',
+    desc: 'Utilize advanced video surveillance and monitoring to enhance security and operational oversight.',
   },
   {
     name: 'POS',
     logo: <IconCreditCard />,
-    signedIn: true,
-    desc: 'Sign in to POS for seamless point-of-sale transactions.',
+    desc: 'Facilitate seamless point-of-sale transactions to improve customer experience and increase sales efficiency.',
   },
   {
     name: 'Card Request',
     logo: <IconCards />,
-    signedIn: false,
-    desc: 'Sign in to request and manage your cards efficiently.',
+    desc: 'Streamline card management and issuance processes for better customer service and operational efficiency.',
   },
   {
-    name: 'Loans',
-    logo: <IconCurrencyNaira />,
-    signedIn: false,
-    desc: 'Sign in to apply for and manage your loans quickly and easily.',
+    name: 'Business Banking',
+    logo: <IconBriefcase />,
+    desc: 'Manage business accounts to support company growth and financial health effectively.',
   },
   {
-    name: 'Savings',
+    name: 'Alert Savings',
     logo: <IconLock />,
-    signedIn: false,
-    desc: 'Sign in to save and grow your money with our Savings service.',
+    desc: 'Encourage savings and financial growth through a comprehensive savings program tailored for customers.',
   },
   {
-    name: 'AlertQR',
-    logo: <IconQrcode />,
-    connected: false,
-    desc: 'Generate and manage QR codes easily from the dashboard.',
+    name: 'Consumer Banking',
+    logo: <IconUser />,
+    desc: 'Enhance personal banking services to meet individual customer needs and strengthen client relationships.',
   },
   // {
   //   name: 'Stripe',

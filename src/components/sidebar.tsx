@@ -5,6 +5,8 @@ import { Button } from './custom/button'
 import Nav from './nav'
 import { cn } from '@/lib/utils'
 import { sidelinks } from '@/data/sidelinks'
+import { useAuth } from '@/lib/auth/hook'
+import { Navigate } from 'react-router-dom'
 // import AlertLogo from '@/assets/Alert.png'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
@@ -17,6 +19,8 @@ export default function Sidebar({
   isCollapsed,
   setIsCollapsed,
 }: SidebarProps) {
+  const { isSignedIn } = useAuth()
+
   const [navOpened, setNavOpened] = useState(false)
 
   /* Make body not scrollable when navBar is opened */
@@ -27,6 +31,10 @@ export default function Sidebar({
       document.body.classList.remove('overflow-hidden')
     }
   }, [navOpened])
+
+  if (!isSignedIn) {
+    return <Navigate to={'/sign-in'} replace={true} />
+  }
 
   return (
     <aside

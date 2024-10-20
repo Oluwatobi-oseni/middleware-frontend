@@ -1,7 +1,13 @@
+import { useAuth } from '@/lib/auth/hook'
 import { UserAuthForm } from './components/user-auth-form'
-// import AlertLogo from '@/assets/Alert.png'
-
+import { Navigate } from 'react-router-dom'
 export default function SignIn() {
+  const { isSignedIn } = useAuth()
+
+  if (isSignedIn) {
+    return <Navigate to={'/dashboard'} />
+  }
+
   return (
     <>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
@@ -41,7 +47,7 @@ export default function SignIn() {
               <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
               <p className='text-sm text-muted-foreground'>
                 Enter your email and password <br />
-                to access yourtouch account
+                to access your account
               </p>
             </div>
             <UserAuthForm />
