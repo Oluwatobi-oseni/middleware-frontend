@@ -79,6 +79,12 @@ const router = createBrowserRouter([
         }),
       },
       {
+        path: 'products/card-requests',
+        lazy: async () => ({
+          Component: (await import('@/pages/card-requests/index.tsx')).default,
+        }),
+      },
+      {
         path: 'users',
         lazy: async () => ({
           Component: (await import('@/components/coming-soon')).default,
