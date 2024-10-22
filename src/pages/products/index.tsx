@@ -21,7 +21,7 @@ import { Button } from '@/components/custom/button'
 import { products } from './data'
 import POSModal from './POSModal' // Import the POS modal component
 import { useAuth } from '@/lib/auth/hook'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 // const productText = new Map<string, string>([['all', 'All Products']])
 
@@ -114,9 +114,10 @@ export default function Products() {
         <Separator className='shadow' />
         <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'>
           {filteredProducts.map((product) => (
-            <li
-              key={product.name}
-              className='rounded-lg border p-4 hover:shadow-md'
+            <Link
+              to={product.path}
+              key={product.id}
+              className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
             >
               <div className='mb-8 flex items-center justify-between'>
                 <div
@@ -140,7 +141,12 @@ export default function Products() {
                   {product.desc}
                 </p>
               </div>
-            </li>
+              {/* <li
+                key={product.name}
+                className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
+              >
+              </li> */}
+            </Link>
           ))}
         </ul>
       </Layout.Body>
