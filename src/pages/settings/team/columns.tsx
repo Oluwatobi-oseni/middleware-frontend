@@ -21,7 +21,7 @@ export const columns: ColumnDef<Team>[] = [
   {
     accessorKey: 'accountName',
     header: 'Account Name',
-    filterFn: (row, columnId, filterValue) => {
+    filterFn: (row, filterValue) => {
       // Cast row.original to Team to access account safely
       const accountName = row.original.accountName
       return accountName.toLowerCase().includes(filterValue.toLowerCase())
