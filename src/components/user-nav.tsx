@@ -10,9 +10,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useSignOut } from '@/lib/auth/hook'
+import { useEffect, useState } from 'react'
 
 export function UserNav() {
   const signOut = useSignOut()
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    const userEmail = sessionStorage.getItem('userEmail')
+    setEmail(userEmail)
+  }, [])
 
   return (
     <DropdownMenu>
@@ -34,7 +41,7 @@ export function UserNav() {
             <div className='flex flex-col space-y-1'>
               <p className='text-sm font-medium leading-none'>satnaing</p>
               <p className='text-xs leading-none text-muted-foreground'>
-                satnaingdev@gmail.com
+                {email}
               </p>
             </div>
           </div>

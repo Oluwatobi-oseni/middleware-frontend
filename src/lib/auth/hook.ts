@@ -21,24 +21,27 @@ export const useAuth = (): AuthState => {
 // SignIn Hook
 const signInAsync = async (payload: { email: string; password: string }) => {
   const data = await apiSignIn(payload)
-  return data
+  return { data, payload }
 }
 export const useSignIn = () => {
   const navigate = useNavigate()
 
   return useMutation({
     mutationFn: signInAsync,
-    onSuccess: (data) => {
+    onSuccess: ({ data, payload }) => {
       if (data && data.access_token) {
+        const { email } = payload
         sessionStorage.setItem('hasPassedLogin', 'true')
         cookies.set(SES_TOKEN_NAME, data.access_token, { path: '/' })
         client.defaults.headers.common['Authorization'] =
           `Bearer ${data.access_token}`
 
+        sessionStorage.setItem('userEmail', email)
+
         setTimeout(() => {
           navigate('/two-factor-auth', {
             replace: true,
-            state: { from: '/sign-in' },
+            state: { from: '/sign-in', email },
           })
           toast({
             title: 'Redirecting to Two-Factor Authentication',
