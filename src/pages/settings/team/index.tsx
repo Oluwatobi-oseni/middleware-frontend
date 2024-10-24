@@ -4,7 +4,7 @@ import { DataTable } from '@/components/table/data-table'
 import ContentSection from '../components/content-section'
 import { columns } from './columns'
 import { data } from './data'
-import RolesModal from './RolesModal'
+// import RolesModal from './RolesModal'
 // import BasicTable from '@/components/table/BasicTable'
 // import { MemberDialog } from './MemberModal'
 
@@ -20,7 +20,6 @@ export default function SettingsDisplay() {
         data={data}
         showModalButton={true}
         inputPlaceHolder='Search Team'
-        ModalComponent={RolesModal}
         filterColumn='accountName'
       />
     </ContentSection>
