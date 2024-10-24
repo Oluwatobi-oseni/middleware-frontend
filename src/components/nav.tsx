@@ -69,7 +69,7 @@ export default function Nav({
       )}
     >
       <TooltipProvider delayDuration={0}>
-        <nav className='flex h-full flex-col justify-between group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
+        <nav className='flex h-full flex-col justify-between group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-0'>
           <div className='grid gap-1'>{links.slice(0, -1).map(renderLink)}</div>
           <div className='grid gap-1'>
             {renderLink(links[links.length - 1])}
@@ -86,16 +86,16 @@ export default function Nav({
                 >
                   <IconLogout
                     size={18}
-                    className={cn('mr-2', isCollapsed && 'mr-3')}
+                    className={cn(isCollapsed ? 'm-0' : 'mr-2')}
                   />
-                  Logout
+                  <span className={cn(isCollapsed && 'hidden')}>Logout</span>
                 </Button>
               </TooltipTrigger>
               {isCollapsed && ( // Show tooltip only when collapsed
                 <TooltipContent
                   side='right'
                   className='flex items-center gap-1'
-                  sideOffset={-50}
+                  sideOffset={-0}
                 >
                   Logout
                 </TooltipContent>

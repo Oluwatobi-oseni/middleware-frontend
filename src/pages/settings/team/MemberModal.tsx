@@ -10,39 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { IconPlus } from '@tabler/icons-react'
-
-const memberData = [
-  {
-    id: 1,
-    accountName: 'OluwaTobi Oseni',
-    email: 'oluwa@example.com',
-    role: 'Team Manager',
-  },
-  {
-    id: 2,
-    accountName: 'Victor Smith',
-    email: 'victor@example.com',
-    role: 'Developer',
-  },
-  {
-    id: 3,
-    accountName: 'Lionel Messi',
-    email: 'lionelmessi@alertgroup.com.ng',
-    role: 'Developer',
-  },
-  {
-    id: 4,
-    accountName: 'Steph Curry',
-    email: 'stephcurry@alertgroup.com.ng',
-    role: 'Designer',
-  },
-  {
-    id: 5,
-    accountName: 'Ruth Odeh',
-    email: 'ruthodeh@alertgroup.com.ng',
-    role: 'Developer',
-  },
-]
+import { data } from './data'
 
 export function MemberDialog() {
   return (
@@ -82,27 +50,29 @@ export function MemberDialog() {
         {/* Members List Section */}
         <div>
           <h2 className=' text-xs font-light'>Members</h2>
-          {memberData.map((user) => (
-            <div
-              key={user.id}
-              className='flex items-center justify-between py-2'
-            >
-              <div className='flex items-center'>
-                <div className='h-10 w-10 flex-shrink-0'>
-                  <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold text-white'>
-                    {user.accountName.charAt(0)}
+          <div className='max-h-40 overflow-y-auto'>
+            {data.map((user) => (
+              <div
+                key={user.id}
+                className='flex items-center justify-between py-2'
+              >
+                <div className='flex items-center'>
+                  <div className='h-10 w-10 flex-shrink-0'>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold text-white'>
+                      {user.accountName.charAt(0)}
+                    </div>
+                  </div>
+                  <div className='ml-4 overflow-hidden'>
+                    <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium'>
+                      {user.accountName}
+                    </div>
+                    <div className='text-xs text-gray-400'>{user.email}</div>
                   </div>
                 </div>
-                <div className='ml-4 overflow-hidden'>
-                  <div className='overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium'>
-                    {user.accountName}
-                  </div>
-                  <div className='text-xs text-gray-400'>{user.email}</div>
-                </div>
+                <div className='ml-4 text-xs font-medium'>{user.role}</div>
               </div>
-              <div className='ml-4 text-xs font-medium'>{user.role}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         <Separator className='mb-2' />
         {/* Copy Link Section */}

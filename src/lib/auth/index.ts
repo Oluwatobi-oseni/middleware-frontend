@@ -41,6 +41,57 @@ export const validateToken = (token: string | undefined): AuthState => {
   return { isSignedIn: !!decodedToken?.sub, userId: decodedToken?.sub }
 }
 
+export async function register(payload: { email: string; password: string }) {
+  console.log(payload)
+  // try {
+  //   const res = await client.post<TokenResponse>(
+  //     '/api/sharedServices/v1/auth/register', // Adjust this endpoint as needed
+  //     payload,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     }
+  //   )
+
+  //   if (res.data.access_token) {
+  //     cookies.set(SES_TOKEN_NAME, res.data.access_token, { path: '/' })
+  //     return res.data
+  //   }
+
+  //   throw new Error('No access token returned')
+  // } catch (error) {
+  //   console.error('Registration error:', error)
+  //   throw new Error('An unexpected error occurred during registration')
+  // }
+}
+
+export async function generate2FASecret(email: string) {
+  console.log(email)
+  // try {
+  //   const res = await client.post<TokenResponse>(
+  //     '/api/sharedServices/v1/auth/generate-2fa-secret', // Adjust this endpoint as needed
+  //     { email },
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     }
+  //   );
+
+  //   if (res.data.secret) {
+  //     return res.data; // Assuming the response includes the 2FA secret
+  //   }
+
+  //   throw new Error('No secret returned');
+  // } catch (error) {
+  //   console.error('2FA Secret generation error:', error);
+  //   throw new Error('An unexpected error occurred while generating 2FA secret');
+  // }
+}
+
 export async function signIn(payload: { email: string; password: string }) {
   try {
     const res = await client.post<TokenResponse>(

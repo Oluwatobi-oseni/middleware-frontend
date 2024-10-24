@@ -7,6 +7,8 @@ import ProtectedRoute from './lib/auth/protected-route.tsx'
 import ForgotPassword from './pages/auth/forgot-password'
 import Otp from './pages/auth/otp'
 import TwoFactorAuthenticationPage from './pages/auth/two-factor-auth'
+import RegisterAccount from './pages/auth/register-account'
+import CompleteRegistration from './pages/auth/complete-signup.tsx'
 
 const router = createBrowserRouter([
   // Auth routes
@@ -17,11 +19,24 @@ const router = createBrowserRouter([
     }),
   },
   {
+    path: '/register-account',
+    element: <RegisterAccount />,
+    lazy: async () => ({
+      Component: (await import('./pages/auth/register-account')).default,
+    }),
+  },
+  {
+    path: '/complete-signup',
+    element: <CompleteRegistration />,
+    lazy: async () => ({
+      Component: (await import('./pages/auth/complete-signup')).default,
+    }),
+  },
+  {
     path: '/forgot-password',
     element: (
       <ProtectedRoute>
-        <ForgotPassword />{' '}
-        {/* Make sure to import your ForgotPassword component here */}
+        <ForgotPassword />
       </ProtectedRoute>
     ),
     lazy: async () => ({
@@ -94,6 +109,18 @@ const router = createBrowserRouter([
         path: 'analytics',
         lazy: async () => ({
           Component: (await import('@/components/coming-soon')).default,
+        }),
+      },
+      {
+        path: 'integrations',
+        lazy: async () => ({
+          Component: (await import('@/pages/integrations/index.tsx')).default,
+        }),
+      },
+      {
+        path: 'control-center',
+        lazy: async () => ({
+          Component: (await import('@/pages/control-center/index.tsx')).default,
         }),
       },
       {

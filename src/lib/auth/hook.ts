@@ -2,6 +2,8 @@ import { useContext, useState } from 'react'
 import {
   AuthState,
   SES_TOKEN_NAME,
+  register as apiRegister,
+  generate2FASecret as apiGenerate2FASecret,
   signIn as apiSignIn,
   verifyOTP as apiVerifyOTP,
 } from '.'
@@ -18,27 +20,87 @@ export const useAuth = (): AuthState => {
   return auth || { isSignedIn: false }
 }
 
+// Complete Registration Hook
+const completeRegistrationAsync = async (email: string) => {
+  const response = await apiGenerate2FASecret(email)
+  return response
+}
+export const useCompleteRegistration = () => {
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: completeRegistrationAsync,
+    onSuccess: () => {
+      toast({
+        title: 'Registration Complete',
+        description: 'You have successfully registered!',
+      })
+      navigate('/signin') // Redirect to the sign-in page
+    },
+    onError: (error) => {
+      console.error('Error completing registration:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to complete registration. Please try again.',
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
+// Register Hook
+const registerAsync = async (payload: { email: string; password: string }) => {
+  const response = await apiRegister(payload)
+  return response
+}
+
+export const useRegister = () => {
+  const navigate = useNavigate()
+  return useMutation({
+    mutationFn: registerAsync,
+    onSuccess: () => {
+      navigate('/complete-signup')
+      toast({
+        title: 'Registration Successful',
+        description: 'You will be redirected to complete your signup.',
+      })
+    },
+    onError: (error) => {
+      console.error('Registration failed:', error)
+      toast({
+        title: 'Registration Error',
+        description:
+          error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
 // SignIn Hook
 const signInAsync = async (payload: { email: string; password: string }) => {
   const data = await apiSignIn(payload)
-  return data
+  return { data, payload }
 }
 export const useSignIn = () => {
   const navigate = useNavigate()
 
   return useMutation({
     mutationFn: signInAsync,
-    onSuccess: (data) => {
+    onSuccess: ({ data, payload }) => {
       if (data && data.access_token) {
+        const { email } = payload
         sessionStorage.setItem('hasPassedLogin', 'true')
         cookies.set(SES_TOKEN_NAME, data.access_token, { path: '/' })
         client.defaults.headers.common['Authorization'] =
           `Bearer ${data.access_token}`
 
+        sessionStorage.setItem('userEmail', email)
+
         setTimeout(() => {
           navigate('/two-factor-auth', {
             replace: true,
-            state: { from: '/sign-in' },
+            state: { from: '/sign-in', email },
           })
           toast({
             title: 'Redirecting to Two-Factor Authentication',
