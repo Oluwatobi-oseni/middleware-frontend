@@ -18,10 +18,10 @@ import { Separator } from '@/components/ui/separator'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 // import { Button } from '@/components/custom/button'
-import { products } from './data'
-// import POSModal from './POSModal'
+import { integrations } from './data'
+
 import { useAuth } from '@/lib/auth/hook'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 // const productText = new Map<string, string>([['all', 'All Products']])
 
@@ -31,20 +31,19 @@ export default function Products() {
   const [sort, setSort] = useState('ascending')
   // const [productType, setProductType] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
-  // const [showPOSModal, setShowPOSModal] = useState(false)
 
   if (!isSignedIn) {
     return <Navigate to={'/sign-in'} replace={true} />
   }
-  const filteredProducts = products
+  const filteredIntegrations = integrations
     .sort((a, b) =>
       sort === 'ascending'
         ? a.name.localeCompare(b.name)
         : b.name.localeCompare(a.name)
     )
 
-    .filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter((integration) =>
+      integration.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
   return (
@@ -52,7 +51,7 @@ export default function Products() {
       {/* ===== Top Heading ===== */}
       <Layout.Header>
         <div className='flex w-full items-center justify-between'>
-          <h1 className='text-2xl font-bold tracking-tight'>Products</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>Integrations</h1>
           <div className='flex items-center space-x-4'>
             <ThemeSwitch />
             <UserNav />
@@ -64,13 +63,13 @@ export default function Products() {
       <Layout.Body className='flex flex-col'>
         <div>
           <p className='text-muted-foreground'>
-            Discover the Tools That Empower Your Banking Operations
+            Seamless Integrations to Elevate Your Bank’s Efficiency
           </p>
         </div>
         <div className='my-4 flex items-end justify-between sm:my-0 sm:items-center'>
           <div className='flex flex-col gap-4 sm:my-4 sm:flex-row'>
             <Input
-              placeholder='Filter products...'
+              placeholder='Filter integrations...'
               className='h-9 w-40 lg:w-[250px]'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -111,17 +110,19 @@ export default function Products() {
         </div>
         <Separator className='shadow' />
         <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'>
-          {filteredProducts.map((product) => (
-            <Link
-              to={product.path}
-              key={product.id}
+          {filteredIntegrations.map((integration) => (
+            <a
+              href={integration.path}
+              target='_blank'
+              rel='noopener noreferrer'
+              key={integration.id}
               className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
             >
               <div className='mb-8 flex items-center justify-between'>
                 <div
                   className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2`}
                 >
-                  {product.logo}
+                  {integration.logo}
                 </div>
                 {/* {product.name === 'POS' && (
                   <Button
@@ -134,9 +135,9 @@ export default function Products() {
                 )} */}
               </div>
               <div>
-                <h2 className='mb-1 font-semibold'>{product.name}</h2>
+                <h2 className='mb-1 font-semibold'>{integration.name}</h2>
                 <p className='line-clamp-2 text-xs text-gray-500'>
-                  {product.desc}
+                  {integration.desc}
                 </p>
               </div>
               {/* <li
@@ -144,13 +145,10 @@ export default function Products() {
                 className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
               >
               </li> */}
-            </Link>
+            </a>
           ))}
         </ul>
       </Layout.Body>
-
-      {/* POS Modal 
-      {showPOSModal && <POSModal onClose={() => setShowPOSModal(false)} />} */}
     </Layout>
   )
 }

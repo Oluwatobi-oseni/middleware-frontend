@@ -21,6 +21,7 @@ export default function SettingsDisplay() {
         showModalButton={true}
         inputPlaceHolder='Search Team'
         ModalComponent={RolesModal}
+        filterColumn='accountName'
       />
     </ContentSection>
   )

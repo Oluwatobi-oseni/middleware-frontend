@@ -24,6 +24,7 @@ import { IconSearch } from '@tabler/icons-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
+  filterColumn?: string
   data: TData[]
   buttonIcon?: JSX.Element
   buttonText?: string
@@ -31,19 +32,20 @@ interface DataTableProps<TData, TValue> {
   showModalButton?: boolean
   onButtonClick?: () => void
   inputPlaceHolder?: string
-  ModalComponent: React.FC
+  // ModalComponent: React.FC
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterColumn,
   buttonIcon,
   buttonText,
   showButton = false,
-  showModalButton = false,
+  // showModalButton = false,
   onButtonClick,
   inputPlaceHolder,
-  ModalComponent,
+  // ModalComponent,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const table = useReactTable({
@@ -71,18 +73,25 @@ export function DataTable<TData, TValue>({
             {buttonText} {/* Render the passed text */}
           </Button>
         )}
-        {showModalButton && <ModalComponent />}
-        <div className='mb-4 flex items-center rounded-lg border-gray-300 px-2'>
-          <IconSearch className='mr-2 text-gray-500' />
+        {/* {showModalButton && <ModalComponent />} */}
+        <div className='relative ml-auto w-full sm:w-[50%] md:w-[40%] lg:w-[30%]'>
+          <span className='absolute left-3 top-1/2 -translate-y-1/2 transform'>
+            <IconSearch size={16} />
+          </span>
           <Input
+            type='email'
             placeholder={inputPlaceHolder}
             value={
-              (table.getColumn('accountName')?.getFilterValue() as string) ?? ''
+              (table
+                .getColumn(filterColumn || 'name')
+                ?.getFilterValue() as string) ?? ''
             }
             onChange={(event) =>
-              table.getColumn('accountName')?.setFilterValue(event.target.value)
+              table
+                .getColumn(filterColumn || 'name')
+                ?.setFilterValue(event.target.value)
             }
-            className='ml-auto w-full max-w-sm border-none text-xs outline-none placeholder:text-xs focus:border-transparent focus:outline-none focus:ring-0 focus-visible:outline-none'
+            className='w-full pl-8' // padding-left to accommodate icon
           />
         </div>
       </div>
