@@ -12,7 +12,7 @@ export const integrations = [
     name: 'E-cam',
     logo: <IconCamera />,
     desc: 'Enhance bank security and operations with advanced video surveillance and real-time monitoring tools.',
-    path: '/',
+    path: 'https://cam-portal.alertmfb.com.ng/',
   },
   {
     id: '2',
