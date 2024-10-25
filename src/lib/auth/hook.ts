@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   AuthState,
   SES_TOKEN_NAME,
@@ -209,7 +209,7 @@ export const useVerifyOTP = () => {
 export const useSignOut = () => {
   const navigate = useNavigate()
 
-  const signOut = () => {
+  const signOut = useCallback(() => {
     cookies.remove(SES_TOKEN_NAME, { path: '/' })
     delete client.defaults.headers.common['Authorization']
     sessionStorage.removeItem('hasPassedLogin')
@@ -221,7 +221,29 @@ export const useSignOut = () => {
 
     navigate('/sign-in')
     window.location.reload()
-  }
+  }, [navigate])
+
+  // Auto sign-out after 5 minutes of inactivity
+  useEffect(() => {
+    const inactivityTime = 5 * 60 * 1000
+    let timeoutId: NodeJS.Timeout
+
+    const resetTimeout = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(signOut, inactivityTime)
+    }
+
+    resetTimeout()
+
+    window.addEventListener('mousemove', resetTimeout)
+    window.addEventListener('keypress', resetTimeout)
+
+    return () => {
+      clearTimeout(timeoutId)
+      window.removeEventListener('mousemove', resetTimeout)
+      window.removeEventListener('keypress', resetTimeout)
+    }
+  }, [signOut])
 
   return signOut
 }
