@@ -94,7 +94,13 @@ const router = createBrowserRouter([
         }),
       },
       {
-        path: 'products/card-requests',
+        path: 'integrations',
+        lazy: async () => ({
+          Component: (await import('@/pages/integrations/index.tsx')).default,
+        }),
+      },
+      {
+        path: 'integrations/card-requests',
         lazy: async () => ({
           Component: (await import('@/pages/card-requests/index.tsx')).default,
         }),
@@ -111,12 +117,7 @@ const router = createBrowserRouter([
           Component: (await import('@/components/coming-soon')).default,
         }),
       },
-      {
-        path: 'integrations',
-        lazy: async () => ({
-          Component: (await import('@/pages/integrations/index.tsx')).default,
-        }),
-      },
+
       {
         path: 'control-center',
         lazy: async () => ({
