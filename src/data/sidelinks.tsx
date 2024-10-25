@@ -33,6 +33,12 @@ export const sidelinks: SideLink[] = [
     icon: <IconApps size={18} />,
   },
   {
+    title: 'Integrations',
+    label: '',
+    href: '/integrations',
+    icon: <IconTablePlus size={18} />,
+  },
+  {
     title: 'Users',
     label: '',
     href: '/users',
@@ -64,12 +70,7 @@ export const sidelinks: SideLink[] = [
     href: '/analytics',
     icon: <IconAnalyze size={18} />,
   },
-  {
-    title: 'Integrations',
-    label: '',
-    href: '/integrations',
-    icon: <IconTablePlus size={18} />,
-  },
+
   {
     title: 'Control Center',
     label: '',
