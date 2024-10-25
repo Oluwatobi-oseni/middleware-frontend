@@ -113,8 +113,16 @@ export default function Products() {
           {filteredIntegrations.map((integration) => (
             <a
               href={integration.path}
-              target='_blank'
-              rel='noopener noreferrer'
+              target={
+                integration.path === 'integrations/card-requests'
+                  ? '_self'
+                  : '_blank'
+              }
+              rel={
+                integration.path === 'integrations/card-requests'
+                  ? ''
+                  : 'noopener noreferrer'
+              }
               key={integration.id}
               className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
             >
