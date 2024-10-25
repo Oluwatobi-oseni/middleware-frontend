@@ -98,13 +98,30 @@ const router = createBrowserRouter([
         lazy: async () => ({
           Component: (await import('@/pages/integrations/index.tsx')).default,
         }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/integrations/products.tsx'))
+                .default,
+            }),
+          },
+          {
+            path: 'card-request',
+            lazy: async () => ({
+              Component: (await import('@/pages/card-requests/index.tsx'))
+                .default,
+            }),
+          },
+        ],
       },
-      {
-        path: 'integrations/card-requests',
-        lazy: async () => ({
-          Component: (await import('@/pages/card-requests/index.tsx')).default,
-        }),
-      },
+      // {
+      //   path: 'integrations/card-requests',
+      //   lazy: async () => ({
+      //     Component: (await import('@/pages/card-requests/index.tsx')).default,
+      //   }),
+      // },
       {
         path: 'users',
         lazy: async () => ({

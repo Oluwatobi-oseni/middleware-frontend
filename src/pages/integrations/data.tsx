@@ -26,7 +26,7 @@ export const integrations = [
     name: 'Card Request',
     logo: <IconCards />,
     desc: 'Simplify the card issuance process for employees, ensuring fast and accurate card request management for customers.',
-    path: '/integrations/card-requests',
+    path: '/integrations/card-request',
   },
   //   {
   //     id: '4',
