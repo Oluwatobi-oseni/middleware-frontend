@@ -48,7 +48,7 @@ export const products = [
     name: 'Consumer Banking',
     logo: <IconUser />,
     desc: 'Enhance personal banking services to meet individual customer needs and strengthen client relationships.',
-    path: '/',
+    path: '/products/consumer-banking',
   },
   // {
   //   name: 'Stripe',

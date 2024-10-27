@@ -1,8 +1,16 @@
 import { useAuth } from '@/lib/auth/hook'
 import { UserAuthForm } from './components/user-auth-form'
 import { Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 export default function SignIn() {
   const { isSignedIn } = useAuth()
+
+  useEffect(() => {
+    sessionStorage.removeItem('tempToken')
+    sessionStorage.removeItem('hasPassedLogin')
+    sessionStorage.removeItem('is2FAVerified')
+    sessionStorage.removeItem('userEmail')
+  }, [])
 
   if (isSignedIn) {
     return <Navigate to={'/dashboard'} />
