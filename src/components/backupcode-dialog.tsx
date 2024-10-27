@@ -15,7 +15,7 @@ export function BackupCodeDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='flex w-1/3 items-center gap-2 text-xs'>
+        <Button className='flex items-center gap-1 text-xs'>
           <IconDownload />
           <span>Backup Code</span>
         </Button>

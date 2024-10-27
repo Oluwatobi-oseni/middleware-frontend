@@ -7,8 +7,13 @@ import { useAuth } from '@/lib/auth/hook'
 export default function TwoFactorAuthenticationPage() {
   //   window.location.reload()
   const { isSignedIn } = useAuth()
-
   const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
+  const hasPassedSignIn = sessionStorage.getItem('hasPassedLogin') === 'true'
+
+  // const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
+  if (!hasPassedSignIn) {
+    return <Navigate to={'/sign-in'} replace={true} />
+  }
 
   if (isSignedIn && is2FAVerified) {
     return <Navigate to={'/dashboard'} replace={true} />

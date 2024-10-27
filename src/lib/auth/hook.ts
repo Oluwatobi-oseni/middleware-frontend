@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   AuthState,
   SES_TOKEN_NAME,
@@ -6,18 +6,22 @@ import {
   generate2FASecret as apiGenerate2FASecret,
   signIn as apiSignIn,
   verifyOTP as apiVerifyOTP,
+  verifyEmail as apiVerifyEmail,
+  resetPassword as apiResetPassword,
+  forgotPassword as apiForgotPassword,
 } from '.'
-import { AuthContext } from './auth-provider'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { cookies } from '.'
-import { toast } from '@/components/ui/use-toast'
 import client from '../axios'
+import { handleError } from './utilities/errorhandler'
+import { handleSuccess } from './utilities/successHandler'
 
 // Context Hook
 export const useAuth = (): AuthState => {
-  const auth = useContext(AuthContext)
-  return auth || { isSignedIn: false }
+  const token = cookies.get(SES_TOKEN_NAME)
+  const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
+  return { isSignedIn: !!token && is2FAVerified }
 }
 
 // Complete Registration Hook
@@ -31,25 +35,24 @@ export const useCompleteRegistration = () => {
   return useMutation({
     mutationFn: completeRegistrationAsync,
     onSuccess: () => {
-      toast({
-        title: 'Registration Complete',
-        description: 'You have successfully registered!',
-      })
+      handleSuccess(
+        'Registration Complete',
+        'You have successfully registered!'
+      )
       navigate('/signin') // Redirect to the sign-in page
     },
     onError: (error) => {
-      console.error('Error completing registration:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to complete registration. Please try again.',
-        variant: 'destructive',
-      })
+      handleError(error, 'Failed to complete registration. Please try again.')
     },
   })
 }
 
 // Register Hook
-const registerAsync = async (payload: { email: string; password: string }) => {
+const registerAsync = async (payload: {
+  email: string
+  password: string
+  enable2FA: boolean
+}) => {
   const response = await apiRegister(payload)
   return response
 }
@@ -59,20 +62,14 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: registerAsync,
     onSuccess: () => {
-      navigate('/complete-signup')
-      toast({
-        title: 'Registration Successful',
-        description: 'You will be redirected to complete your signup.',
-      })
+      navigate('/complete-signup') // Redirect to 2FA setup page
+      handleSuccess(
+        'Registration Successful',
+        'You will be redirected to complete your signup with 2FA.'
+      )
     },
     onError: (error) => {
-      console.error('Registration failed:', error)
-      toast({
-        title: 'Registration Error',
-        description:
-          error instanceof Error ? error.message : 'Please try again.',
-        variant: 'destructive',
-      })
+      handleError(error, 'Registration failed. Please try again.')
     },
   })
 }
@@ -88,45 +85,28 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: signInAsync,
     onSuccess: ({ data, payload }) => {
-      if (data && data.access_token) {
+      if (data?.access_token) {
         const { email } = payload
-        sessionStorage.setItem('hasPassedLogin', 'true')
-        cookies.set(SES_TOKEN_NAME, data.access_token, { path: '/' })
-        client.defaults.headers.common['Authorization'] =
-          `Bearer ${data.access_token}`
 
+        // Store token temporarily in state
+        sessionStorage.setItem('hasPassedLogin', 'true')
+        sessionStorage.setItem('tempToken', data.access_token)
         sessionStorage.setItem('userEmail', email)
 
-        setTimeout(() => {
-          navigate('/two-factor-auth', {
-            replace: true,
-            state: { from: '/sign-in', email },
-          })
-          toast({
-            title: 'Redirecting to Two-Factor Authentication',
-            description: 'Please complete the verification to log in.',
-          })
-        }, 0)
-      } else {
-        // Handle case where access_token is not returned
-        toast({
-          title: 'Login Error',
-          description: 'No access token returned. Please try again.',
-          variant: 'destructive',
+        navigate('/two-factor-auth', {
+          replace: true,
         })
+
+        handleSuccess(
+          'Redirecting to Two-Factor Authentication',
+          'Please complete the verification to log in.'
+        )
+      } else {
+        handleError(null, 'No access token returned. Please try again.')
       }
     },
     onError: (error) => {
-      console.error('Login failed:', error)
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Login failed. Please try again.'
-      toast({
-        title: 'Login Error',
-        description: errorMessage,
-        variant: 'destructive',
-      })
+      handleError(error, 'Login failed. Please try again.')
     },
   })
 }
@@ -152,15 +132,19 @@ export const useVerifyOTP = () => {
   const handleVerificationSuccess = (data: { isAuthenticated: boolean }) => {
     if (data.isAuthenticated) {
       // Set 2FA verification flag in sessionStorage
-      sessionStorage.setItem('is2FAVerified', 'true')
+      const token = sessionStorage.getItem('tempToken')
+      if (token) {
+        cookies.set(SES_TOKEN_NAME, token, { path: '/' })
+        client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        sessionStorage.removeItem('tempToken')
+        sessionStorage.setItem('is2FAVerified', 'true')
 
-      toast({
-        title: 'Verification successful',
-        description: 'You will be redirected shortly.',
-      })
-
-      // Redirect or reload to trigger dashboard loading
-      window.location.reload()
+        handleSuccess(
+          'Verification successful',
+          'You will be redirected shortly.'
+        )
+        window.location.reload()
+      }
     } else {
       handleFailedVerification()
     }
@@ -171,22 +155,14 @@ export const useVerifyOTP = () => {
       const newCount = prevCount + 1
 
       if (newCount >= maxRetries) {
-        toast({
-          title: 'Too many attempts',
-          description: 'You have been redirected to the sign-in page.',
-          variant: 'destructive',
-        })
-
+        handleError(null, 'You have been redirected to the sign-in page.')
         // Navigate back to the sign-in page upon exceeding max attempts
         navigate('/sign-in')
       } else {
-        toast({
-          title: 'Verification failed',
-          description: `Invalid code. Please try again. Attempts left: ${
-            maxRetries - newCount
-          }`,
-          variant: 'destructive',
-        })
+        handleError(
+          null,
+          `Invalid code. Please try again. Attempts left: ${maxRetries - newCount}`
+        )
       }
 
       return newCount
@@ -194,17 +170,109 @@ export const useVerifyOTP = () => {
   }
 
   const handleVerificationError = (error: unknown) => {
-    console.error('OTP verification failed:', error)
-    toast({
-      title: 'Verification failed',
-      description: 'An error occurred during verification.',
-      variant: 'destructive',
-    })
+    handleError(error, 'An error occurred during verification.')
   }
 
   return { ...mutation, retryCount }
 }
 
+const forgotPasswordAsync = async (payload: { email: string }) => {
+  const data = await apiForgotPassword(payload)
+  return data
+}
+export const useForgotPassword = () => {
+  const navigate = useNavigate()
+
+  const mutation = useMutation({
+    mutationFn: forgotPasswordAsync,
+    onSuccess(data) {
+      handleForgotPasswordSuccess(data)
+    },
+    onError(error) {
+      handleForgotPasswordError(error)
+    },
+  })
+  const handleForgotPasswordSuccess = (data: { email: string }) => {
+    // if (data.success) {
+    //   handleSuccess(
+    //     'Password Reset Email Sent',
+    //     'OTP has been sent to your email. Please check your inbox.'
+    //   )
+    //   navigate('/otp')
+    // } else {
+    //   handleError(null, 'Failed to send password reset email.')
+    // }
+    console.log('Email', data)
+    handleSuccess(
+      'Password Reset Email Sent',
+      'OTP has been sent to your email. Please check your inbox.'
+    )
+    navigate('/otp', { state: { email: data.email } })
+  }
+
+  const handleForgotPasswordError = (error: unknown) => {
+    handleError(
+      error,
+      'An error occurred while attempting to reset the password.'
+    )
+  }
+
+  return { ...mutation }
+}
+
+// Verify email hook
+const verifyEmailAsync = async (payload: { otp: string }) => {
+  const data = await apiVerifyEmail(payload)
+  return data
+}
+export const useVerifyEmail = () => {
+  const navigate = useNavigate()
+  const mutation = useMutation({
+    mutationFn: verifyEmailAsync,
+    onSuccess(data) {
+      handleVerificationSuccess(data)
+    },
+    onError(error) {
+      handleVerificationError(error)
+    },
+  })
+  const handleVerificationSuccess = (data: { otp: string }) => {
+    if (data) {
+      handleSuccess('OTP verified', 'You can now set a new password.')
+      navigate('/reset-password')
+    } else {
+      handleError(null, 'Invalid OTP. Please try again.')
+    }
+  }
+  const handleVerificationError = (error: unknown) => {
+    handleError(error, 'An error occurred during verification.')
+  }
+  return { ...mutation }
+}
+
+// Reset Password Hook
+const resetPasswordAsync = async (payload: { password: string }) => {
+  const data = await apiResetPassword(payload)
+  return data
+}
+
+export const useResetPassword = () => {
+  const navigate = useNavigate()
+  const mutation = useMutation({
+    mutationFn: resetPasswordAsync,
+    onSuccess() {
+      handleSuccess(
+        'Password reset successfully',
+        'You can now log in with your new password.'
+      )
+      navigate('/sign-in') // Redirect to login page after a successful reset
+    },
+    onError(error) {
+      handleError(error, 'An error occurred while resetting your password.')
+    },
+  })
+  return { ...mutation }
+}
 // Sign Out Hook
 export const useSignOut = () => {
   const navigate = useNavigate()
@@ -214,10 +282,7 @@ export const useSignOut = () => {
     delete client.defaults.headers.common['Authorization']
     sessionStorage.removeItem('hasPassedLogin')
 
-    toast({
-      title: 'Signed Out',
-      description: 'You have been successfully signed out.',
-    })
+    handleSuccess('Signed Out', 'You have been successfully signed out.')
 
     navigate('/sign-in')
     window.location.reload()

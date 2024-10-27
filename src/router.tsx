@@ -9,6 +9,7 @@ import Otp from './pages/auth/otp'
 import TwoFactorAuthenticationPage from './pages/auth/two-factor-auth'
 import RegisterAccount from './pages/auth/register-account'
 import CompleteRegistration from './pages/auth/complete-signup.tsx'
+import ResetPassword from './pages/auth/reset-password.tsx'
 
 const router = createBrowserRouter([
   // Auth routes
@@ -66,6 +67,17 @@ const router = createBrowserRouter([
       Component: (await import('./pages/auth/two-factor-auth')).default,
     }),
   },
+  {
+    path: '/reset-password', // New password route
+    element: (
+      <ProtectedRoute>
+        <ResetPassword />
+      </ProtectedRoute>
+    ),
+    lazy: async () => ({
+      Component: (await import('./pages/auth/reset-password.tsx')).default,
+    }),
+  },
 
   // Main routes (protected)
   {
@@ -92,6 +104,24 @@ const router = createBrowserRouter([
         lazy: async () => ({
           Component: (await import('@/pages/products/index.tsx')).default,
         }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/products/products.tsx'))
+                .default,
+            }),
+          },
+          {
+            path: 'consumer-banking',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/products/consumer-banking/index.tsx')
+              ).default,
+            }),
+          },
+        ],
       },
       {
         path: 'integrations',

@@ -7,21 +7,17 @@ import { Button } from '@/components/custom/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useRegister } from '@/lib/auth/hook'
-// import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/custom/password-input'
-import { InfoIcon } from 'lucide-react'
+import { useResetPassword } from '@/lib/auth/hook'
 
-interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {
-  email: string | null // Accept email as a prop
-}
+interface NewPasswordFormProps extends HTMLAttributes<HTMLDivElement> {}
+
 const passwordSchema = z
   .string()
   .min(8, { message: 'Password must be at least 8 characters' })
@@ -52,25 +48,18 @@ const formSchema = z
     }
   })
 
-export function RegisterForm({
-  className,
-  email,
-  ...props
-}: RegisterFormProps) {
-  const registerMutation = useRegister()
-
+export function NewPasswordForm({ className, ...props }: NewPasswordFormProps) {
+  const resetPassword = useResetPassword()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { password: '', confirmPassword: '' },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    registerMutation.mutate({
-      email: email!,
-      password: data.password,
-      enable2FA: true,
-    })
+    resetPassword.mutate({ password: data.password }) // Call the API with the new password
+    form.reset()
   }
+
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>
@@ -82,10 +71,10 @@ export function RegisterForm({
               name='password'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>New Password</FormLabel>
                   <FormControl>
                     <PasswordInput
-                      placeholder='Enter your password'
+                      placeholder='Enter your new password'
                       {...field}
                     />
                   </FormControl>
@@ -94,17 +83,17 @@ export function RegisterForm({
               )}
             />
 
-            {/*       Confirm Password Field */}
+            {/* Confirm Password Field */}
             <FormField
               control={form.control}
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>Confirm New Password</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
-                      placeholder='Confirm your password'
+                      placeholder='Confirm your new password'
                       {...field}
                     />
                   </FormControl>
@@ -113,17 +102,12 @@ export function RegisterForm({
               )}
             />
 
-            {/* Enable 2FA Switch */}
-            <FormItem className='mt-2 flex items-center space-x-2 rounded bg-blue-50 p-2'>
-              <InfoIcon className='text-blue-500' /> {/* Important Info Icon */}
-              <FormDescription className='text-sm'>
-                <strong>Note:</strong> Two-factor authentication is required for
-                enhanced security.
-              </FormDescription>
-            </FormItem>
-
-            <Button className='mt-8' loading={registerMutation.isPending}>
-              Continue
+            <Button
+              className='mt-8'
+              type='submit'
+              loading={resetPassword.isPending}
+            >
+              Reset Password
             </Button>
           </div>
         </form>

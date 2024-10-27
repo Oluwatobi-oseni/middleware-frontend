@@ -32,7 +32,6 @@ interface DataTableProps<TData, TValue> {
   showModalButton?: boolean
   onButtonClick?: () => void
   inputPlaceHolder?: string
-  // ModalComponent: React.FC
 }
 
 export function DataTable<TData, TValue>({

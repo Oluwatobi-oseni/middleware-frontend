@@ -117,6 +117,76 @@ export async function signIn(payload: { email: string; password: string }) {
   }
 }
 
+export async function forgotPassword(payload: { email: string }) {
+  console.log('Forgot Password Payload:', payload) // Logging the payload for testing
+
+  // Temporarily returning payload as mock data
+  return payload
+  // try {
+  //   const res = await client.post(
+  //     '/api/sharedServices/v1/auth/forgotPassword',
+  //     payload,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     }
+  //   )
+  //   return res.data
+  // } catch (error) {
+  //   console.error('Forgot password error:', error)
+  //   return null // Handle error and return null
+  // }
+}
+
+export async function verifyEmail(payload: { otp: string }) {
+  console.log('verifyEmail Payload:', payload) // Logging the payload for testing
+
+  // Temporarily returning payload as mock data
+  return payload
+  // try {
+  //   const res = await client.post(
+  //     '/api/sharedServices/v1/auth/verifyEmailOTP', // Adjust endpoint as needed
+  //     payload,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     }
+  //   )
+  //   return res.data
+  // } catch (error) {
+  //   console.error('Email verification error:', error)
+  //   return null // Handle error and return null
+  // }
+}
+
+export async function resetPassword(payload: { password: string }) {
+  console.log('newPassword Payload:', payload) // Logging the payload for testing
+
+  // Temporarily returning payload as mock data
+  return payload
+  // try {
+  //   const res = await client.post(
+  //     '/api/sharedServices/v1/auth/resetPassword',
+  //     payload,
+  //     {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     }
+  //   )
+
+  //   return res.data
+  // } catch (error) {
+  //   console.error('Password reset error:', error)
+  //   return null // Handle error and return null
+  // }
+}
+
 export async function verifyOTP(payload: { otp: string }) {
   try {
     const res = await client.post(

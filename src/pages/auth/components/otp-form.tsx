@@ -14,15 +14,16 @@ import {
 import { Input } from '@/components/ui/input'
 import { PinInput, PinInputField } from '@/components/custom/pin-input'
 import { Separator } from '@/components/ui/separator'
+import { useVerifyEmail } from '@/lib/auth/hook'
 
 interface OtpFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
-  otp: z.string().min(1, { message: 'Please enter your otp code.' }),
+  otp: z.string().min(1, { message: 'Please enter a valid 6-digit OTP.' }),
 })
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const verifyOtp = useVerifyEmail()
   const [disabledBtn, setDisabledBtn] = useState(true)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -31,13 +32,8 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    return data
-
-    setTimeout(() => {
-      form.reset()
-      setIsLoading(false)
-    }, 2000)
+    verifyOtp.mutate({ otp: data.otp })
+    form.reset()
   }
 
   return (
@@ -74,7 +70,11 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
                 </FormItem>
               )}
             />
-            <Button className='mt-2' disabled={disabledBtn} loading={isLoading}>
+            <Button
+              className='mt-2'
+              disabled={disabledBtn}
+              loading={verifyOtp.isPending}
+            >
               Verify
             </Button>
           </div>
