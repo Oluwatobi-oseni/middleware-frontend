@@ -7,11 +7,20 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useSignOut } from '@/lib/auth/hook'
+import { useEffect, useState } from 'react'
 
 export function UserNav() {
+  const signOut = useSignOut()
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    const userEmail = sessionStorage.getItem('userEmail')
+    setEmail(userEmail)
+  }, [])
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,34 +33,26 @@ export function UserNav() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
-          <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>satnaing</p>
-            <p className='text-xs leading-none text-muted-foreground'>
-              satnaingdev@gmail.com
-            </p>
+          <div className='flex items-center space-x-3'>
+            <Avatar>
+              <AvatarImage src='/avatars/01.png' alt='@shadcn' />
+              <AvatarFallback>SN</AvatarFallback>
+            </Avatar>
+            <div className='flex flex-col space-y-1'>
+              <p className='text-sm font-medium leading-none'>satnaing</p>
+              <p className='text-xs leading-none text-muted-foreground'>
+                {email}
+              </p>
+            </div>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

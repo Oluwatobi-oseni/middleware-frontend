@@ -1,8 +1,10 @@
 import {
+  IconAdjustments,
+  IconAnalyze,
   IconApps,
-  IconChartHistogram,
   IconLayoutDashboard,
   IconSettings,
+  IconTablePlus,
   IconUsers,
 } from '@tabler/icons-react'
 
@@ -29,6 +31,12 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/products',
     icon: <IconApps size={18} />,
+  },
+  {
+    title: 'Integrations',
+    label: '',
+    href: '/integrations',
+    icon: <IconTablePlus size={18} />,
   },
   {
     title: 'Users',
@@ -60,7 +68,14 @@ export const sidelinks: SideLink[] = [
     title: 'Analytics',
     label: '',
     href: '/analytics',
-    icon: <IconChartHistogram size={18} />,
+    icon: <IconAnalyze size={18} />,
+  },
+
+  {
+    title: 'Control Center',
+    label: '',
+    href: '/control-center',
+    icon: <IconAdjustments size={18} />,
   },
   // {
   //   title: 'Error Pages',

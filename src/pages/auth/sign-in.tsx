@@ -1,11 +1,25 @@
+import { useAuth } from '@/lib/auth/hook'
 import { UserAuthForm } from './components/user-auth-form'
-// import AlertLogo from '@/assets/Alert.png'
-
+import { Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 export default function SignIn() {
+  const { isSignedIn } = useAuth()
+
+  useEffect(() => {
+    sessionStorage.removeItem('tempToken')
+    sessionStorage.removeItem('hasPassedLogin')
+    sessionStorage.removeItem('is2FAVerified')
+    sessionStorage.removeItem('userEmail')
+  }, [])
+
+  if (isSignedIn) {
+    return <Navigate to={'/dashboard'} />
+  }
+
   return (
     <>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
-        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
+        <div className='relative hidden h-full flex-col bg-muted p-10  dark:border-r lg:flex'>
           <div className='absolute inset-0 bg-black' />
           <div className='relative z-20 flex items-center text-lg font-medium'>
             <img
@@ -41,7 +55,7 @@ export default function SignIn() {
               <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
               <p className='text-sm text-muted-foreground'>
                 Enter your email and password <br />
-                to access yourtouch account
+                to access your account
               </p>
             </div>
             <UserAuthForm />

@@ -1,9 +1,9 @@
-import { HTMLAttributes, useState } from 'react'
+import { HTMLAttributes } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
+import { useSignIn } from '@/lib/auth/hook'
 import {
   Form,
   FormControl,
@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/custom/button'
 import { PasswordInput } from '@/components/custom/password-input'
 import { cn } from '@/lib/utils'
+
+// import { useNavigate } from 'react-router-dom'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -32,11 +34,20 @@ const formSchema = z.object({
     .min(7, {
       message: 'Password must be at least 7 characters long',
     }),
+  // .regex(/[A-Z]/, {
+  //   message: 'Password must contain at least one uppercase letter',
+  // })
+  // .regex(/[a-z]/, {
+  //   message: 'Password must contain at least one lowercase letter',
+  // })
+  // .regex(/[0-9]/, { message: 'Password must contain at least one number' })
+  // .regex(/[!@#$%^&*(),.?":{}|<>]/, {
+  //   message: 'Password must contain at least one special character',
+  // }),
 })
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const signInMutation = useSignIn()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,14 +58,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    console.log(data)
-
-    setTimeout(() => {
-      setIsLoading(false)
-
-      navigate('/dashboard') // Redirect to dashboard
-    }, 3000)
+    signInMutation.mutate({ email: data.email, password: data.password })
   }
 
   return (
@@ -96,8 +100,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </FormItem>
               )}
             />
-            <Button className='mt-2' loading={isLoading}>
-              Login
+            <Button className='mt-2'>
+              {signInMutation.isPending ? (
+                <div className='h-4 w-4 animate-spin rounded-full border-b-2 ' />
+              ) : (
+                'Login'
+              )}
             </Button>
 
             {/* <div className='relative my-2'>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { IconChevronDown } from '@tabler/icons-react'
+import { IconChevronDown, IconLogout } from '@tabler/icons-react'
 import { Button, buttonVariants } from './custom/button'
 import {
   Collapsible,
@@ -23,6 +23,7 @@ import {
 import { cn } from '@/lib/utils'
 import useCheckActiveNav from '@/hooks/use-check-active-nav'
 import { SideLink } from '@/data/sidelinks'
+import { useSignOut } from '@/lib/auth/hook'
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean
@@ -36,6 +37,7 @@ export default function Nav({
   className,
   closeNav,
 }: NavProps) {
+  const signOut = useSignOut()
   const renderLink = ({ sub, ...rest }: SideLink) => {
     const key = `${rest.title}-${rest.href}`
     if (isCollapsed && sub)
@@ -67,8 +69,39 @@ export default function Nav({
       )}
     >
       <TooltipProvider delayDuration={0}>
-        <nav className='grid gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2'>
-          {links.map(renderLink)}
+        <nav className='flex h-full flex-col justify-between group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-0'>
+          <div className='grid gap-1'>{links.slice(0, -1).map(renderLink)}</div>
+          <div className='grid gap-1'>
+            {renderLink(links[links.length - 1])}
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className={cn(
+                    'h-12 justify-start text-wrap rounded-none',
+                    isCollapsed ? 'px-[17px]' : 'px-[26px]'
+                  )}
+                  onClick={signOut}
+                >
+                  <IconLogout
+                    size={18}
+                    className={cn(isCollapsed ? 'm-0' : 'mr-2')}
+                  />
+                  <span className={cn(isCollapsed && 'hidden')}>Logout</span>
+                </Button>
+              </TooltipTrigger>
+              {isCollapsed && ( // Show tooltip only when collapsed
+                <TooltipContent
+                  side='right'
+                  className='flex items-center gap-1'
+                  sideOffset={-0}
+                >
+                  Logout
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </div>
         </nav>
       </TooltipProvider>
     </div>
