@@ -505,15 +505,13 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div> */}
-            <div className='flex items-center justify-end gap-2'>
-              {/* <DatePickerWithRange /> */}
-              <ExportDialog />
-            </div>
+
             <DataTable
               columns={columns}
               data={transactionData}
               inputPlaceHolder='Search Transactions'
-              showModalButton={false}
+              showModalComponent
+              ModalComponent={<ExportDialog />}
               filterColumn='name'
             />
           </TabsContent>

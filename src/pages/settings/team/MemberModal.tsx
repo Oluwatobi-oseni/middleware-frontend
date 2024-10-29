@@ -58,7 +58,7 @@ export function MemberDialog() {
               >
                 <div className='flex items-center'>
                   <div className='h-10 w-10 flex-shrink-0'>
-                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold text-white'>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold'>
                       {user.accountName.charAt(0)}
                     </div>
                   </div>

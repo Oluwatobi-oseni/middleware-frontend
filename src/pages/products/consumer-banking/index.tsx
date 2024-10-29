@@ -3,21 +3,30 @@ import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
 import { data } from './data'
 import ContentSection from '@/pages/settings/components/content-section'
+import { useNavigate } from 'react-router-dom'
+const ConsumerBanking = () => {
+  const navigate = useNavigate()
 
-export default function SettingsDisplay() {
+  const handleRowClick = (userId: string) => {
+    navigate(`/products/consumer-banking/user/${userId}`) // Navigate to the user detail page
+  }
+
   return (
     <ContentSection
-      title='Team'
-      desc="Manage your team's settings and permissions to control their access and visibility within the app."
-      showMemberDialog
+      title='Consumer Banking'
+      desc='View and manage consumer business accounts'
     >
       <DataTable
         columns={columns}
         data={data}
-        showModalButton={true}
-        inputPlaceHolder='Search Team'
-        filterColumn='accountName'
+        inputPlaceHolder='Search...'
+        filterColumn='name'
+        onRowClick={(row) => handleRowClick(row.id)}
+        showButton
+        buttonText='Search'
       />
     </ContentSection>
   )
 }
+
+export default ConsumerBanking

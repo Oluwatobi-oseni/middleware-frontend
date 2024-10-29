@@ -121,10 +121,32 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+          {
+            path: 'consumer-banking/user/:id', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/products/consumer-banking/user.tsx')
+              ).default,
+            }),
+          },
         ],
       },
       {
         path: 'integrations',
+        /*************  ✨ Codeium Command ⭐  *************/
+        /**
+         * The lazy function is used to import the component
+         * when the route is visited. This is a performance optimization
+         * that prevents the component from being loaded until it is needed.
+         *
+         * The function returns an object with a single property, `Component`,
+         * which is the default export of the module.
+         *
+         * The function is marked as `async` because the import is asynchronous.
+         * The function returns a promise that resolves with the object containing
+         * the component.
+         */
+        /******  26d59b44-26c3-4b8b-996c-47d097d4f073  *******/
         lazy: async () => ({
           Component: (await import('@/pages/integrations/index.tsx')).default,
         }),

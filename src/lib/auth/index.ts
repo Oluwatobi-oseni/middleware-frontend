@@ -112,8 +112,8 @@ export async function signIn(payload: { email: string; password: string }) {
 
     throw new Error('No access token returned')
   } catch (error) {
-    console.error('SignIn error:', error)
-    throw new Error('An unexpected error occurred')
+    // console.error('SignIn error:', error)
+    throw new Error(JSON.stringify(error))
   }
 }
 
@@ -203,6 +203,7 @@ export async function verifyOTP(payload: { otp: string }) {
     return res.data
   } catch (error) {
     console.error('OTP verification error:', error)
+    throw new Error('OTP verification failed. Please try again.')
     return null // Handle error and return null
   }
 }

@@ -18,7 +18,7 @@ export default function SettingsDisplay() {
       <DataTable
         columns={columns}
         data={data}
-        showModalButton={true}
+        showModalComponent
         inputPlaceHolder='Search Team'
         filterColumn='accountName'
       />

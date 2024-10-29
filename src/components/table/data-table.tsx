@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table'
 import { Input } from '../ui/input'
 import { IconSearch } from '@tabler/icons-react'
+import { DatePickerWithRange } from '../date-range-picker'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -29,7 +30,10 @@ interface DataTableProps<TData, TValue> {
   buttonIcon?: JSX.Element
   buttonText?: string
   showButton?: boolean
-  showModalButton?: boolean
+  showDateRangePicker?: boolean
+  showModalComponent?: boolean
+  ModalComponent?: JSX.Element
+  onRowClick?: (row: TData) => void
   onButtonClick?: () => void
   inputPlaceHolder?: string
 }
@@ -41,10 +45,12 @@ export function DataTable<TData, TValue>({
   buttonIcon,
   buttonText,
   showButton = false,
-  // showModalButton = false,
+  showModalComponent = false,
+  showDateRangePicker = true,
+  onRowClick,
   onButtonClick,
   inputPlaceHolder,
-  // ModalComponent,
+  ModalComponent,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const table = useReactTable({
@@ -62,18 +68,9 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className='flex items-center justify-between py-4'>
-        {showButton && (
-          <Button
-            variant='outline'
-            className='mr-2 px-4 py-4 text-xs'
-            onClick={onButtonClick}
-          >
-            {buttonIcon} {/* Render the passed icon */}
-            {buttonText} {/* Render the passed text */}
-          </Button>
-        )}
         {/* {showModalButton && <ModalComponent />} */}
-        <div className='relative ml-auto w-full sm:w-[50%] md:w-[40%] lg:w-[30%]'>
+        {/* sm:w-[50%] md:w-[40%] lg:w-[30%] */}
+        <div className='relative w-full max-w-sm'>
           <span className='absolute left-3 top-1/2 -translate-y-1/2 transform'>
             <IconSearch size={16} />
           </span>
@@ -92,6 +89,19 @@ export function DataTable<TData, TValue>({
             }
             className='w-full pl-8' // padding-left to accommodate icon
           />
+        </div>
+        <div className='flex items-center space-x-4'>
+          {showDateRangePicker && <DatePickerWithRange />}
+          {showButton && (
+            <Button
+              // variant='outline'
+              className='px-4 py-2 text-xs'
+              onClick={onButtonClick}
+            >
+              {buttonIcon} {buttonText}
+            </Button>
+          )}
+          {showModalComponent && ModalComponent}
         </div>
       </div>
       {/* TABLE */}
@@ -124,11 +134,13 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => onRowClick && onRowClick(row.original)}
+                  className='cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700'
                 >
                   {row.getVisibleCells().map((cell, index) => (
                     <TableCell
                       key={cell.id}
-                      className={`${index > 1 ? 'text-center' : ''}`}
+                      className={`p-4 ${index > 1 ? 'text-center' : ''}`}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
