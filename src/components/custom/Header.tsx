@@ -1,4 +1,4 @@
-const Header = ({ title, desc }: { title: string; desc: string }) => {
+const header = ({ title, desc }: { title: string; desc: string }) => {
   return (
     <div>
       <h3 className='text-[18px] text-lg font-semibold'>{title}</h3>
@@ -7,4 +7,4 @@ const Header = ({ title, desc }: { title: string; desc: string }) => {
   )
 }
 
-export default Header
+export default header
