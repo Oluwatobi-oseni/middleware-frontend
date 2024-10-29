@@ -8,7 +8,7 @@ import Header from '@/components/custom/header'
 
 const UserDetails = () => {
   const { id } = useParams()
-  console.log(id)
+  console.log('The user id is', id)
 
   // Sample user data
   const userData = {
