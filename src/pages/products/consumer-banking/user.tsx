@@ -4,7 +4,6 @@ import pdf from '../../../assets/pdf.svg'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './transaction/columns'
 import { data } from './transaction/data'
-import Header from '@/components/custom/header'
 
 const UserDetails = () => {
   const { id } = useParams()
@@ -49,7 +48,12 @@ const UserDetails = () => {
   return (
     <>
       <div className='h-screen overflow-y-auto'>
-        <Header title={userData.accountName} desc='Consumer Banking' />
+        <div>
+          <h3 className='text-[18px] text-lg font-semibold'>
+            {userData.accountName}
+          </h3>
+          <p className='text-sm text-muted-foreground'>Consumer Bank</p>
+        </div>
         <div className='my-6 flex flex-col md:flex-row'>
           {/* Left Section: User Information */}
           <div className='mb-4 w-1/5 '>
