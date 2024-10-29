@@ -1,5 +1,4 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { RowLink } from './row-link'
 
 export type User = {
   id: string
@@ -13,12 +12,9 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
-
     cell: ({ row }) => {
-      const { id, name } = row.original
-      const path = `/products/users/${id}`
-
-      return <RowLink path={path} name={name} />
+      const { name } = row.original
+      return <span>{name}</span> // Simply render the name
     },
   },
   {

@@ -102,7 +102,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
             <Button className='mt-2'>
               {signInMutation.isPending ? (
-                <div className='h-4 w-4 animate-spin rounded-full border-b-2 border-white' />
+                <div className='h-4 w-4 animate-spin rounded-full border-b-2 ' />
               ) : (
                 'Login'
               )}

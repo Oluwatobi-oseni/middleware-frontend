@@ -16,12 +16,14 @@ import { cookies } from '.'
 import client from '../axios'
 import { handleError } from './utilities/errorhandler'
 import { handleSuccess } from './utilities/successHandler'
+import { toast } from '@/components/ui/use-toast'
 
 // Context Hook
 export const useAuth = (): AuthState => {
   const token = cookies.get(SES_TOKEN_NAME)
   const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
-  return { isSignedIn: !!token && is2FAVerified }
+  // return { isSignedIn: !!token && is2FAVerified }
+  return { isSignedIn: Boolean(token && is2FAVerified) }
 }
 
 // Complete Registration Hook
@@ -93,6 +95,9 @@ export const useSignIn = () => {
         sessionStorage.setItem('tempToken', data.access_token)
         sessionStorage.setItem('userEmail', email)
 
+        client.defaults.headers.common['Authorization'] =
+          `Bearer ${data.access_token}`
+
         navigate('/two-factor-auth', {
           replace: true,
         })
@@ -106,7 +111,24 @@ export const useSignIn = () => {
       }
     },
     onError: (error) => {
-      handleError(error, 'Login failed. Please try again.')
+      const errorMessage = error.message
+      const status: number = JSON.parse(errorMessage).status
+
+      if (status === 401) {
+        toast({
+          title: 'Error',
+          description: 'Invalid credentials. Please try again.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong. Please try again.',
+          variant: 'destructive',
+        })
+      }
+
+      // console.error(JSON.parse(errorMessage))
     },
   })
 }
@@ -122,9 +144,17 @@ export const useVerifyOTP = () => {
       return data
     },
     onSuccess(data) {
-      handleVerificationSuccess(data)
+      console.log('API Response:', data)
+      if (data && typeof data.isAuthenticated !== 'undefined') {
+        handleVerificationSuccess(data)
+      } else {
+        handleVerificationError(
+          'Invalid response from server. Please try again.'
+        )
+      }
     },
     onError(error) {
+      console.error('API Error:', error)
       handleVerificationError(error)
     },
   })
@@ -135,7 +165,7 @@ export const useVerifyOTP = () => {
       const token = sessionStorage.getItem('tempToken')
       if (token) {
         cookies.set(SES_TOKEN_NAME, token, { path: '/' })
-        client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        // client.defaults.headers.common['Authorization'] = `Bearer ${token}`
         sessionStorage.removeItem('tempToken')
         sessionStorage.setItem('is2FAVerified', 'true')
 
@@ -143,7 +173,10 @@ export const useVerifyOTP = () => {
           'Verification successful',
           'You will be redirected shortly.'
         )
-        window.location.reload()
+        // window.location.reload()
+        navigate('/dashboard')
+      } else {
+        handleError(null, 'Session token missing. Please try again.')
       }
     } else {
       handleFailedVerification()

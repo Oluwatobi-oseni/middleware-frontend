@@ -15,7 +15,7 @@ export default function SetupKeyInput() {
     <div className='my-2 w-full max-w-lg'>
       <label
         htmlFor='setup-key'
-        className='mb-1 block text-left text-xs font-medium text-gray-900 dark:text-white'
+        className='mb-1 block text-left text-xs font-medium text-muted-foreground'
       >
         Setup key
       </label>
@@ -62,7 +62,7 @@ export default function SetupKeyInput() {
           </button>
           <div
             role='tooltip'
-            className={`absolute bottom-12 right-2 z-10 w-auto rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-opacity duration-300 dark:bg-gray-700 ${
+            className={`absolute bottom-12 right-2 z-10 w-auto rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium  shadow-sm transition-opacity duration-300 dark:bg-gray-700 ${
               isCopied ? 'visible opacity-100' : 'invisible opacity-0'
             }`}
           >

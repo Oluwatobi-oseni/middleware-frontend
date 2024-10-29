@@ -79,7 +79,7 @@ export default function BasicTable() {
           return (
             <div className='flex items-center'>
               <div className='h-10 w-10 flex-shrink-0'>
-                <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold text-white'>
+                <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-400 to-blue-500 font-semibold '>
                   {accountName.name.charAt(0)}
                 </div>
               </div>

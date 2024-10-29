@@ -2,13 +2,12 @@ import { Card } from '@/components/ui/card'
 import { Navigate } from 'react-router-dom'
 import { OtpForm } from './components/two-factor-form'
 import { useAuth } from '@/lib/auth/hook'
-// import { useEffect } from 'react'
 
 export default function TwoFactorAuthenticationPage() {
-  //   window.location.reload()
   const { isSignedIn } = useAuth()
   const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
   const hasPassedSignIn = sessionStorage.getItem('hasPassedLogin') === 'true'
+  // const twoFaToken = sessionStorage.getItem('hasPassedLogin') === 'true'
 
   // const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
   if (!hasPassedSignIn) {
