@@ -165,9 +165,9 @@ export const useVerifyOTP = () => {
       const token = sessionStorage.getItem('tempToken')
       if (token) {
         cookies.set(SES_TOKEN_NAME, token, { path: '/' })
-        // client.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        sessionStorage.removeItem('tempToken')
+        sessionStorage.setItem('accessToken', token)
         sessionStorage.setItem('is2FAVerified', 'true')
+        sessionStorage.removeItem('tempToken')
 
         handleSuccess(
           'Verification successful',

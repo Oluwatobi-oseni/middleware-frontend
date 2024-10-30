@@ -26,7 +26,7 @@ export default function Settings() {
         <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
           Settings
         </h1>
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ml-auto hidden items-center space-x-4 md:flex'>
           <ThemeSwitch />
           <UserNav />
         </div>
