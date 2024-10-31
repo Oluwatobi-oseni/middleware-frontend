@@ -82,7 +82,7 @@ export default function CompleteRegistration() {
               {/* </div> */}
               <SelectSeparator />
 
-              <p className='rounded-md border-l-4 border-blue-500 bg-gray-800 p-2 text-sm font-medium '>
+              <p className='rounded-md border-l-4 border-blue-500 bg-muted-foreground p-2 text-sm font-medium '>
                 Using a laptop? Download an authenticator app on your mobile
                 device to complete setup.
               </p>

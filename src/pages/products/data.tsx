@@ -34,7 +34,7 @@ export const products = [
     name: 'Business Banking',
     logo: <IconBriefcase />,
     desc: 'Manage business accounts to support company growth and financial health effectively.',
-    path: '/',
+    path: '/products/business-banking',
   },
   {
     id: '3',

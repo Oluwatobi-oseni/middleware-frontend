@@ -1,15 +1,15 @@
 import { Layout } from '@/components/custom/layout'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
-import { useAuth } from '@/lib/auth/hook'
-import { Navigate, Outlet } from 'react-router-dom'
+// import { useAuth } from '@/lib/auth/hook'
+import { Outlet } from 'react-router-dom'
 
 export default function Products() {
-  const { isSignedIn } = useAuth()
+  // const { isSignedIn } = useAuth()
 
-  if (!isSignedIn) {
-    return <Navigate to={'/sign-in'} replace={true} />
-  }
+  // if (!isSignedIn) {
+  //   return <Navigate to={'/sign-in'} replace={true} />
+  // }
 
   return (
     <Layout fixed>

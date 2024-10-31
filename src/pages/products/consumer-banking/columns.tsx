@@ -3,43 +3,69 @@ import { ColumnDef } from '@tanstack/react-table'
 export type User = {
   id: string
   name: string
-  phoneNumber: string
-  lastActive: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
-  dateJoined: string // ISO date format
+  type: 'Debit' | 'Credit'
+  currency: string
+  paymentType: 'Withdrawal' | 'Convert'
+  time: string // e.g., '07:18:46 PM'
+  amount: number // amount in Naira
+  date: string // formatted date (e.g., 'October 29, 2024')
+  status: 'Successful' | 'Failed'
 }
 
 export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
-    cell: ({ row }) => {
-      const { name } = row.original
-      return <span>{name}</span> // Simply render the name
-    },
+    cell: ({ row }) => <span>{row.original.name}</span>,
+  },
+
+  {
+    accessorKey: 'type',
+    header: 'Type',
+    cell: ({ row }) => row.original.type,
   },
   {
-    accessorKey: 'phoneNumber',
-    header: 'Phone Number',
-    cell: ({ row }) => row.original.phoneNumber,
+    accessorKey: 'currency',
+    header: 'Currency',
+    cell: ({ row }) => row.original.currency,
   },
   {
-    accessorKey: 'lastActive',
-    header: 'Last Active',
+    accessorKey: 'paymentType',
+    header: 'Payment Type',
+    cell: ({ row }) => row.original.paymentType,
+  },
+  {
+    accessorKey: 'time',
+    header: 'Time',
+    cell: ({ row }) => row.original.time,
+  },
+  {
+    accessorKey: 'amount',
+    header: 'Amount',
     cell: ({ row }) =>
-      new Date(row.original.lastActive).toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      }),
+      new Intl.NumberFormat('en-NG', {
+        style: 'currency',
+        currency: 'NGN',
+      }).format(row.original.amount),
   },
   {
-    accessorKey: 'dateJoined',
-    header: 'Date Joined',
-    cell: ({ row }) =>
-      new Date(row.original.dateJoined).toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      }),
+    accessorKey: 'date',
+    header: 'Date',
+    cell: ({ row }) => row.original.date,
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => (
+      <span
+        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+          row.original.status === 'Successful'
+            ? 'border border-green-700 bg-green-100 text-green-700'
+            : 'border border-red-700 bg-red-100 text-red-700'
+        }`}
+      >
+        {row.original.status}
+      </span>
+    ),
   },
 ]
