@@ -17,7 +17,7 @@ export default function Products() {
       <Layout.Header>
         <div className='flex w-full items-center justify-between'>
           <h1 className='text-2xl font-bold tracking-tight'>Products</h1>
-          <div className='flex items-center space-x-4'>
+          <div className='hidden items-center space-x-4 md:flex'>
             <ThemeSwitch />
             <UserNav />
           </div>

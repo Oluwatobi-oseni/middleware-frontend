@@ -33,8 +33,10 @@ export default function Dashboard() {
     <Layout>
       {/* ===== Top Heading ===== */}
       <Layout.Header>
-        {/* <TopNav links={topNav} /> */}
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='mb-2 flex items-center justify-between'>
+          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+        </div>
+        <div className='ml-auto hidden items-center space-x-4 md:flex'>
           <ThemeSwitch />
           <UserNav />
         </div>
@@ -42,16 +44,13 @@ export default function Dashboard() {
 
       {/* ===== Main ===== */}
       <Layout.Body>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-        </div>
         <Tabs
           orientation='vertical'
           defaultValue='overview'
           className='space-y-4'
         >
-          <div className='flex w-full items-center justify-between overflow-x-auto pb-2 sm:flex-row'>
-            <TabsList>
+          <div className='flex w-full flex-col items-center justify-between space-y-4 overflow-x-auto pb-2 sm:flex-row sm:space-y-0'>
+            <TabsList className='w-full sm:w-auto'>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
               <TabsTrigger value='transactions'>Transactions</TabsTrigger>
               <TabsTrigger value='reports'>Reports</TabsTrigger>
@@ -59,8 +58,10 @@ export default function Dashboard() {
             <DateRangeSelect
               dateRange={dateRange}
               setDateRange={setDateRange}
+              // className="w-full sm:w-auto"
             />
           </div>
+
           <TabsContent value='overview' className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>

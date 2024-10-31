@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 import { sidelinks } from '@/data/sidelinks'
 import { useAuth } from '@/lib/auth/hook'
 import { Navigate } from 'react-router-dom'
+import ThemeSwitch from './theme-switch'
+import { UserNav } from './user-nav'
 // import AlertLogo from '@/assets/Alert.png'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
@@ -69,18 +71,22 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* Toggle Button in mobile */}
-          <Button
-            variant='ghost'
-            size='icon'
-            className='md:hidden'
-            aria-label='Toggle Navigation'
-            aria-controls='sidebar-menu'
-            aria-expanded={navOpened}
-            onClick={() => setNavOpened((prev) => !prev)}
-          >
-            {navOpened ? <IconX /> : <IconMenu2 />}
-          </Button>
+          <div className='flex items-center gap-4 md:hidden'>
+            <ThemeSwitch />
+            <UserNav />
+
+            {/* Toggle Button in mobile */}
+            <Button
+              variant='ghost'
+              size='icon'
+              aria-label='Toggle Navigation'
+              aria-controls='sidebar-menu'
+              aria-expanded={navOpened}
+              onClick={() => setNavOpened((prev) => !prev)}
+            >
+              {navOpened ? <IconX /> : <IconMenu2 />}
+            </Button>
+          </div>
         </Layout.Header>
 
         {/* Navigation links */}
@@ -91,6 +97,8 @@ export default function Sidebar({
           isCollapsed={isCollapsed}
           links={sidelinks}
         />
+
+        {/* Add ThemeSwitch and UserNav */}
 
         {/* Scrollbar width toggle button */}
         <Button

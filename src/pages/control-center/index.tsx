@@ -166,7 +166,7 @@ export default function ControlCenter({ className, ...props }: CardProps) {
       {/* ===== Top Heading ===== */}
       <Layout.Header>
         <h1 className='text-2xl font-bold tracking-tight'>Control Center</h1>
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className='ml-auto hidden items-center space-x-4 md:flex'>
           <ThemeSwitch />
           <UserNav />
         </div>
