@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BackupCodeDialog } from '@/components/backupcode-dialog'
 
-export default function SetupKeyInput() {
+export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopy = () => {
@@ -24,9 +24,10 @@ export default function SetupKeyInput() {
           <input
             id='setup-key'
             type='text'
-            className='w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-500 placeholder:text-xs focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400'
-            placeholder='050211e53ed564ace50406'
-            disabled
+            className='w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-muted-foreground placeholder:text-xs focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400'
+            // placeholder={'050211e53ed564ace50406'}
+            value={setupKey}
+            // disabled
             readOnly
           />
           <button

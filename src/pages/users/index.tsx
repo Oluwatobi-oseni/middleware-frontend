@@ -97,6 +97,9 @@ export default function InviteUserForm() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value='MEMBER'>Member</SelectItem>
+                            <SelectItem value='SUPER_ADMIN'>
+                              Super Admin
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
