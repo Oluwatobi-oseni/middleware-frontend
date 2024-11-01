@@ -18,7 +18,6 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/custom/password-input'
 import { InfoIcon } from 'lucide-react'
 import { useCreatePassword } from '@/lib/invites/hook'
-import { useNavigate } from 'react-router-dom'
 
 interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {}
 const passwordSchema = z
@@ -53,7 +52,6 @@ const formSchema = z
 
 export function RegisterForm({ className, ...props }: RegisterFormProps) {
   const registerMutation = useCreatePassword()
-  const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,7 +67,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
       })
     }
   }
-  registerMutation.isSuccess && navigate('/complete-signup')
+
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>

@@ -3,6 +3,7 @@ import { createPassword, inviteUser, otpAuth } from '.'
 import { handleSuccess } from '../auth/utilities/successHandler'
 import { handleError } from '../auth/utilities/errorhandler'
 import { toast } from '@/components/ui/use-toast'
+import { useNavigate } from 'react-router-dom'
 
 const inviteUserAsync = async (payload: { email: string; role: string }) => {
   console.log('Sending invite with payload:', payload)
@@ -42,12 +43,12 @@ const createPasswordAsync = async (payload: {
 }
 
 export const useCreatePassword = () => {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: createPasswordAsync,
     onSuccess: ({ data }) => {
+      navigate('/complete-signup')
       if (data.email) {
-        // navigate('/complete-signup')
         handleSuccess(
           'Password created successfully',
           'Proceed to complete sign up'
