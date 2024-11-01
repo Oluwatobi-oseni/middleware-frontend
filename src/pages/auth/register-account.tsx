@@ -1,18 +1,18 @@
 import { Card } from '@/components/ui/card'
 import { RegisterForm } from './components/register-account-form'
 import { useLocation } from 'react-router-dom' // If using React Router
+import { useEffect } from 'react'
 
 export default function RegisterAccount() {
   const { search } = useLocation()
-  const email = new URLSearchParams(search).get('email')
+  const token = new URLSearchParams(search).get('token')
 
-  const getNameFromEmail = (email: string | null) => {
-    if (!email) return ''
-    const name = email.split('.')[0]
-    return name.charAt(0).toUpperCase() + name.slice(1)
-  }
-
-  const name = getNameFromEmail(email)
+  // Save token to sessionStorage on component mount
+  useEffect(() => {
+    if (token) {
+      sessionStorage.setItem('onboardingToken', token)
+    }
+  }, [token])
 
   return (
     <>
@@ -26,7 +26,7 @@ export default function RegisterAccount() {
             />
           </div>
           <div className='mb-4 flex items-center justify-center'>
-            <h1 className='text-3xl font-bold'>Welcome, {name} !</h1>{' '}
+            <h1 className='text-3xl font-bold'>Welcome !</h1>{' '}
           </div>
           <Card className='p-6'>
             <div className='mb-2 flex flex-col space-y-2 text-left'>
@@ -38,7 +38,7 @@ export default function RegisterAccount() {
                 registration.
               </p>
             </div>
-            <RegisterForm email={email} />
+            <RegisterForm />
           </Card>
         </div>
       </div>

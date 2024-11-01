@@ -1,7 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { Button } from '@/components/custom/button'
 import { Card } from '@/components/ui/card'
-import { useCompleteRegistration } from '@/lib/auth/hook'
 import { SelectSeparator } from '@/components/ui/select'
 import { IconInfoCircleFilled } from '@tabler/icons-react'
 import {
@@ -12,15 +11,17 @@ import {
 } from '@/components/ui/tooltip'
 
 import SetupKeyInput from './components/setup-key'
+import { useOtpAuth } from '@/lib/invites/hook'
+import { useNavigate } from 'react-router-dom'
 
 export default function CompleteRegistration() {
   // Use the hook to handle the registration completion
-  const completeRegistrationMutation = useCompleteRegistration()
-
-  const email = 'email'
-  const secret = 'secret'
+  const onboardingToken = sessionStorage.getItem('onboardingToken')
+  console.log('onboardingToken', onboardingToken)
+  const { data, isLoading } = useOtpAuth(onboardingToken as string)
+  const navigate = useNavigate()
   const handleContinue = () => {
-    completeRegistrationMutation.mutate(email)
+    navigate('/sign-in')
   }
 
   return (
@@ -59,14 +60,11 @@ export default function CompleteRegistration() {
               </div>
             </TooltipProvider>
             <div className='mb-2 flex flex-col items-center justify-center gap-4'>
-              <QRCodeSVG
-                size={180}
-                value={`otpauth://totp/${email}?secret=${secret}`}
-              />
+              <QRCodeSVG size={180} value={data?.otpauth} />
               <Button
                 className='mx-auto w-[180px]'
                 onClick={handleContinue}
-                loading={completeRegistrationMutation.isPending}
+                loading={isLoading}
               >
                 Continue
               </Button>
@@ -78,7 +76,7 @@ export default function CompleteRegistration() {
             </div>
             <div className='mt-2 text-center text-sm'>
               {/* <div className='mx-auto my-2 flex w-full max-w-sm'> */}
-              <SetupKeyInput />
+              <SetupKeyInput setupKey={data?.setupKey as string} />
               {/* </div> */}
               <SelectSeparator />
 

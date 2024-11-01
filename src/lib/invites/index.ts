@@ -22,12 +22,12 @@ export async function inviteUser(payload: { email: string; role: string }) {
 
 // Create Password API function
 export async function createPassword(payload: {
-  email: string
+  token: string
   password: string
 }) {
   try {
     const res = await client.post(
-      '/api/sharedServices/v1/invites/createPassword',
+      `/api/sharedServices/v1/invites/createPassword?token=${payload.token}`,
       payload,
       {
         headers: {
@@ -44,14 +44,17 @@ export async function createPassword(payload: {
 }
 
 // OTP Authentication API function
-export async function otpAuth() {
+export async function otpAuth({ token }: { token: string }) {
   try {
-    const res = await client.get('/api/sharedServices/v1/invites/otpauth', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    })
+    const res = await client.get(
+      `/api/sharedServices/v1/invites/otpauth?token=${token}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    )
 
     return res.data
   } catch (error) {
