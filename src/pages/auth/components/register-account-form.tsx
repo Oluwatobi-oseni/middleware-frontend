@@ -14,14 +14,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useRegister } from '@/lib/auth/hook'
 // import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/custom/password-input'
 import { InfoIcon } from 'lucide-react'
+import { useCreatePassword } from '@/lib/invites/hook'
+import { useNavigate } from 'react-router-dom'
 
-interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {
-  email: string | null // Accept email as a prop
-}
+interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {}
 const passwordSchema = z
   .string()
   .min(8, { message: 'Password must be at least 8 characters' })
@@ -52,12 +51,9 @@ const formSchema = z
     }
   })
 
-export function RegisterForm({
-  className,
-  email,
-  ...props
-}: RegisterFormProps) {
-  const registerMutation = useRegister()
+export function RegisterForm({ className, ...props }: RegisterFormProps) {
+  const registerMutation = useCreatePassword()
+  const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,12 +61,15 @@ export function RegisterForm({
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    registerMutation.mutate({
-      email: email!,
-      password: data.password,
-      enable2FA: true,
-    })
+    const onboardingToken = sessionStorage.getItem('onboardingToken')
+    if (onboardingToken) {
+      registerMutation.mutate({
+        token: onboardingToken, // Pass the token
+        password: data.password,
+      })
+    }
   }
+  registerMutation.isSuccess && navigate('/complete-signup')
   return (
     <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>
