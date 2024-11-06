@@ -6,9 +6,10 @@ import {
   generate2FASecret as apiGenerate2FASecret,
   signIn as apiSignIn,
   verifyOTP as apiVerifyOTP,
-  verifyEmail as apiVerifyEmail,
+  verifyPasswordResetOTP as apiVerifyEmail,
   resetPassword as apiResetPassword,
   forgotPassword as apiForgotPassword,
+  updatePassword as apiUpdatePassword,
 } from '.'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
@@ -17,6 +18,7 @@ import client from '../axios'
 import { handleError } from './utilities/errorhandler'
 import { handleSuccess } from './utilities/successHandler'
 import { toast } from '@/components/ui/use-toast'
+import { RequestPasswordResetResponse } from './types'
 
 // Context Hook
 export const useAuth = (): AuthState => {
@@ -87,16 +89,16 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: signInAsync,
     onSuccess: ({ data, payload }) => {
-      if (data?.access_token) {
+      if (data.success) {
         const { email } = payload
 
         // Store token temporarily in state
         sessionStorage.setItem('hasPassedLogin', 'true')
-        sessionStorage.setItem('tempToken', data.access_token)
+        sessionStorage.setItem('userId', data.id.toString())
         sessionStorage.setItem('userEmail', email)
 
-        client.defaults.headers.common['Authorization'] =
-          `Bearer ${data.access_token}`
+        // client.defaults.headers.common['Authorization'] =
+        //   `Bearer ${data.access_token}`
 
         navigate('/two-factor-auth', {
           replace: true,
@@ -104,10 +106,10 @@ export const useSignIn = () => {
 
         handleSuccess(
           'Redirecting to Two-Factor Authentication',
-          'Please complete the verification to log in.'
+          data.message || 'Please complete the verification to log in.'
         )
       } else {
-        handleError(null, 'No access token returned. Please try again.')
+        handleError(null, 'Sign in failed. Please try again..')
       }
     },
     onError: (error) => {
@@ -127,8 +129,6 @@ export const useSignIn = () => {
           variant: 'destructive',
         })
       }
-
-      // console.error(JSON.parse(errorMessage))
     },
   })
 }
@@ -144,8 +144,7 @@ export const useVerifyOTP = () => {
       return data
     },
     onSuccess(data) {
-      console.log('API Response:', data)
-      if (data && typeof data.isAuthenticated !== 'undefined') {
+      if (data && data.isAuthenticated) {
         handleVerificationSuccess(data)
       } else {
         handleVerificationError(
@@ -159,25 +158,22 @@ export const useVerifyOTP = () => {
     },
   })
 
-  const handleVerificationSuccess = (data: { isAuthenticated: boolean }) => {
-    if (data.isAuthenticated) {
-      // Set 2FA verification flag in sessionStorage
-      const token = sessionStorage.getItem('tempToken')
-      if (token) {
-        cookies.set(SES_TOKEN_NAME, token, { path: '/' })
-        sessionStorage.setItem('accessToken', token)
-        sessionStorage.setItem('is2FAVerified', 'true')
-        sessionStorage.removeItem('tempToken')
+  const handleVerificationSuccess = (data: {
+    isAuthenticated: boolean
+    access_token?: string
+  }) => {
+    if (data.isAuthenticated && data.access_token) {
+      cookies.set(SES_TOKEN_NAME, data.access_token, { path: '/' })
+      sessionStorage.setItem('accessToken', data.access_token)
+      sessionStorage.setItem('is2FAVerified', 'true')
+      sessionStorage.removeItem('tempToken')
+      sessionStorage.removeItem('userId')
 
-        handleSuccess(
-          'Verification successful',
-          'You will be redirected shortly.'
-        )
-        // window.location.reload()
-        navigate('/dashboard')
-      } else {
-        handleError(null, 'Session token missing. Please try again.')
-      }
+      handleSuccess(
+        'Verification successful',
+        'You will be redirected shortly.'
+      )
+      navigate('/dashboard')
     } else {
       handleFailedVerification()
     }
@@ -211,6 +207,9 @@ export const useVerifyOTP = () => {
 
 const forgotPasswordAsync = async (payload: { email: string }) => {
   const data = await apiForgotPassword(payload)
+  if (data.success) {
+    sessionStorage.setItem('resetEmail', payload.email)
+  }
   return data
 }
 export const useForgotPassword = () => {
@@ -225,22 +224,16 @@ export const useForgotPassword = () => {
       handleForgotPasswordError(error)
     },
   })
-  const handleForgotPasswordSuccess = (data: { email: string }) => {
-    // if (data.success) {
-    //   handleSuccess(
-    //     'Password Reset Email Sent',
-    //     'OTP has been sent to your email. Please check your inbox.'
-    //   )
-    //   navigate('/otp')
-    // } else {
-    //   handleError(null, 'Failed to send password reset email.')
-    // }
-    console.log('Email', data)
-    handleSuccess(
-      'Password Reset Email Sent',
-      'OTP has been sent to your email. Please check your inbox.'
-    )
-    navigate('/otp', { state: { email: data.email } })
+  const handleForgotPasswordSuccess = (data: RequestPasswordResetResponse) => {
+    if (data.success) {
+      handleSuccess(
+        'Password Reset Email Sent',
+        'OTP has been sent to your email. Please check your inbox.'
+      )
+      navigate('/otp')
+    } else {
+      handleError(null, 'Failed to send password reset email.')
+    }
   }
 
   const handleForgotPasswordError = (error: unknown) => {
@@ -254,14 +247,24 @@ export const useForgotPassword = () => {
 }
 
 // Verify email hook
-const verifyEmailAsync = async (payload: { otp: string }) => {
-  const data = await apiVerifyEmail(payload)
+const verifyPasswordResetOTPAsync = async (payload: { otp: string }) => {
+  const email = sessionStorage.getItem('resetEmail')
+  if (!email) {
+    throw new Error('Email not found in session. Please try again.')
+  }
+  console.log('Payload email', email)
+  const data = await apiVerifyEmail({ email, otp: payload.otp })
+
+  if (data.id) {
+    sessionStorage.setItem('resetId', data.id)
+  }
+  sessionStorage.removeItem('resetEmail')
   return data
 }
 export const useVerifyEmail = () => {
   const navigate = useNavigate()
   const mutation = useMutation({
-    mutationFn: verifyEmailAsync,
+    mutationFn: verifyPasswordResetOTPAsync,
     onSuccess(data) {
       handleVerificationSuccess(data)
     },
@@ -269,10 +272,10 @@ export const useVerifyEmail = () => {
       handleVerificationError(error)
     },
   })
-  const handleVerificationSuccess = (data: { otp: string }) => {
-    if (data) {
+  const handleVerificationSuccess = (data: { id: string }) => {
+    if (data?.id) {
       handleSuccess('OTP verified', 'You can now set a new password.')
-      navigate('/reset-password')
+      navigate('/reset-password', { state: { id: data.id } })
     } else {
       handleError(null, 'Invalid OTP. Please try again.')
     }
@@ -285,7 +288,13 @@ export const useVerifyEmail = () => {
 
 // Reset Password Hook
 const resetPasswordAsync = async (payload: { password: string }) => {
-  const data = await apiResetPassword(payload)
+  const resetId = sessionStorage.getItem('resetId')
+
+  if (!resetId) {
+    throw new Error('Reset ID not found. Please try the reset process again.')
+  }
+  const data = await apiResetPassword({ password: payload.password, resetId })
+  sessionStorage.removeItem('resetId')
   return data
 }
 
@@ -293,12 +302,12 @@ export const useResetPassword = () => {
   const navigate = useNavigate()
   const mutation = useMutation({
     mutationFn: resetPasswordAsync,
-    onSuccess() {
+    onSuccess(data) {
       handleSuccess(
-        'Password reset successfully',
-        'You can now log in with your new password.'
+        'Password Reset Successful',
+        data.message || 'Your password has been changed successfully.'
       )
-      navigate('/sign-in') // Redirect to login page after a successful reset
+      navigate('/sign-in')
     },
     onError(error) {
       handleError(error, 'An error occurred while resetting your password.')
@@ -306,6 +315,36 @@ export const useResetPassword = () => {
   })
   return { ...mutation }
 }
+
+const updatePasswordAsync = async (payload: { newPassword: string }) => {
+  const data = await apiUpdatePassword(payload)
+  return data
+}
+
+export const useUpdatePassword = () => {
+  const navigate = useNavigate()
+
+  const mutation = useMutation({
+    mutationFn: updatePasswordAsync,
+    onSuccess(data) {
+      if (data.success) {
+        handleSuccess(
+          'Password Updated',
+          'Your password has been successfully updated.'
+        )
+        navigate('/dashboard') // Redirect to a desired page after success
+      } else {
+        handleError(null, 'Failed to update password. Please try again.')
+      }
+    },
+    onError(error) {
+      handleError(error, 'An error occurred while updating your password.')
+    },
+  })
+
+  return { ...mutation }
+}
+
 // Sign Out Hook
 export const useSignOut = () => {
   const navigate = useNavigate()

@@ -2,8 +2,11 @@ import {
   IconAdjustments,
   IconAnalyze,
   IconApps,
+  IconGift,
   IconLayoutDashboard,
+  IconMessage,
   IconSettings,
+  IconSwitchVertical,
   IconTablePlus,
   IconUsers,
 } from '@tabler/icons-react'
@@ -76,6 +79,24 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/control-center',
     icon: <IconAdjustments size={18} />,
+  },
+  {
+    title: 'Switches',
+    label: '',
+    href: '/switches',
+    icon: <IconSwitchVertical size={18} />,
+  },
+  {
+    title: 'Messages',
+    label: '',
+    href: '/messages',
+    icon: <IconMessage size={18} />,
+  },
+  {
+    title: 'Promo Code',
+    label: '',
+    href: '/promo-code',
+    icon: <IconGift size={18} />,
   },
   // {
   //   title: 'Error Pages',

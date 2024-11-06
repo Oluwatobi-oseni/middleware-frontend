@@ -1,6 +1,13 @@
 import Cookies from 'universal-cookie'
 import { isExpired, decodeToken } from 'react-jwt'
 import client from '../axios'
+import {
+  RequestPasswordResetResponse,
+  ResetPasswordResponse,
+  SignInWithPasswordResponse,
+  VerifyPasswordResetOTPResponse,
+  VerifyTOTPResponse,
+} from './types'
 
 export const SES_TOKEN_NAME = '_cptn'
 
@@ -94,8 +101,8 @@ export async function generate2FASecret(email: string) {
 
 export async function signIn(payload: { email: string; password: string }) {
   try {
-    const res = await client.post<TokenResponse>(
-      '/api/sharedServices/v1/auth/signin',
+    const res = await client.post<SignInWithPasswordResponse>(
+      '/api/sharedServices/v1/auth/signInWithPassword',
       payload,
       {
         headers: {
@@ -105,93 +112,89 @@ export async function signIn(payload: { email: string; password: string }) {
       }
     )
 
-    if (res.data.access_token) {
-      cookies.set(SES_TOKEN_NAME, res.data.access_token, { path: '/' })
+    if (res.data.success) {
+      // cookies.set(SES_TOKEN_NAME, res.data.access_token, { path: '/' })
       return res.data
     }
 
-    throw new Error('No access token returned')
+    throw new Error('Sign in was not successful')
   } catch (error) {
-    // console.error('SignIn error:', error)
     throw new Error(JSON.stringify(error))
   }
 }
 
 export async function forgotPassword(payload: { email: string }) {
-  console.log('Forgot Password Payload:', payload) // Logging the payload for testing
-
-  // Temporarily returning payload as mock data
-  return payload
-  // try {
-  //   const res = await client.post(
-  //     '/api/sharedServices/v1/auth/forgotPassword',
-  //     payload,
-  //     {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       withCredentials: true,
-  //     }
-  //   )
-  //   return res.data
-  // } catch (error) {
-  //   console.error('Forgot password error:', error)
-  //   return null // Handle error and return null
-  // }
+  try {
+    const res = await client.post<RequestPasswordResetResponse>(
+      '/api/sharedServices/v1/auth/requestPasswordReset',
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    )
+    return res.data
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    throw new Error('Failed to send password reset email. Please try again.')
+  }
 }
 
-export async function verifyEmail(payload: { otp: string }) {
-  console.log('verifyEmail Payload:', payload) // Logging the payload for testing
-
-  // Temporarily returning payload as mock data
-  return payload
-  // try {
-  //   const res = await client.post(
-  //     '/api/sharedServices/v1/auth/verifyEmailOTP', // Adjust endpoint as needed
-  //     payload,
-  //     {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       withCredentials: true,
-  //     }
-  //   )
-  //   return res.data
-  // } catch (error) {
-  //   console.error('Email verification error:', error)
-  //   return null // Handle error and return null
-  // }
+export async function verifyPasswordResetOTP(payload: {
+  email: string
+  otp: string
+}) {
+  try {
+    const res = await client.post<VerifyPasswordResetOTPResponse>(
+      '/api/sharedServices/v1/auth/verifyPasswordResetOTP',
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    )
+    return res.data
+  } catch (error) {
+    console.error('OTP verification error:', error)
+    throw new Error('OTP verification failed. Please try again.')
+  }
 }
 
-export async function resetPassword(payload: { password: string }) {
-  console.log('newPassword Payload:', payload) // Logging the payload for testing
-
-  // Temporarily returning payload as mock data
-  return payload
-  // try {
-  //   const res = await client.post(
-  //     '/api/sharedServices/v1/auth/resetPassword',
-  //     payload,
-  //     {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       withCredentials: true,
-  //     }
-  //   )
-
-  //   return res.data
-  // } catch (error) {
-  //   console.error('Password reset error:', error)
-  //   return null // Handle error and return null
-  // }
+export async function resetPassword(payload: {
+  resetId: string
+  password: string
+}) {
+  try {
+    const res = await client.post<ResetPasswordResponse>(
+      '/api/sharedServices/v1/auth/resetPassword',
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    )
+    return res.data
+  } catch (error) {
+    console.error('Password reset error:', error)
+    throw new Error('Password reset failed. Please try again.')
+  }
 }
 
 export async function verifyOTP(payload: { otp: string }) {
+  const id = sessionStorage.getItem('userId')
+  if (!id) {
+    throw new Error('User ID is missing. Please sign in again.')
+  }
   try {
-    const res = await client.post(
-      '/api/sharedServices/v1/auth/verifyTOTP',
-      payload,
+    const res = await client.post<VerifyTOTPResponse>(
+      '/api/sharedServices/v1/auth/verifySignInOTP',
+      { id: parseInt(id), otp: payload.otp },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -205,5 +208,24 @@ export async function verifyOTP(payload: { otp: string }) {
     console.error('OTP verification error:', error)
     throw new Error('OTP verification failed. Please try again.')
     return null // Handle error and return null
+  }
+}
+
+export async function updatePassword(payload: { newPassword: string }) {
+  try {
+    const res = await client.post(
+      '/api/sharedServices/v1/auth/updatePassword',
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    )
+    return res.data
+  } catch (error) {
+    console.error('Password update error:', error)
+    throw new Error('Password update failed. Please try again.')
   }
 }
