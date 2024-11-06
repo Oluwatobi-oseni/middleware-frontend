@@ -1,4 +1,4 @@
-import { Team } from './columns'
+import { Team } from './types'
 
 export const data: Team[] = [
   {

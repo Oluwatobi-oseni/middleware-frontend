@@ -196,6 +196,42 @@ const router = createBrowserRouter([
         }),
       },
       {
+        path: 'switches',
+        lazy: async () => ({
+          Component: (await import('@/components/coming-soon.tsx')).default,
+        }),
+      },
+      {
+        path: 'messages',
+        lazy: async () => ({
+          Component: (await import('@/pages/messages/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/messages/message.tsx')).default,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'promo-code',
+        lazy: async () => ({
+          Component: (await import('@/pages/promo-code/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/promo-code/promo.tsx')).default,
+            }),
+          },
+        ],
+      },
+      {
         path: 'settings',
         lazy: async () => ({
           Component: (await import('./pages/settings')).default,

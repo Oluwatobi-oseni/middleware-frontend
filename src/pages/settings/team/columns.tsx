@@ -7,14 +7,45 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconDots } from '@tabler/icons-react'
+import { DeleteMemberDialog } from './options/delete-dialog'
+import { useState } from 'react'
 
-export type Team = {
-  id: string
-  accountName: string
-  email: string
-  role: string
-  twoFactorAuthEnabled: boolean
-  dateJoined: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
+import { Team } from './types'
+const ActionsCell = ({ row }: { row: { original: Team } }) => {
+  const team = row.original
+  console.log(team)
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant='ghost' className='h-8 w-8 p-0'>
+          <span className='sr-only'>Open menu</span>
+          <IconDots className='h-4 w-4' />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align='end'>
+        {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
+        {/* <DropdownMenuItem
+          onClick={() => navigator.clipboard.writeText(team.id)}
+        >
+          Copy payment ID
+        </DropdownMenuItem> */}
+        <DropdownMenuItem className='text-[#215DE7]'>Edit</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setDeleteDialogOpen(true)}
+          className='text-red-500'
+        >
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+
+      <DeleteMemberDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      />
+    </DropdownMenu>
+  )
 }
 
 export const columns: ColumnDef<Team>[] = [
@@ -85,34 +116,40 @@ export const columns: ColumnDef<Team>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      const team = row.original
-      console.log(team)
+    cell: ({ row }) => <ActionsCell row={row} />,
+    //   {
+    //   const team = row.original
+    //   console.log(team)
+    //   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    //   return (
+    //     <DropdownMenu>
+    //       <DropdownMenuTrigger asChild>
+    //         <Button variant='ghost' className='h-8 w-8 p-0'>
+    //           <span className='sr-only'>Open menu</span>
+    //           <IconDots className='h-4 w-4' />
+    //         </Button>
+    //       </DropdownMenuTrigger>
+    //       <DropdownMenuContent align='end'>
+    //         {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
+    //         {/* <DropdownMenuItem
+    //           onClick={() => navigator.clipboard.writeText(team.id)}
+    //         >
+    //           Copy payment ID
+    //         </DropdownMenuItem> */}
+    //         <DropdownMenuItem className='text-xs text-[#215DE7]'>
+    //           Edit
+    //         </DropdownMenuItem>
+    //         <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)}>
+    //           Delete
+    //         </DropdownMenuItem>
+    //       </DropdownMenuContent>
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <IconDots className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(team.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem> */}
-            <DropdownMenuItem className='text-xs text-[#FF0000]'>
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuItem className='text-xs text-[#215DE7]'>
-              Edit
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    //       <DeleteMemberDialog
+    //         isOpen={isDeleteDialogOpen}
+    //         onClose={() => setDeleteDialogOpen(false)}
+    //       />
+    //     </DropdownMenu>
+    //   )
+    // },
   },
 ]
