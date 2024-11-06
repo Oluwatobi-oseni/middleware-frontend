@@ -1,4 +1,5 @@
 import client from '../axios'
+import { OtpAuthRespomse } from './types'
 
 // Invite User API function
 export async function inviteUser(payload: { email: string; role: string }) {
@@ -46,7 +47,7 @@ export async function createPassword(payload: {
 // OTP Authentication API function
 export async function otpAuth({ token }: { token: string }) {
   try {
-    const res = await client.get(
+    const res = await client.get<OtpAuthRespomse>(
       `/api/sharedServices/v1/invites/otpauth?token=${token}`,
       {
         headers: {

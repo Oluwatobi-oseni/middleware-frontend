@@ -65,7 +65,7 @@ const FormSchema = z.object(
   )
 )
 
-export function SwitchForm({ onDisableAll }: { onDisableAll: () => void }) {
+export function SwitchForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: controlCenterItems.reduce(
@@ -84,8 +84,8 @@ export function SwitchForm({ onDisableAll }: { onDisableAll: () => void }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <CardContent className='grid max-h-[55vh] gap-4 overflow-y-auto'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <CardContent className='grid max-h-[55vh] gap-2 overflow-y-auto'>
           {controlCenterItems.map((item) => (
             <FormField
               key={item.name}
@@ -112,11 +112,6 @@ export function SwitchForm({ onDisableAll }: { onDisableAll: () => void }) {
         </CardContent>
         <CardFooter className='flex gap-4'>
           <Button type='submit'>Submit Changes</Button>
-
-          {/* Button to disable all switches */}
-          <Button variant={'destructive'} onClick={onDisableAll}>
-            Disable All
-          </Button>
         </CardFooter>
       </form>
     </Form>
@@ -127,34 +122,34 @@ export default function ControlCenter({ className, ...props }: CardProps) {
   const { isSignedIn } = useAuth()
 
   // Define the form methods at the top level
-  const formMethods = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: controlCenterItems.reduce(
-      (defaults, item) => {
-        defaults[item.name] = false
-        return defaults
-      },
-      {} as Record<string, boolean>
-    ),
-  })
+  // const formMethods = useForm<z.infer<typeof FormSchema>>({
+  //   resolver: zodResolver(FormSchema),
+  //   defaultValues: controlCenterItems.reduce(
+  //     (defaults, item) => {
+  //       defaults[item.name] = false
+  //       return defaults
+  //     },
+  //     {} as Record<string, boolean>
+  //   ),
+  // })
 
   // Function to disable all switches and log the result
-  const handleDisableAll = () => {
-    console.log('Current values before disabling:', formMethods.getValues())
+  // const handleDisableAll = () => {
+  //   console.log('Current values before disabling:', formMethods.getValues())
 
-    // Reset all switches to false
-    formMethods.reset(
-      controlCenterItems.reduce(
-        (acc, item) => {
-          acc[item.name] = false
-          return acc
-        },
-        {} as Record<string, boolean>
-      )
-    )
+  //   // Reset all switches to false
+  //   formMethods.reset(
+  //     controlCenterItems.reduce(
+  //       (acc, item) => {
+  //         acc[item.name] = false
+  //         return acc
+  //       },
+  //       {} as Record<string, boolean>
+  //     )
+  //   )
 
-    console.log('Values after disabling all:', formMethods.getValues())
-  }
+  //   console.log('Values after disabling all:', formMethods.getValues())
+  // }
 
   // Early return based on authentication
   if (!isSignedIn) {
@@ -179,28 +174,33 @@ export default function ControlCenter({ className, ...props }: CardProps) {
             settings
           </p>
         </div>
-        <Separator className='my-4 lg:my-6' />
+        <Separator className='my-4' />
 
         {/* Switch Form Integration */}
-        <div className='flex flex-1 flex-col space-y-8 md:space-y-2 md:overflow-hidden lg:flex-row lg:space-x-12 lg:space-y-0'>
+        <div className='flex flex-1 flex-col space-y-2 md:overflow-hidden lg:flex-row lg:space-x-12 lg:space-y-0'>
           <Card className={cn('w-full', className)} {...props}>
-            <CardHeader>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center space-x-4'>
-                  <IconAlertTriangleFilled size={36} color='red' />
-                  <div>
-                    <CardTitle className='text-lg'>All Controls</CardTitle>
-                    <CardDescription>
-                      Manage every Product control.
-                    </CardDescription>
-                  </div>
+            <CardHeader className=''>
+              <div className='flex items-center space-x-4'>
+                {/* Icon with a subtle background for better prominence */}
+                <div className='flex items-center justify-center rounded-full bg-red-100 p-2'>
+                  <IconAlertTriangleFilled size={32} color='red' />
+                </div>
+
+                {/* Text Content */}
+                <div className='space-y-1'>
+                  <CardTitle className='text-lg font-semibold text-muted-foreground'>
+                    All Controls
+                  </CardTitle>
+                  <CardDescription className='text-sm text-muted-foreground'>
+                    Manage every Product control.
+                  </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <SelectSeparator />
 
             {/* Render the SwitchForm */}
-            <SwitchForm onDisableAll={handleDisableAll} />
+            <SwitchForm />
           </Card>
         </div>
       </Layout.Body>

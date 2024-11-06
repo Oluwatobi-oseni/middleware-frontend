@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ImagePickerDialog } from './upload-image-dialog'
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required.'),
@@ -58,14 +59,12 @@ export default function ProfileForm() {
 
   return (
     <>
-      <div className='my-8 flex items-center gap-4'>
-        <Avatar className='h-24 w-24'>
+      <div className='my-2 flex items-center gap-4'>
+        <Avatar className='h-16 w-16'>
           <AvatarImage src='https://github.com/shadcn.png' />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <Button className='rounded-xl' variant={'outline'}>
-          Upload a new picture
-        </Button>
+        <ImagePickerDialog />
         <Button className='rounded-xl' variant={'destructive'}>
           Delete
         </Button>

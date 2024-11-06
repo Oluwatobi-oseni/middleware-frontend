@@ -19,9 +19,14 @@ export default function CompleteRegistration() {
   const onboardingToken = sessionStorage.getItem('onboardingToken')
   console.log('onboardingToken', onboardingToken)
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
+
   const navigate = useNavigate()
   const handleContinue = () => {
     navigate('/sign-in')
+  }
+
+  if (!data) {
+    return <div>...</div>
   }
 
   return (
@@ -60,7 +65,7 @@ export default function CompleteRegistration() {
               </div>
             </TooltipProvider>
             <div className='mb-2 flex flex-col items-center justify-center gap-4'>
-              <QRCodeSVG size={180} value={data?.otpauth} />
+              <QRCodeSVG size={180} value={data.otpauth} />
               <Button
                 className='mx-auto w-[180px]'
                 onClick={handleContinue}
@@ -76,7 +81,7 @@ export default function CompleteRegistration() {
             </div>
             <div className='mt-2 text-center text-sm'>
               {/* <div className='mx-auto my-2 flex w-full max-w-sm'> */}
-              <SetupKeyInput setupKey={data?.setupKey as string} />
+              <SetupKeyInput setupKey={data.setupKey as string} />
               {/* </div> */}
               <SelectSeparator />
 
