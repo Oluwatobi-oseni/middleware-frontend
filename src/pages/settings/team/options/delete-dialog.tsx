@@ -28,7 +28,7 @@ export function DeleteMemberDialog({
 }: {
   isOpen: boolean
   onClose: () => void
-  teamMember: userDetailsType
+  teamMember?: userDetailsType
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -42,20 +42,20 @@ export function DeleteMemberDialog({
             <Avatar className='h-16 w-16'>
               <div className='flex h-full w-full items-center justify-center rounded-full bg-gray-200'>
                 <span className='text-2xl font-medium'>
-                  {teamMember.email.charAt(0)}
+                  {teamMember?.email.charAt(0)}
                 </span>
               </div>
             </Avatar>
           </div>
           <div className='space-y-3'>
-            <p className='flex items-center'>{teamMember.email}</p>
+            <p className='flex items-center'>{teamMember?.email}</p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconUser size={16} className='mr-1' />
-              {teamMember.role}
+              {teamMember?.role}
             </p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconMail size={16} className='mr-1' />
-              {teamMember.email}
+              {teamMember?.email}
             </p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconCalendar size={16} className='mr-1' />
@@ -65,7 +65,7 @@ export function DeleteMemberDialog({
         </div>
         <Separator />
         <DialogFooter>
-          <DeleteUserDialog username={teamMember.email} onClose={onClose} />
+          <DeleteUserDialog username={teamMember?.email} onClose={onClose} />
         </DialogFooter>
       </DialogContent>
     </Dialog>
