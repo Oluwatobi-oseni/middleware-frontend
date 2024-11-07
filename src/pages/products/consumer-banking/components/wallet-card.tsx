@@ -8,7 +8,7 @@ function WalletCard({
   isActive: boolean
 }) {
   return (
-    <div className='w-64 rounded-lg border border-gray-200 bg-white p-4 text-center shadow-md'>
+    <div className='w-64 rounded-lg border border-muted bg-white p-4 text-center shadow-md'>
       {/* Country and Status */}
       <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center gap-2'>
@@ -46,19 +46,17 @@ export default function WalletCards() {
     { currency: 'Nigerian Naira', amount: 250000, isActive: true },
     { currency: 'Nigerian Naira', amount: 150000, isActive: true },
     { currency: 'Nigerian Naira', amount: 50000, isActive: false },
-    { currency: 'Nigerian Naira', amount: 250000, isActive: true },
-    { currency: 'Nigerian Naira', amount: 150000, isActive: true },
   ]
 
   return (
     <section className='mt-8'>
       {/* General Header */}
-      <h2 className='mb-4 mt-8 border-b-2 border-gray-300 pb-2 text-xl text-muted-foreground'>
+      <h2 className='mb-4 mt-8 border-b-2 border-muted pb-2 text-xl text-muted-foreground'>
         Wallet Details
       </h2>
 
       {/* Wallet Cards Grid */}
-      <div className='grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {wallets.map((wallet, index) => (
           <WalletCard
             key={index}

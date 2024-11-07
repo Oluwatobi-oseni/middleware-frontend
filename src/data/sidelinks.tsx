@@ -4,11 +4,11 @@ import {
   IconApps,
   IconGift,
   IconLayoutDashboard,
+  IconLockAccessOff,
   IconMessage,
   IconSettings,
-  IconSwitchVertical,
   IconTablePlus,
-  IconUsers,
+  IconToggleLeft,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -42,11 +42,17 @@ export const sidelinks: SideLink[] = [
     icon: <IconTablePlus size={18} />,
   },
   {
-    title: 'Users',
+    title: 'Adminstration',
     label: '',
-    href: '/users',
-    icon: <IconUsers size={18} />,
+    href: '/adminstration',
+    icon: <IconLockAccessOff size={18} />,
   },
+  // {
+  //   title: 'Users',
+  //   label: '',
+  //   href: '/users',
+  //   icon: <IconUsers size={18} />,
+  // },
   // {
   //   title: 'Requests',
   //   label: '10',
@@ -84,7 +90,7 @@ export const sidelinks: SideLink[] = [
     title: 'Switches',
     label: '',
     href: '/switches',
-    icon: <IconSwitchVertical size={18} />,
+    icon: <IconToggleLeft size={18} />,
   },
   {
     title: 'Messages',

@@ -7,8 +7,8 @@ import { CheckCircleIcon } from 'lucide-react'
 
 export default function UserForm() {
   return (
-    <div className='p-6'>
-      <div className='mb-4 mt-8 flex items-center justify-between border-b-2 border-gray-300 pb-2'>
+    <div className='p-2'>
+      <div className='mb-4 mt-2 flex items-center justify-between border-b-2 border-gray-300 pb-2 lg:mt-8'>
         <h2 className='text-xl text-muted-foreground'>User Details</h2>
 
         {/* Right-aligned Section */}
@@ -41,10 +41,12 @@ export default function UserForm() {
 
       <form className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
         {/* Avatar Upload */}
-        <Avatar>
-          <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <div>
+          <Avatar className='h-20 w-20'>
+            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </div>
 
         {/* First Name */}
         <div className='grid w-full max-w-sm items-center gap-1.5'>
@@ -92,26 +94,14 @@ export default function UserForm() {
           <Input
             type='text'
             id='address'
-            placeholder='No 123 Herbert Macaulay way, Yaba'
+            placeholder='No 132 Herbert Macaulay way, Yaba'
           />
         </div>
 
-        {/* Zip Code */}
-        {/* <div className='grid w-full max-w-sm items-center gap-1.5'>
-          <Label htmlFor='zipcode'>Zip Code</Label>
-          <Input type='text' id='zipcode' placeholder='LA 24B' />
-        </div> */}
-
-        {/* Country */}
-        {/* <div className='grid w-full max-w-sm items-center gap-1.5'>
-          <Label htmlFor='country'>Country</Label>
-          <Input type='text' id='country' placeholder='NG' />
-        </div> */}
-
-        <div className='grid w-full max-w-sm items-center gap-6 lg:grid-cols-2'>
+        <div className='grid w-full max-w-sm grid-cols-2 items-center gap-6'>
           <div className='grid w-full max-w-sm items-center gap-1.5'>
-            <Label htmlFor='zipcode'>Zip Code</Label>
-            <Input type='text' id='zipcode' placeholder='LA 24B' />
+            <Label htmlFor='postalcode'>Postal Code</Label>
+            <Input type='text' id='postalcode' placeholder='LA 24B' />
           </div>
           <div className='grid w-full max-w-sm items-center gap-1.5'>
             <Label htmlFor='country'>Country</Label>
@@ -119,22 +109,20 @@ export default function UserForm() {
           </div>
         </div>
 
-        {/* Joined Date */}
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label htmlFor='joinedDate'>Joined</Label>
           <Input type='date' id='joinedDate' />
         </div>
 
-        {/* User Active Status */}
+        {/* Last Login Date */}
         <div className='grid w-full max-w-sm items-center gap-1.5'>
-          <Label htmlFor='activeStatus'>User Active Status</Label>
-          <select
-            id='activeStatus'
-            className='w-full rounded-md border p-2 focus:ring focus:ring-blue-200'
-          >
-            <option value='active'>Active</option>
-            <option value='inactive'>Inactive</option>
-          </select>
+          <Label htmlFor='lastLogin'>Last Login</Label>
+          <div className='flex items-center justify-between rounded-md border p-2 text-sm text-gray-600'>
+            <span>2024-11-01 10:15 AM</span> {/* Example static date */}
+            <button className='text-blue-500 hover:underline'>
+              View Details
+            </button>
+          </div>
         </div>
       </form>
     </div>
