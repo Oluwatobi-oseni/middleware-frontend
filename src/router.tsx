@@ -170,18 +170,28 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'adminstration',
+        lazy: async () => ({
+          Component: (await import('@/pages/adminstration/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/adminstration/admin.tsx'))
+                .default,
+            }),
+          },
+        ],
+      },
       // {
-      //   path: 'integrations/card-requests',
+      //   path: 'users',
       //   lazy: async () => ({
-      //     Component: (await import('@/pages/card-requests/index.tsx')).default,
+      //     Component: (await import('@/pages/users/index.tsx')).default,
       //   }),
       // },
-      {
-        path: 'users',
-        lazy: async () => ({
-          Component: (await import('@/pages/users/index.tsx')).default,
-        }),
-      },
       {
         path: 'analytics',
         lazy: async () => ({

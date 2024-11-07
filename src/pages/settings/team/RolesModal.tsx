@@ -147,7 +147,7 @@ const RolesModal = () => {
                 <div
                   key={role.id}
                   onClick={() => handleRoleChange(role.id)}
-                  className={`cursor-pointer p-2 text-left transition-all duration-300 
+                  className={`cursor-pointer p-2 text-left text-xs transition-all duration-300
                     ${selectedRole === role.id ? 'border-r-4 border-muted-foreground bg-muted shadow-lg' : 'hover:bg-muted-foreground/10'}`}
                 >
                   {role.label}
@@ -179,7 +179,7 @@ const RolesModal = () => {
                               />
                               <FormLabel
                                 htmlFor={permission.id}
-                                className='text-sm'
+                                className='text-xs'
                               >
                                 {permission.label}
                               </FormLabel>

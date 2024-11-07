@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 
 interface DeleteUserDialogProps {
-  username: string
+  username?: string
   onClose: () => void // Define onClose as a function that returns void
 }
 

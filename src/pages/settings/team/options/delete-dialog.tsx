@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar } from '@/components/ui/avatar'
 // import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,59 +11,61 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { IconCalendar, IconMail, IconUser } from '@tabler/icons-react'
 import { DeleteUserDialog } from './confirm-delete-dialog'
+import { userDetailsType } from '@/lib/users/types'
 
-const teamMember = {
-  avatarUrl: 'https://github.com/shadcn.png',
-  name: 'Victor Olayemi',
-  role: 'Developer',
-  email: 'victor.olayemi@alert.com.ng',
-  dateJoined: 'January 10, 2022',
-}
+// interface TeamMember {
+//   avatarUrl: string
+//   name: string
+//   role: string
+//   email: string
+//   dateJoined: string
+// }
 
 export function DeleteMemberDialog({
   isOpen,
   onClose,
+  teamMember,
 }: {
   isOpen: boolean
-  //   onOpen: (open: boolean) => void
   onClose: () => void
+  teamMember?: userDetailsType
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      {/* <DialogTrigger asChild>
-        <Button variant='outline'>Delete Member</Button>
-      </DialogTrigger> */}
       <DialogContent className='sm:max-w-sm'>
         <DialogHeader>
           <DialogTitle>Remove Team Member</DialogTitle>
         </DialogHeader>
         <Separator />
-        <div className='mb-4 flex items-center justify-between gap-4'>
-          <div className='flex h-full w-1/2 items-center justify-center'>
-            <Avatar className='h-full w-fit'>
-              <AvatarImage src={teamMember.avatarUrl} alt={teamMember.name} />
-              <AvatarFallback>{teamMember.name.charAt(0)}</AvatarFallback>
+        <div className='mb-4 flex gap-6'>
+          <div className='flex flex-shrink-0 items-center justify-center'>
+            <Avatar className='h-16 w-16'>
+              <div className='flex h-full w-full items-center justify-center rounded-full bg-gray-200'>
+                <span className='text-2xl font-medium'>
+                  {teamMember?.email.charAt(0)}
+                </span>
+              </div>
             </Avatar>
           </div>
-          <div className='space-y-2'>
-            <p className='flex items-center font-semibold'>{teamMember.name}</p>
+          <div className='space-y-3'>
+            <p className='flex items-center'>{teamMember?.email}</p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconUser size={16} className='mr-1' />
-              {teamMember.role}
+              {teamMember?.role}
             </p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconMail size={16} className='mr-1' />
-              {teamMember.email}
+              {teamMember?.email}
             </p>
             <p className='flex items-center text-xs text-muted-foreground'>
               <IconCalendar size={16} className='mr-1' />
-              Joined on {teamMember.dateJoined}
+              Joined on
             </p>
           </div>
         </div>
         <Separator />
         <DialogFooter>
-          <DeleteUserDialog username='Victor Olayemi' onClose={onClose} />
+          <DeleteUserDialog username={teamMember?.email} onClose={onClose} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

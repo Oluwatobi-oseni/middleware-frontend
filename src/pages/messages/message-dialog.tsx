@@ -85,7 +85,7 @@ export function NewMessageDialog() {
             <div className='grid gap-4 py-4'>
               {/* Category and Channel Select */}
               <div className='grid grid-cols-2 items-center gap-4'>
-                <div className='grid items-center'>
+                <div className='grid items-center gap-2'>
                   <Label htmlFor='category' className='text-right text-xs'>
                     Select Category
                   </Label>
@@ -123,7 +123,7 @@ export function NewMessageDialog() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className='grid items-center'>
+                <div className='grid items-center gap-2'>
                   <Label htmlFor='channel' className='text-right text-xs'>
                     Select Channel
                   </Label>
