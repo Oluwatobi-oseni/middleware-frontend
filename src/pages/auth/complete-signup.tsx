@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router-dom'
 export default function CompleteRegistration() {
   // Use the hook to handle the registration completion
   const onboardingToken = sessionStorage.getItem('onboardingToken')
-  console.log('onboardingToken', onboardingToken)
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
 
   const navigate = useNavigate()

@@ -25,10 +25,10 @@ export const columns: ColumnDef<userDetailsType>[] = [
     header: 'Role',
     cell: ({ row }) => (
       <span
-        className={`rounded px-2 py-1 text-sm font-medium ${
+        className={`rounded px-3 py-2 text-xs font-medium ${
           row.original.role === 'SUPER_ADMIN'
-            ? 'bg-blue-100 text-blue-700'
-            : 'bg-gray-100 text-gray-700'
+            ? 'bg-blue-200 text-blue-800'
+            : 'bg-green-200 text-green-800'
         }`}
       >
         {row.original.role}
