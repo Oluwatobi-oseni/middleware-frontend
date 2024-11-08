@@ -15,7 +15,7 @@ const AdminPage = () => {
   const hasAdminData = data?.length
 
   return (
-    <div className='h-screen overflow-y-auto'>
+    <div className='h-screen overflow-y-auto hide-scrollbar'>
       <div>
         <p className='text-muted-foreground'>
           Manage users, permissions, and other administrative actions
@@ -38,7 +38,7 @@ const AdminPage = () => {
           buttonText='Search'
         />
       ) : (
-        <div className='flex h-full flex-col items-center justify-center text-center'>
+        <div className='flex h-[50vh] flex-col items-center justify-center text-center'>
           <IconUser size={80} className='mb-4 text-muted-foreground' />
           <p className='text-xl font-semibold'>No data available</p>
           <p className='text-muted-foreground'>

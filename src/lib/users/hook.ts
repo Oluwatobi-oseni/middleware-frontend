@@ -3,7 +3,6 @@ import { userDetails } from '.'
 
 const fetchUsersAsync = async () => {
   const data = await userDetails()
-  console.log(data)
   return data
 }
 

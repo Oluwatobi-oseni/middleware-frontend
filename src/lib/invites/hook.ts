@@ -6,7 +6,6 @@ import { toast } from '@/components/ui/use-toast'
 import { useNavigate } from 'react-router-dom'
 
 const inviteUserAsync = async (payload: { email: string; role: string }) => {
-  console.log('Sending invite with payload:', payload)
   const data = await inviteUser(payload)
   return { data, payload }
 }
@@ -22,14 +21,11 @@ export const useInviteUser = () => {
       }
     },
     onError: (error) => {
-      const errorMessage = error.message
-
       toast({
         title: 'Error',
-        description: 'Something went wrong. Please try again.',
+        description: error.message || 'Something went wrong. Please try again.',
         variant: 'destructive',
       })
-      console.error(JSON.parse(errorMessage))
     },
   })
 }
