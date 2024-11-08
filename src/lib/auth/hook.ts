@@ -252,7 +252,6 @@ const verifyPasswordResetOTPAsync = async (payload: { otp: string }) => {
   if (!email) {
     throw new Error('Email not found in session. Please try again.')
   }
-  console.log('Payload email', email)
   const data = await apiVerifyEmail({ email, otp: payload.otp })
 
   if (data.id) {
@@ -351,6 +350,7 @@ export const useSignOut = () => {
 
   const signOut = useCallback(() => {
     cookies.remove(SES_TOKEN_NAME, { path: '/' })
+    sessionStorage.removeItem('accessToken')
     delete client.defaults.headers.common['Authorization']
     sessionStorage.removeItem('hasPassedLogin')
 

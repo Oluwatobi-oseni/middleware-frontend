@@ -1,5 +1,6 @@
+import { AxiosError } from 'axios'
 import client from '../axios'
-import { OtpAuthRespomse } from './types'
+import { AxiosErrorResponse, OtpAuthRespomse } from './types'
 
 // Invite User API function
 export async function inviteUser(payload: { email: string; role: string }) {
@@ -16,8 +17,12 @@ export async function inviteUser(payload: { email: string; role: string }) {
     )
 
     return res.data
-  } catch (error) {
-    throw new Error(JSON.stringify(error))
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<AxiosErrorResponse>
+    if (axiosError.response?.data?.message) {
+      throw new Error(axiosError.response.data.message)
+    }
+    throw new Error('An unexpected error occurred')
   }
 }
 
