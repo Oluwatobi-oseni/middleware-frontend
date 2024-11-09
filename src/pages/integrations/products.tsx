@@ -81,14 +81,16 @@ export default function ProductList() {
           <a
             href={integration.path}
             target={
-              integration.path === '/integrations/card-request'
-                ? '_self'
-                : '_blank'
+              // integration.path === '/integrations/card-request'
+              //   ? '_self'
+              //   : '_blank'
+              returnTarget(integration.path)
             }
             rel={
-              integration.path === '/integrations/card-request'
-                ? ''
-                : 'noopener noreferrer'
+              // integration.path === '/integrations/card-request'
+              //   ? ''
+              //   : 'noopener noreferrer'
+              returnRel(integration.path)
             }
             key={integration.id}
             className='cursor-pointer rounded-lg border p-4 hover:shadow-md'
@@ -111,4 +113,24 @@ export default function ProductList() {
       </ul>
     </>
   )
+}
+
+const returnTarget = (path: string): string => {
+  switch (path) {
+    case '/integrations/card-request':
+    case '/integrations/e-cam':
+      return '_self'
+    default:
+      return '_blank'
+  }
+}
+
+const returnRel = (path: string): string => {
+  switch (path) {
+    case '/integrations/card-request':
+    case '/integrations/e-cam':
+      return ''
+    default:
+      return 'noopener noreferrer'
+  }
 }
