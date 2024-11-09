@@ -5,12 +5,14 @@ import { AxiosErrorResponse, OtpAuthRespomse } from './types'
 // Invite User API function
 export async function inviteUser(payload: { email: string; role: string }) {
   try {
+    const token = sessionStorage.getItem('accessToken')
     const res = await client.post(
       '/api/sharedServices/v1/invites/inviteUser',
       payload,
       {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       }
