@@ -168,6 +168,12 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
+          {
+            path: 'e-cam',
+            lazy: async () => ({
+              Component: (await import('@/pages/e-cam/index.tsx')).default,
+            }),
+          },
         ],
       },
       {
