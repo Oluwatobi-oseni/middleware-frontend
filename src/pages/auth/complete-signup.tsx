@@ -18,14 +18,16 @@ export default function CompleteRegistration() {
   // Use the hook to handle the registration completion
   const onboardingToken = sessionStorage.getItem('onboardingToken')
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
+  console.log('The data it returns is ', data)
 
   const navigate = useNavigate()
   const handleContinue = () => {
     navigate('/sign-in')
   }
 
-  if (!data) {
-    return <div>...</div>
+  if (!isLoading && !data) {
+    navigate('/sign-in')
+    return null
   }
 
   return (
@@ -64,7 +66,7 @@ export default function CompleteRegistration() {
               </div>
             </TooltipProvider>
             <div className='mb-2 flex flex-col items-center justify-center gap-4'>
-              <QRCodeSVG size={180} value={data.otpauth} />
+              {data && <QRCodeSVG size={180} value={data.otpauth} />}
               <Button
                 className='mx-auto w-[180px]'
                 onClick={handleContinue}
@@ -80,8 +82,7 @@ export default function CompleteRegistration() {
             </div>
             <div className='mt-2 text-center text-sm'>
               {/* <div className='mx-auto my-2 flex w-full max-w-sm'> */}
-              <SetupKeyInput setupKey={data.setupKey as string} />
-              {/* </div> */}
+              {data && <SetupKeyInput setupKey={data.setupKey as string} />}
               <SelectSeparator />
 
               <p className='rounded-md border-l-4 border-blue-500 bg-muted-foreground p-2 text-sm font-medium '>
