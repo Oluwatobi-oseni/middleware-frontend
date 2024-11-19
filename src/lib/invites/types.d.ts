@@ -1,4 +1,4 @@
-export type OtpAuthRespomse = {
+export type OtpAuthResponse = {
   otpauth: string
   setupKey: string
 }
