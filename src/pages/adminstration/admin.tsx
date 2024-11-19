@@ -33,7 +33,7 @@ const AdminPage = () => {
       <div className='my-4 flex justify-end'>
         {userRole === 'SUPER_ADMIN' && <AddTeamMemberDialog />}
       </div>
-      <Separator className='shadow' />
+      <Separator />
       {hasAdminData ? (
         <DataTable
           columns={columns}
