@@ -2,13 +2,6 @@ import { QRCodeSVG } from 'qrcode.react'
 import { Button } from '@/components/custom/button'
 import { Card } from '@/components/ui/card'
 import { SelectSeparator } from '@/components/ui/select'
-import { IconInfoCircleFilled } from '@tabler/icons-react'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 import SetupKeyInput from './components/setup-key'
 import { useOtpAuth } from '@/lib/invites/hook'
@@ -18,7 +11,6 @@ export default function CompleteRegistration() {
   // Use the hook to handle the registration completion
   const onboardingToken = sessionStorage.getItem('onboardingToken')
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
-  console.log('The data it returns is ', data)
 
   const navigate = useNavigate()
   const handleContinue = () => {
@@ -45,12 +37,12 @@ export default function CompleteRegistration() {
             <h2 className='mb-2 text-center text-lg font-bold'>
               Complete 2FA Signup
             </h2>
-            <TooltipProvider>
-              <p className='mb-4 text-center text-sm'>
-                To activate authentication, please scan the QR code below from
-                the authenticator app{' '}
-              </p>
-              <div className='mb-4 flex items-center justify-center'>
+
+            <p className='mb-4 text-center text-sm'>
+              To activate authentication, please scan the QR code below from an
+              authenticator app{' '}
+            </p>
+            {/* <div className='mb-4 flex items-center justify-center'>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <IconInfoCircleFilled className='ml-1 h-6 w-6 cursor-pointer' />
@@ -63,11 +55,26 @@ export default function CompleteRegistration() {
                     />
                   </TooltipContent>
                 </Tooltip>
-              </div>
-            </TooltipProvider>
-            <div className='mb-2 flex flex-col items-center justify-center gap-4'>
-              {data && <QRCodeSVG size={180} value={data.otpauth} />}
+              </div> */}
+
+            <div
+              className='mb-4 flex flex-col items-center justify-center gap-6 rounded-md border bg-white p-4 shadow-md'
+              style={{
+                filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1))',
+              }}
+            >
+              {/* {data && ( */}
+              <QRCodeSVG
+                size={180}
+                // value={data.otpauth}
+                value={'34'}
+                fgColor='#000000'
+                bgColor='#ffffff'
+              />
+
+              {/* )} */}
               <Button
+                variant={'outline'}
                 className='mx-auto w-[180px]'
                 onClick={handleContinue}
                 loading={isLoading}
@@ -75,6 +82,7 @@ export default function CompleteRegistration() {
                 Continue
               </Button>
             </div>
+
             <div className='flex items-center'>
               <hr className='flex-grow' />
               <span className='text-xs'>OR Enter setup key manually</span>

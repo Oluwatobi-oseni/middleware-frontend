@@ -9,8 +9,8 @@ export function censorEmail(email: string): string {
     return `********@******.com`
   }
 
-  const emailName = match[1] // e.g (alex.olaolu007)
-  const emailProvider = match[2] // e.g (@gmail.com)
+  const emailName = match[1]
+  const emailProvider = match[2]
   let censoredEmailName = ''
 
   if (emailName.length < 5) {

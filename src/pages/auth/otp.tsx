@@ -1,14 +1,14 @@
 import { Card } from '@/components/ui/card'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { OtpForm } from './components/otp-form'
 import { censorEmail } from '@/lib/auth/utilities/censorEmail'
 
 export default function Otp() {
-  const location = useLocation()
-  const email = location.state?.email
+  const email = sessionStorage.getItem('resetEmail')
 
   // Use the censorEmail function to get the censored version
-  const censoredEmail = censorEmail(email)
+  // console.log('The mail', email)
+  const censoredEmail = email ? censorEmail(email) : '********@******.com'
   return (
     <>
       <div className='container grid h-svh flex-col items-center justify-center bg-primary-foreground lg:max-w-none lg:px-0'>
