@@ -5,7 +5,8 @@ export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('050211e53ed564ace50406').then(() => {
+    const uppercaseKey = setupKey.toUpperCase()
+    navigator.clipboard.writeText(uppercaseKey).then(() => {
       setIsCopied(true)
       setTimeout(() => setIsCopied(false), 2000)
     })
@@ -32,7 +33,7 @@ export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
           />
           <button
             onClick={handleCopy}
-            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-muted hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
             aria-label='Copy setup key'
           >
             {isCopied ? (
@@ -63,7 +64,7 @@ export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
           </button>
           <div
             role='tooltip'
-            className={`absolute bottom-12 right-2 z-10 w-auto rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium  shadow-sm transition-opacity duration-300 dark:bg-gray-700 ${
+            className={`absolute bottom-12 right-2 z-10 w-auto rounded-lg bg-muted-foreground px-3 py-2 text-sm font-medium  shadow-sm transition-opacity duration-300 dark:bg-gray-700 ${
               isCopied ? 'visible opacity-100' : 'invisible opacity-0'
             }`}
           >
