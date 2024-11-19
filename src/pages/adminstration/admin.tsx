@@ -7,12 +7,21 @@ import { columns } from './columns'
 import { useAdminUserData } from './data'
 import RolesModal from '../settings/team/RolesModal'
 import { AddTeamMemberDialog } from './AddMemberModal'
+import { jwtDecode } from 'jwt-decode'
 
-// import { adminColumns } from './adminColumns'  // Columns configuration specific to admin data
+type DecodedToken = {
+  role: string
+}
 
 const AdminPage = () => {
   const { data } = useAdminUserData()
   const hasAdminData = data?.length
+
+  // Decode access token to get the user's role
+  const accessToken = sessionStorage.getItem('accessToken')
+  const userRole = accessToken
+    ? jwtDecode<DecodedToken>(accessToken).role
+    : null
 
   return (
     <div className='h-screen overflow-y-auto hide-scrollbar'>
@@ -22,7 +31,7 @@ const AdminPage = () => {
         </p>
       </div>
       <div className='my-4 flex justify-end'>
-        <AddTeamMemberDialog />
+        {userRole === 'SUPER_ADMIN' && <AddTeamMemberDialog />}
       </div>
       <Separator className='shadow' />
       {hasAdminData ? (
