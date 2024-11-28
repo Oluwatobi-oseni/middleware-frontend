@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import pdf from '../../../assets/pdf.svg'
+import samplepdf from '../../../assets/sample.pdf'
 import {
-  IconBuildingBank,
+  // IconBuildingBank,
   IconCopy,
   IconId,
   IconMessage,
@@ -24,6 +25,8 @@ import { z } from 'zod'
 import { toast } from '@/components/ui/use-toast'
 import { Button } from '@/components/custom/button'
 import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
 // import { useState } from 'react'
 import {
   Select,
@@ -41,6 +44,9 @@ import {
 } from '@/components/ui/collapsible'
 import { ChevronsUpDown } from 'lucide-react'
 import WalletCards from './components/wallet'
+import { DataTable } from '@/components/table/data-table'
+import { columns } from './transaction/columns'
+import { data } from './transaction/data'
 
 const FormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
@@ -68,6 +74,12 @@ const UserDetails = () => {
   }
   const { id } = useParams()
   console.log('The user id is', id)
+  const navigate = useNavigate()
+
+  const goToActivities = () => {
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+    navigate(`${currentPath}/activities`)
+  }
 
   // Sample user data
   const userData = {
@@ -98,19 +110,9 @@ const UserDetails = () => {
         accountNumber: '1234567890',
         bankName: 'Alert Microfinance Bank',
       },
-      {
-        accountName: 'Tech Innovations Savings Account',
-        accountNumber: '0987654321',
-        bankName: 'National Bank of Nigeria',
-      },
-      {
-        accountName: 'Tech Innovations Dollar Account',
-        accountNumber: '1122334455',
-        bankName: 'International Bank PLC',
-      },
     ],
   }
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
   const [kybStatus, setKybStatus] = useState(userData.kybStatus || '')
   const [isCopied, setIsCopied] = useState(false)
 
@@ -140,9 +142,67 @@ const UserDetails = () => {
     .map((word) => word[0])
     .join('')
   // const [status, setStatus] = useState('VERIFIED')
+
+  const getNoteContent = () => {
+    const userDetails = {
+      name: 'Victor Bamidele',
+      email: 'victor.bamidele@alertgroup.com.ng',
+      actionDate: 'October 10, 2024',
+      actionTime: '11:12 PM',
+    }
+
+    switch (kybStatus) {
+      case 'rejected':
+        return {
+          title: 'KYB Rejected',
+          description: `${userDetails.name} (${userDetails.email}) rejected this business account's KYB application. The account was flagged for fraud on ${userDetails.actionDate} at ${userDetails.actionTime}.`,
+          type: 'error',
+          borderColor: 'border-red-500',
+          textColor: 'text-red-600',
+        }
+      case 'pending':
+        return {
+          title: 'KYB Pending',
+          description:
+            "This business account's KYB application is currently under review. Please check back later for updates.",
+          type: 'warning',
+          borderColor: 'border-yellow-500',
+          textColor: 'text-yellow-600',
+        }
+      case 'completed':
+        return {
+          title: 'KYB Approved',
+          description:
+            "This business account's KYB application has been successfully approved. All operations are active.",
+          type: 'success',
+          borderColor: 'border-green-500',
+          textColor: 'text-green-600',
+        }
+      case 'in-review':
+        return {
+          title: 'KYB In Review',
+          description:
+            "This business account's KYB application is being reviewed. Further details will follow soon.",
+          type: 'info',
+          borderColor: 'border-blue-500',
+          textColor: 'text-blue-600',
+        }
+      default:
+        return {
+          title: 'Unknown Status',
+          description:
+            'No information is available for the selected KYB status.',
+          type: 'info',
+          borderColor: 'border-muted-foreground',
+          textColor: 'text-gray-600',
+        }
+    }
+  }
+
+  const noteContent = getNoteContent()
   return (
     <>
-      <div className='hide-scrollbar h-screen overflow-y-auto'>
+      <div className='h-screen overflow-y-auto hide-scrollbar'>
         <div className='flex flex-col items-center justify-between md:flex-row'>
           <div>
             <h3 className='mb-2 text-3xl font-semibold'>
@@ -171,14 +231,13 @@ const UserDetails = () => {
                   <SelectItem value='completed'>KYB Approved</SelectItem>
                   <SelectItem value='pending'>KYB Pending</SelectItem>
                   <SelectItem value='rejected'>KYB Rejected</SelectItem>
-                  <SelectItem value='in-review'>KYB In Review</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        <div className='my-6 flex flex-col md:flex-row'>
+        <div className='my-6 flex flex-col lg:flex-row'>
           {/* Left Section: User Information */}
           <div className='mb-4 w-1/4'>
             <div className='flex w-full flex-col items-start'>
@@ -200,9 +259,9 @@ const UserDetails = () => {
                 </p>
               </div>
               <div className='mt-4'>
-                <span className='rounded-full bg-muted-foreground px-3 py-1 text-sm font-semibold text-muted'>
+                <Button onClick={goToActivities} className=''>
                   Track Activities
-                </span>
+                </Button>
               </div>
             </div>
           </div>
@@ -282,7 +341,7 @@ const UserDetails = () => {
                     </span>
                     <a
                       className='mt-1 text-xs text-blue-500 hover:underline'
-                      href={userData.documents.registrationCertificate}
+                      href={samplepdf}
                       target='_blank'
                       rel='noopener noreferrer'
                     >
@@ -292,13 +351,16 @@ const UserDetails = () => {
 
                   {/* Tax Clearance */}
                   <div className='flex flex-col items-center rounded-lg p-3 shadow-md'>
+                    {/* PDF Icon */}
                     <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
                     <span className='text-sm font-semibold'>Tax Clearance</span>
+
+                    {/* View File Link */}
                     <a
                       className='mt-1 text-xs text-blue-500 hover:underline'
-                      href={userData.documents.taxClearance}
-                      target='_blank'
-                      rel='noopener noreferrer'
+                      href={samplepdf} // Link to the local PDF
+                      target='_blank' // Open in a new tab
+                      rel='noopener noreferrer' // Security improvement
                     >
                       View File
                     </a>
@@ -316,7 +378,7 @@ const UserDetails = () => {
                       </span>
                       <a
                         className='mt-1 text-xs text-blue-500 hover:underline'
-                        href={doc}
+                        href={samplepdf}
                         target='_blank'
                         rel='noopener noreferrer'
                       >
@@ -342,9 +404,11 @@ const UserDetails = () => {
                         render={({ field }) => (
                           <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
                             <div className='w-full space-y-0.5'>
-                              <FormLabel>Slug</FormLabel>
+                              <FormLabel>
+                                Business Slug (NGN Account Issuance)
+                              </FormLabel>
                               <FormDescription>
-                                Unique identifier for the business URL.
+                                AlertMFB - <span>Techi</span> / Business Slug
                               </FormDescription>
                             </div>
                             <div className='flex items-center space-x-2'>
@@ -359,6 +423,7 @@ const UserDetails = () => {
                                 type='button'
                                 onClick={() => /* Add edit logic here */ {}}
                                 variant={'outline'}
+                                className='text-xs'
                               >
                                 Edit Slug
                               </Button>
@@ -369,27 +434,6 @@ const UserDetails = () => {
                       <FormField
                         control={form.control}
                         name='marketing_emails'
-                        render={({ field }) => (
-                          <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
-                            <div className='space-y-0.5'>
-                              <FormLabel>Whitelabel Business</FormLabel>
-                              <FormDescription>
-                                Enable this business apply their own branding on
-                                the payment page
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name='security_emails'
                         render={({ field }) => (
                           <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
                             <div className='space-y-0.5'>
@@ -429,6 +473,48 @@ const UserDetails = () => {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name='security_emails'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
+                            <div className='space-y-0.5'>
+                              <FormLabel>Payment Gateway</FormLabel>
+                              <FormDescription>
+                                Enable this business apply their own branding on
+                                the payment page
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='security_emails'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
+                            <div className='space-y-0.5'>
+                              <FormLabel>Account Issuance</FormLabel>
+                              <FormDescription>
+                                Enable this business apply their own branding on
+                                the payment page
+                              </FormDescription>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </form>
                 </Form>
@@ -436,142 +522,112 @@ const UserDetails = () => {
 
               {/* Bank Accounts Tab */}
               <TabsContent value='bank-accounts'>
-                <div>
-                  {/* Check if there are any bank accounts */}
-                  {userData.bankAccounts && userData.bankAccounts.length > 0 ? (
-                    userData.bankAccounts.map((account, index) => (
-                      <Collapsible
-                        key={index}
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
-                        className='my-4 w-[500px] space-y-2'
-                      >
-                        <div className='mb-2 flex items-center justify-between space-x-4'>
-                          <div className='flex items-center space-x-4'>
-                            <img
-                              src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg'
-                              alt='Nigeria Flag'
-                              className='h-10 w-10 rounded-full shadow-sm'
-                            />{' '}
-                            <div>
-                              <p className='text-sm font-semibold text-muted-foreground'>
-                                NGN Account Details
-                              </p>
-                              <p className='text-muted-foreground/300 text-xs'>
-                                Bank account details for Nigerian Naira
-                              </p>
-                            </div>
-                          </div>
-                          <CollapsibleTrigger asChild>
-                            <Button variant='ghost' size='sm'>
-                              <ChevronsUpDown className='h-4 w-4' />
-                              <span className='sr-only'>Toggle</span>
-                            </Button>
-                          </CollapsibleTrigger>
-                        </div>
-                        <CollapsibleContent className='space-y-4'>
-                          {/* Render account details or bank icon/message */}
-                          <div className='mb-8 flex w-full max-w-lg transform  flex-col justify-center rounded-lg bg-muted p-4 text-sm'>
-                            <p className='mb-4 flex justify-between'>
-                              <span>Account Name</span>{' '}
-                              <span>{account.accountName}</span>
-                            </p>
-                            <p className='mb-4 flex justify-between'>
-                              <span>Account Number</span>{' '}
-                              <div className='flex items-center gap-2'>
-                                <span>{account.accountNumber}</span>
-                                <IconCopy
-                                  size={18}
-                                  className='cursor-pointer text-gray-600 hover:text-gray-900'
-                                  onClick={() => {
-                                    navigator.clipboard
-                                      .writeText(account.accountNumber)
-                                      .then(() => {
-                                        setIsCopied(true)
-                                        setTimeout(
-                                          () => setIsCopied(false),
-                                          2000
-                                        ) // Reset the copied state after 2 seconds
-                                      })
-                                  }}
-                                />
-                              </div>
-                              {isCopied && (
-                                <span className='text-sm text-green-600'>
-                                  Copied!
-                                </span>
-                              )}
-                            </p>
-                            <p className='flex justify-between'>
-                              <span>Bank Name</span>{' '}
-                              <span>{account.bankName}</span>
-                            </p>
-                          </div>
-                        </CollapsibleContent>
-                      </Collapsible>
-                    ))
-                  ) : (
-                    // If no bank accounts, render the bank icon and message
-                    <Collapsible
-                      open={isOpen}
-                      onOpenChange={setIsOpen}
-                      className='w-[500px] space-y-2'
-                    >
-                      <div className='flex items-center justify-between space-x-4 px-4'>
-                        <div className='flex items-center space-x-4'>
-                          <img
-                            src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg'
-                            alt='Nigeria Flag'
-                            className='h-10 w-10 rounded-full shadow-sm'
-                          />{' '}
-                          <div>
-                            <p className='text-sm font-semibold text-muted-foreground'>
-                              NGN Account Details
-                            </p>
-                            <p className='text-muted-foreground/300 text-xs'>
-                              Bank account details for Nigerian Naira
-                            </p>
-                          </div>
-                        </div>
-                        <CollapsibleTrigger asChild>
-                          <Button variant='ghost' size='sm'>
-                            <ChevronsUpDown className='h-4 w-4' />
-                            <span className='sr-only'>Toggle</span>
-                          </Button>
-                        </CollapsibleTrigger>
-                      </div>
-
-                      <div className='flex w-full max-w-lg transform items-center justify-center rounded-lg bg-muted p-4'>
-                        <div className='mt-2 flex flex-col items-center space-y-4'>
-                          <div className='rounded-full bg-green-500 p-2'>
-                            <IconBuildingBank
-                              size={20}
-                              className='text-muted'
-                            />
-                          </div>
-                          <p className='text-sm font-semibold text-muted-foreground'>
-                            No bank account has been issued
+                <div className='flex w-full'>
+                  <Collapsible
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    className='w-full space-y-4 rounded-lg border bg-white p-6 shadow-md'
+                  >
+                    <div className='mb-4 flex items-center justify-between'>
+                      <div className='flex items-center space-x-4'>
+                        <img
+                          src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg'
+                          alt='Nigeria Flag'
+                          className='h-10 w-10 rounded-full shadow-sm'
+                        />
+                        <div>
+                          <p className='text-lg font-semibold text-gray-800'>
+                            NGN Account Details
+                          </p>
+                          <p className='text-sm text-gray-500'>
+                            Bank account details for Nigerian Naira
                           </p>
                         </div>
                       </div>
-
-                      {/* <CollapsibleContent className='space-y-2'>
-                        <div className='rounded-md border px-4 py-2 font-mono text-sm shadow-sm'>
-                          @radix-ui/colors
-                        </div>
-                        <div className='rounded-md border px-4 py-2 font-mono text-sm shadow-sm'>
-                          @stitches/react
-                        </div>
-                      </CollapsibleContent> */}
-                    </Collapsible>
-                  )}
+                      <CollapsibleTrigger asChild>
+                        <Button variant='ghost' size='sm'>
+                          <ChevronsUpDown className='h-4 w-4' />
+                          <span className='sr-only'>Toggle</span>
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
+                      <div className='space-y-4 rounded-lg bg-gray-50 p-4'>
+                        <p className='flex justify-between'>
+                          <span className='text-sm font-medium text-gray-700'>
+                            Account Name
+                          </span>
+                          <span className='text-sm text-gray-800'>
+                            {userData.accountName}
+                          </span>
+                        </p>
+                        <p className='flex justify-between'>
+                          <span className='text-sm font-medium text-gray-700'>
+                            Account Number
+                          </span>
+                          <div className='flex items-center gap-2'>
+                            <span className='text-sm text-gray-800'>
+                              {userData.bankAccounts[0].accountNumber}
+                            </span>
+                            <IconCopy
+                              size={18}
+                              className='cursor-pointer text-gray-600 hover:text-gray-900'
+                              onClick={() => {
+                                navigator.clipboard
+                                  .writeText(
+                                    userData.bankAccounts[0].accountNumber
+                                  )
+                                  .then(() => {
+                                    setIsCopied(true)
+                                    setTimeout(() => setIsCopied(false), 2000)
+                                  })
+                              }}
+                            />
+                          </div>
+                        </p>
+                        {isCopied && (
+                          <p className='text-sm text-green-600'>
+                            Account number copied!
+                          </p>
+                        )}
+                        <p className='flex justify-between'>
+                          <span className='text-sm font-medium text-gray-700'>
+                            Bank Name
+                          </span>
+                          <span className='text-sm text-gray-800'>
+                            {userData.bankAccounts[0].bankName}
+                          </span>
+                        </p>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </div>
               </TabsContent>
             </Tabs>
           </div>
         </div>
 
+        <Alert
+          variant={noteContent.type === 'error' ? 'destructive' : 'default'}
+          className={`border-l-2 ${noteContent.borderColor} p-4`}
+        >
+          <AlertTitle className={`text-lg font-bold ${noteContent.textColor}`}>
+            {noteContent.title}
+          </AlertTitle>
+          <AlertDescription>{noteContent.description}</AlertDescription>
+        </Alert>
+
         <WalletCards />
+
+        <div className='mt-8 overflow-auto'>
+          <DataTable
+            columns={columns}
+            data={data}
+            inputPlaceHolder='Search Transactions'
+            filterColumn='accountName'
+            showDateRangePicker={false}
+          />
+        </div>
       </div>
     </>
   )

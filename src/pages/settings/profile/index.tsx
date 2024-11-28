@@ -3,7 +3,7 @@ import ContentSection from '../components/content-section'
 
 export default function SettingsProfile() {
   return (
-    <ContentSection title='Profile' desc='Update your profile settings.'>
+    <ContentSection title='Profile' desc=''>
       <ProfileForm />
     </ContentSection>
   )

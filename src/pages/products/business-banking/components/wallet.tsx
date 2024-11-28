@@ -41,20 +41,13 @@ function WalletCard({
             }).format(balance)}
           </p>
         </div>
-        <span className='rounded-full bg-blue-700 px-2 py-1 text-xs font-semibold text-blue-100'>
-          Fund
-        </span>
       </div>
     </div>
   )
 }
 
 export default function WalletCards() {
-  const wallets = [
-    { balance: 250000, isActive: true },
-    { balance: 150000, isActive: true },
-    { balance: 50000, isActive: false },
-  ]
+  const wallets = [{ balance: 250000, isActive: true }]
 
   return (
     <section className='mt-8'>

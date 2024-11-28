@@ -16,8 +16,15 @@ import {
 import { Input } from '@/components/ui/input'
 // import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/custom/password-input'
-import { InfoIcon } from 'lucide-react'
+import { CalendarIcon, InfoIcon } from 'lucide-react'
 import { useCreatePassword } from '@/lib/invites/hook'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
 
 interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {}
 const passwordSchema = z
@@ -37,6 +44,12 @@ const passwordSchema = z
 // Define form schema for password validation
 const formSchema = z
   .object({
+    firstName: z.string().min(1, { message: 'First name is required' }),
+    lastName: z.string().min(1, { message: 'Last name is required' }),
+    dateOfBirth: z.date({
+      required_error: 'A date of birth is required.',
+    }),
+    phoneNumber: z.string().min(1, { message: 'Phone number is required' }),
     password: passwordSchema,
     confirmPassword: passwordSchema,
   })
@@ -55,7 +68,14 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { password: '', confirmPassword: '' },
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: undefined,
+      phoneNumber: '',
+      password: '',
+      confirmPassword: '',
+    },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
@@ -73,6 +93,92 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className='grid gap-2'>
+            <div className='grid grid-cols-2 gap-4'>
+              <FormField
+                control={form.control}
+                name='firstName'
+                render={({ field }) => (
+                  <FormItem className='space-y-1'>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Ayo' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='lastName'
+                render={({ field }) => (
+                  <FormItem className='space-y-1'>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Bamidele' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Date of Birth and Phone Number */}
+            <div className='grid grid-cols-1 gap-2'>
+              <FormField
+                control={form.control}
+                name='dateOfBirth'
+                render={({ field }) => (
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>Date of birth</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={'outline'}
+                            className={cn(
+                              'w-[240px] pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, 'PPP')
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className='w-auto p-0' align='start'>
+                        <Calendar
+                          mode='single'
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date('1900-01-01')
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='phoneNumber'
+                render={({ field }) => (
+                  <FormItem className='space-y-1'>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder='+234 123 456 789' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             {/* Password Field */}
             <FormField
               control={form.control}
