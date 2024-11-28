@@ -1,16 +1,16 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import {
-  // IconNotification,
-  // IconPalette,
-  IconTool,
-  IconUser,
-  // IconUsers,
-} from '@tabler/icons-react'
+// import {
+//   // IconNotification,
+//   // IconPalette,
+//   IconTool,
+//   IconUser,
+//   // IconUsers,
+// } from '@tabler/icons-react'
 import { Layout } from '@/components/custom/layout'
 import { Separator } from '@/components/ui/separator'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
-import SidebarNav from './components/sidebar-nav'
+// import SidebarNav from './components/sidebar-nav'
 import { useAuth } from '@/lib/auth/hook'
 
 export default function Settings() {

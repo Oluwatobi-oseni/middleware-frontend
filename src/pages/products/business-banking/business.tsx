@@ -367,25 +367,19 @@ const UserDetails = () => {
                   </div>
 
                   {/* Other Documents */}
-                  {userData.documents.otherDocuments.map((doc, index) => (
-                    <div
-                      key={index}
-                      className='flex flex-col items-center rounded-lg p-3 shadow-md'
+
+                  <div className='flex flex-col items-center rounded-lg p-3 shadow-md'>
+                    <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
+                    <span className='text-sm font-semibold'>Certificate A</span>
+                    <a
+                      className='mt-1 text-xs text-blue-500 hover:underline'
+                      href={samplepdf}
+                      target='_blank'
+                      rel='noopener noreferrer'
                     >
-                      <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
-                      <span className='text-sm font-semibold'>
-                        Certificate {index + 1}
-                      </span>
-                      <a
-                        className='mt-1 text-xs text-blue-500 hover:underline'
-                        href={samplepdf}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      >
-                        View File
-                      </a>
-                    </div>
-                  ))}
+                      View File
+                    </a>
+                  </div>
                 </div>
               </TabsContent>
 
