@@ -130,6 +130,16 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'consumer-banking/user/:id/activities', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/products/consumer-banking/consumer-banking-user-activity/page.tsx'
+                )
+              ).default,
+            }),
+          },
+          {
             path: 'business-banking',
             lazy: async () => ({
               Component: (
@@ -142,6 +152,16 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import('@/pages/products/business-banking/business.tsx')
+              ).default,
+            }),
+          },
+          {
+            path: 'business-banking/business/:id/activities', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/products/business-banking/business-banking-activity/page.tsx'
+                )
               ).default,
             }),
           },
@@ -174,6 +194,24 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/e-cam/index.tsx')).default,
             }),
           },
+          // {
+          //   path: 'support',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/support/index.tsx')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'agile',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/agile/index.tsx')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'workspace',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/workspace/index.tsx')).default,
+          //   }),
+          // },
         ],
       },
       {
@@ -214,7 +252,7 @@ const router = createBrowserRouter([
       {
         path: 'switches',
         lazy: async () => ({
-          Component: (await import('@/components/coming-soon.tsx')).default,
+          Component: (await import('@/pages/switches/index.tsx')).default,
         }),
       },
       {

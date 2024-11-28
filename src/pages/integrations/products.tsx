@@ -119,6 +119,9 @@ const returnTarget = (path: string): string => {
   switch (path) {
     case '/integrations/card-request':
     case '/integrations/e-cam':
+    case '/integrations/workspace':
+    case '/integrations/agile':
+    case '/integrations/support':
       return '_self'
     default:
       return '_blank'
@@ -129,6 +132,9 @@ const returnRel = (path: string): string => {
   switch (path) {
     case '/integrations/card-request':
     case '/integrations/e-cam':
+    case '/integrations/workspace':
+    case '/integrations/agile':
+    case '/integrations/support':
       return ''
     default:
       return 'noopener noreferrer'

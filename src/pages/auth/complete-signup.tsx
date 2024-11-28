@@ -1,9 +1,9 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { Button } from '@/components/custom/button'
 import { Card } from '@/components/ui/card'
-import { SelectSeparator } from '@/components/ui/select'
+// import { SelectSeparator } from '@/components/ui/select'
 
-import SetupKeyInput from './components/setup-key'
+// import SetupKeyInput from './components/setup-key'
 import { useOtpAuth } from '@/lib/invites/hook'
 import { useNavigate } from 'react-router-dom'
 
@@ -84,14 +84,14 @@ export default function CompleteRegistration() {
             </div>
 
             <div className='flex items-center'>
-              <hr className='flex-grow' />
+              {/* <hr className='flex-grow' />
               <span className='text-xs'>OR Enter setup key manually</span>
-              <hr className='flex-grow' />
+              <hr className='flex-grow' /> */}
             </div>
             <div className='mt-2 text-center text-sm'>
               {/* <div className='mx-auto my-2 flex w-full max-w-sm'> */}
-              {data && <SetupKeyInput setupKey={data.setupKey as string} />}
-              <SelectSeparator />
+              {/* {data && <SetupKeyInput setupKey={data.setupKey as string} />}
+              <SelectSeparator /> */}
 
               <p className='rounded-md border-l-4 border-blue-500 bg-muted-foreground p-2 text-sm font-medium '>
                 Using a laptop? Download an authenticator app on your mobile

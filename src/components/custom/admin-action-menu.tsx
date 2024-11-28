@@ -31,14 +31,17 @@ const AdminActionsMenu = <T,>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuItem onClick={() => onEdit(row)} className='text-blue-600'>
+        <DropdownMenuItem
+          onClick={() => onEdit(row)}
+          className='text-muted-foreground'
+        >
           Edit
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setDeleteDialogOpen(true)}
-          className='text-red-500'
+          className='text-muted-foreground'
         >
-          Delete
+          Suspend
         </DropdownMenuItem>
       </DropdownMenuContent>
 

@@ -4,18 +4,25 @@ import { Button } from '@/components/custom/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ImagePickerDialog } from './upload-image-dialog'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
+import dayjs from 'dayjs'
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required.'),
@@ -30,12 +37,20 @@ const profileFormSchema = z.object({
     .min(10, 'Phone number must be at least 10 digits.')
     .max(15, 'Phone number must not be longer than 15 digits.'),
   bio: z.string().max(160).min(4),
+  dob: z.date({
+    required_error: 'A date of birth is required.',
+  }),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 // This can come from your database or API.
 const defaultValues: Partial<ProfileFormValues> = {
+  firstName: 'Victor',
+  lastName: 'Chukwuma',
+  email: sessionStorage.getItem('userEmail') || '',
+  phoneNumber: '08012345678',
+  dob: new Date('2023-01-23'),
   bio: 'Team manager.',
 }
 
@@ -70,10 +85,10 @@ export default function ProfileForm() {
         </Button>
       </div>
       <Form {...form}>
-        <h2 className='mb-4 mt-2 font-semibold'>Personal Information</h2>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <h2 className='my-8 font-semibold'>Personal Information</h2>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-12'>
           {/* First Name and Last Name Fields */}
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-2 gap-2'>
             <FormField
               control={form.control}
               name='firstName'
@@ -81,12 +96,13 @@ export default function ProfileForm() {
                 <FormItem className='flex-1'>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='First Name' {...field} />
+                    <Input
+                      placeholder='First Name'
+                      {...field}
+                      disabled
+                      // className='border-none shadow-none outline-none'
+                    />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name. You can only change this
-                    once every 30 days.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -98,7 +114,12 @@ export default function ProfileForm() {
                 <FormItem className='flex-1'>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='Last Name' {...field} />
+                    <Input
+                      placeholder='Last Name'
+                      {...field}
+                      disabled
+                      // className='border-none shadow-none outline-none'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,7 +127,7 @@ export default function ProfileForm() {
             />
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-2 gap-2'>
             <FormField
               control={form.control}
               name='email'
@@ -118,13 +139,14 @@ export default function ProfileForm() {
                       type='email'
                       placeholder='you@alertgroup.com.ng'
                       {...field}
+                      disabled
+                      // className='border-none shadow-none outline-none'
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             {/* Phone Number Field */}
             <FormField
               control={form.control}
@@ -133,37 +155,81 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter phone number' {...field} />
+                    <Input
+                      placeholder='Enter phone number'
+                      {...field}
+                      disabled
+                      // className='border-none shadow-none outline-none'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+          <div className='grid grid-cols-2 gap-2'>
+            <FormField
+              control={form.control}
+              name='dob'
+              render={({ field }) => (
+                <FormItem className='flex flex-col gap-2'>
+                  <FormLabel>Date of birth</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          disabled
+                          className={cn(
+                            'w-[240px] pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            dayjs(field.value).format('MMM D, YYYY')
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className='w-auto p-0' align='start'>
+                      <Calendar
+                        mode='single'
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date: Date) =>
+                          date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name='bio'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder='Tell us a little bit about yourself'
-                    className='resize-none'
-                    rows={2}
-                    {...field}
-                  />
-                </FormControl>
-                {/* <FormDescription>
+            <FormField
+              control={form.control}
+              name='bio'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled
+                      // className='border-none shadow-none outline-none'
+                    />
+                  </FormControl>
+                  {/* <FormDescription>
                   Brief description of your profile. URLs are hyperlinked
                 </FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className='flex w-full justify-end'>
-            <Button type='submit'>Save Changes</Button>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </form>
       </Form>

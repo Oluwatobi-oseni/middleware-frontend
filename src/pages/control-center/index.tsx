@@ -33,24 +33,27 @@ type CardProps = React.ComponentProps<typeof Card>
 const controlCenterItems = [
   {
     name: 'Alert Savings',
-    description: 'Control whether you want users to see alert savings.',
+    description: 'Control whether users can access alert savings.',
   },
   {
     name: 'Business Banking',
-    description: 'Control whether you want users to see business banking.',
+    description: 'Control whether users can access business banking.',
   },
   {
     name: 'Consumer Banking',
-    description: 'Control whether you want users to see consumer banking.',
+    description: 'Control whether users can access consumer banking.',
   },
   {
-    name: 'Card Deposit',
-    description: 'Control whether you want users to see card deposit.',
+    name: 'Card Withdrawal',
+    description: 'Control whether users can access card wothdrawal.',
   },
-  { name: 'POS', description: 'Control whether you want users to see POS.' },
+  {
+    name: 'POS Features',
+    description: 'Control whether users can access POS features.',
+  },
   {
     name: 'E-cam',
-    description: 'Control whether you want users to see E-cam.',
+    description: 'Control whether users can access E-cam features.',
   },
 ]
 
@@ -170,8 +173,8 @@ export default function ControlCenter({ className, ...props }: CardProps) {
       <Layout.Body className='flex flex-col'>
         <div className='space-y-0.5'>
           <p className='text-muted-foreground'>
-            Turn the toggle on or off to activate or deactivate any of the
-            settings
+            Use the toggles below to activate or deactivate access to specific
+            features.
           </p>
         </div>
         <Separator className='my-4' />
