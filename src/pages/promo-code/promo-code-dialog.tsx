@@ -35,7 +35,7 @@ const formSchema = z.object({
   codeTitle: z.string().min(1, 'Code Title is required'),
   code: z.string().min(1, 'Code is required'),
   amount: z.number().min(0.01, 'Amount must be greater than zero'),
-  usageLimit: z.number().min(1, 'Number of usage must be at least 1'),
+  usageLimit: z.string().min(1, 'Number of usage must be at least 1'),
   expirationDate: z.date(),
 })
 
@@ -47,7 +47,7 @@ export function CreateCodeDialog() {
       codeTitle: '',
       code: '',
       amount: 0.0,
-      usageLimit: 0,
+      usageLimit: '',
       expirationDate: new Date(),
     },
   })
@@ -59,7 +59,7 @@ export function CreateCodeDialog() {
       title: data.codeTitle,
       key: data.code,
       amount: data.amount,
-      usage: data.usageLimit,
+      usage: parseInt(data.usageLimit),
       expirationDate: data.expirationDate.toISOString(),
     })
   }
@@ -228,7 +228,7 @@ export function CreateCodeDialog() {
             <Button
               type='submit'
               className='w-full'
-              disabled={!form.formState.isValid || isPending}
+              // disabled={!form.formState.isValid || isPending}
             >
               {isPending ? 'Creating...' : 'Create Code'}
             </Button>
