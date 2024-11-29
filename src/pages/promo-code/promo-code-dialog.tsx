@@ -28,13 +28,14 @@ import {
 import { CalendarIcon, Plus } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useCreateCode } from '@/lib/promo-code/hook'
 
 // Define form schema with zod
 const formSchema = z.object({
   codeTitle: z.string().min(1, 'Code Title is required'),
   code: z.string().min(1, 'Code is required'),
   amount: z.number().min(0.01, 'Amount must be greater than zero'),
-  usageLimit: z.number().min(1, 'Number of usage must be at least 1'),
+  usageLimit: z.string().min(1, 'Number of usage must be at least 1'),
   expirationDate: z.date(),
 })
 
@@ -46,13 +47,21 @@ export function CreateCodeDialog() {
       codeTitle: '',
       code: '',
       amount: 0.0,
-      usageLimit: 0,
+      usageLimit: '',
       expirationDate: new Date(),
     },
   })
 
+  const { mutate, isPending } = useCreateCode()
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log('Form submitted:', data)
+    mutate({
+      title: data.codeTitle,
+      key: data.code,
+      amount: data.amount,
+      usage: parseInt(data.usageLimit),
+      expirationDate: data.expirationDate.toISOString(),
+    })
   }
 
   return (
@@ -219,9 +228,9 @@ export function CreateCodeDialog() {
             <Button
               type='submit'
               className='w-full'
-              disabled={!form.formState.isValid}
+              // disabled={!form.formState.isValid || isPending}
             >
-              Create Code
+              {isPending ? 'Creating...' : 'Create Code'}
             </Button>
           </form>
         </Form>

@@ -23,6 +23,7 @@ const formSchema = z.object({
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const [disabledBtn, setDisabledBtn] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const verifyOTPMutation = useVerifyOTP()
   const maxRetries = 5
@@ -33,16 +34,17 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
   })
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    setIsLoading(true)
     verifyOTPMutation.mutate(
       { otp: data.otp },
       {
         onSuccess: () => {
-          // Handle success scenario here, like navigating to the dashboard
+          setIsLoading(false)
           form.reset()
           setIsSubmitted(false) // Reset the submission state on success
         },
         onError: () => {
-          // If the OTP is invalid, set isSubmitted to true to trigger the red border
+          setIsLoading(false)
           setIsSubmitted(true)
         },
       }
@@ -94,8 +96,8 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
                 {maxRetries} attempts left.
               </p>
             )}
-            <Button className='mt-2' disabled={disabledBtn}>
-              Verify Code
+            <Button className='mt-2' disabled={disabledBtn || isLoading}>
+              {isLoading ? 'Verifying...' : 'Verify Code'}
             </Button>
           </div>
         </form>

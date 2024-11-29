@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
+import { jwtDecode } from 'jwt-decode'
 
 interface RegisterFormProps extends HTMLAttributes<HTMLDivElement> {}
 const passwordSchema = z
@@ -66,6 +67,14 @@ const formSchema = z
 export function RegisterForm({ className, ...props }: RegisterFormProps) {
   const registerMutation = useCreatePassword()
 
+  // Decode email from onboardingToken
+  const onboardingToken = sessionStorage.getItem('onboardingToken')
+  let email = ''
+  if (onboardingToken) {
+    const decodedToken: { email?: string } = jwtDecode(onboardingToken)
+    email = decodedToken.email || ''
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,7 +91,10 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
     const onboardingToken = sessionStorage.getItem('onboardingToken')
     if (onboardingToken) {
       registerMutation.mutate({
-        token: onboardingToken, // Pass the token
+        firstname: data.firstName,
+        lastname: data.lastName,
+        dob: data.dateOfBirth.toISOString(),
+        phoneNumber: data.phoneNumber,
         password: data.password,
       })
     }
@@ -172,12 +184,32 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   <FormItem className='space-y-1'>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input placeholder='+234 123 456 789' {...field} />
+                      <Input
+                        type='tel'
+                        placeholder='+234 123 456 789'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* Email Field */}
+              <FormItem className='space-y-1'>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type='email'
+                    value={email}
+                    readOnly
+                    className='cursor-not-allowed bg-gray-100 text-muted-foreground'
+                  />
+                </FormControl>
+                <FormDescription className='text-sm text-muted-foreground'>
+                  This email is associated with your account and cannot be
+                  changed.
+                </FormDescription>
+              </FormItem>
             </div>
             {/* Password Field */}
             <FormField

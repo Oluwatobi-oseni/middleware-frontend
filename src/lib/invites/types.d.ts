@@ -3,6 +3,10 @@ export type OtpAuthResponse = {
   setupKey: string
 }
 
+export type CreatePasswordResponse = {
+  email: string
+}
+
 export interface AxiosErrorResponse {
   message: string
   name: string
