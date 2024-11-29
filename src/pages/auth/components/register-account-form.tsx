@@ -82,7 +82,10 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
     const onboardingToken = sessionStorage.getItem('onboardingToken')
     if (onboardingToken) {
       registerMutation.mutate({
-        token: onboardingToken, // Pass the token
+        firstname: data.firstName,
+        lastname: data.lastName,
+        dob: data.dateOfBirth.toISOString(), // Ensure this is in ISO 8601 format
+        phoneNumber: data.phoneNumber,
         password: data.password,
       })
     }

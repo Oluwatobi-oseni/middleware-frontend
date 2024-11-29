@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/use-toast'
+import { useCreateMessage } from '@/lib/messages/hook'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertCircle,
@@ -53,14 +54,32 @@ export function NewMessageDialog() {
     },
   })
 
+  const createMessageMutation = useCreateMessage()
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: 'Message submitted!',
-      description: (
-        <pre className='mt-2 w-full rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    const payload = {
+      category: data.category.toUpperCase().replace(/-/g, '_'), // Convert to API-expected format
+      channel: data.channel.toUpperCase().replace(/-/g, '_'),
+      title: data.title,
+      body: data.messageBody,
+    }
+
+    createMessageMutation.mutate(payload, {
+      onSuccess: ({ data }) => {
+        toast({
+          title: 'Message Created',
+          description: `Your message (ID: ${data.id}) has been sent successfully.`,
+        })
+        form.reset() // Reset the form after success
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description:
+            error.message || 'Failed to create the message. Please try again.',
+          variant: 'destructive',
+        })
+      },
     })
   }
 
@@ -89,7 +108,9 @@ export function NewMessageDialog() {
                   <Label htmlFor='category' className='text-right text-xs'>
                     Select Category
                   </Label>
-                  <Select {...form.register('category')}>
+                  <Select
+                    onValueChange={(value) => form.setValue('category', value)}
+                  >
                     <SelectTrigger id='category' className='col-span-3'>
                       <SelectValue
                         placeholder='Select an Option'
@@ -127,7 +148,9 @@ export function NewMessageDialog() {
                   <Label htmlFor='channel' className='text-right text-xs'>
                     Select Channel
                   </Label>
-                  <Select {...form.register('channel')}>
+                  <Select
+                    onValueChange={(value) => form.setValue('channel', value)}
+                  >
                     <SelectTrigger id='channel' className='col-span-3'>
                       <SelectValue
                         placeholder='Select an Option'
