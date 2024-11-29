@@ -10,39 +10,52 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { IconDownload, IconPlus } from '@tabler/icons-react'
-import { useState } from 'react'
+import { IconDownload } from '@tabler/icons-react'
+import { useState, useEffect } from 'react'
 
 export function ExportDialog() {
   const [selectedFormat, setSelectedFormat] = useState<
     'excel' | 'pdf' | 'csv' | null
   >(null)
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Retrieve the email from sessionStorage on component mount
+    const storedEmail = sessionStorage.getItem('userEmail')
+    setEmail(storedEmail)
+  }, [])
+
   const handleSelectFormat = (format: 'excel' | 'pdf' | 'csv') => {
     setSelectedFormat(format)
   }
 
   const handleConfirm = () => {
+    if (!email) {
+      console.error('Email not found in sessionStorage')
+      return
+    }
     console.log('Selected format:', selectedFormat)
     console.log('Email:', email)
+
+    // Add your API call logic here
   }
+
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className='flex items-center gap-2'>
-          <IconDownload />
-          <span>Export</span>
+      <DialogTrigger>
+        <Button variant={'outline'} className='text-xs'>
+          <IconDownload className='text-muted-200 h-4 w-4' />
+          Export
         </Button>
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='sm:max-w-[375px]'>
         <DialogHeader>
           <DialogTitle>Data Report</DialogTitle>
           <DialogDescription className='text-xs'>
-            Select the file type you would like to be sent to your email
+            Select the file type you would like to be sent via email.
           </DialogDescription>
         </DialogHeader>
-        <div className='col-span-3 flex space-x-4'>
+        <div className='col-span-3 flex space-x-2'>
           {/* Excel Option */}
           <div
             className={`flex cursor-pointer items-center p-2 ${
@@ -50,13 +63,8 @@ export function ExportDialog() {
             }`}
             onClick={() => handleSelectFormat('excel')}
           >
-            <img
-              src={excelIcon}
-              alt='excel'
-              className='h-6 w-6'
-              color='black'
-            />
-            <span className='ml-1'>Excel File</span>
+            <img src={excelIcon} alt='excel' className='h-6 w-6' />
+            <span className='ml-1'>Excel</span>
           </div>
 
           {/* PDF Option */}
@@ -66,8 +74,8 @@ export function ExportDialog() {
             }`}
             onClick={() => handleSelectFormat('pdf')}
           >
-            <img src={pdfIcon} alt='pdf' className='h-6 w-6' color='black' />
-            <span className='ml-1'>PDF File</span>
+            <img src={pdfIcon} alt='pdf' className='h-6 w-6' />
+            <span className='ml-1'>PDF</span>
           </div>
 
           {/* CSV Option */}
@@ -77,24 +85,18 @@ export function ExportDialog() {
             }`}
             onClick={() => handleSelectFormat('csv')}
           >
-            <img src={csvIcon} alt='csv' className='h-6 w-6' color='black' />
-            <span className='ml-1'>CSV File</span>
+            <img src={csvIcon} alt='csv' className='h-6 w-6' />
+            <span className='ml-1'>CSV</span>
           </div>
         </div>
-        <div className='mt-4 flex items-center gap-2'>
-          <div className='relative w-full'>
-            <span className='absolute left-3 top-1/2 -translate-y-1/2 transform'>
-              <IconPlus size={16} />
-            </span>
-            <Input
-              type='email'
-              placeholder='Add email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className='w-full pl-8' // padding-left to accommodate icon
-            />
-          </div>
-          <Button onClick={handleConfirm}>Confirm</Button>
+        <div className='mt-4 w-full'>
+          <Button
+            onClick={handleConfirm}
+            disabled={!selectedFormat}
+            className='w-full'
+          >
+            Confirm
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

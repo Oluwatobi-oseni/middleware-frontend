@@ -41,12 +41,6 @@ export const sidelinks: SideLink[] = [
     href: '/integrations',
     icon: <IconTablePlus size={18} />,
   },
-  {
-    title: 'Adminstration',
-    label: '',
-    href: '/adminstration',
-    icon: <IconLockAccessOff size={18} />,
-  },
   // {
   //   title: 'Users',
   //   label: '',
@@ -81,12 +75,6 @@ export const sidelinks: SideLink[] = [
   },
 
   {
-    title: 'Control Center',
-    label: '',
-    href: '/control-center',
-    icon: <IconAdjustments size={18} />,
-  },
-  {
     title: 'Switches',
     label: '',
     href: '/switches',
@@ -103,6 +91,18 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/promo-code',
     icon: <IconGift size={18} />,
+  },
+  {
+    title: 'Adminstration',
+    label: '',
+    href: '/adminstration',
+    icon: <IconLockAccessOff size={18} />,
+  },
+  {
+    title: 'Control Center',
+    label: '',
+    href: '/control-center',
+    icon: <IconAdjustments size={18} />,
   },
   // {
   //   title: 'Error Pages',
