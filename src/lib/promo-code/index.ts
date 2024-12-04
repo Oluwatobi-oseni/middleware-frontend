@@ -5,7 +5,7 @@ import { CodeResponse, CreateCodeRequest } from './type'
 
 export async function fetchCodes() {
   try {
-    const response = await client.get<CodeResponse>(
+    const response = await client.get<CodeResponse[]>(
       '/api/sharedServices/v1/codes',
       {
         headers: {

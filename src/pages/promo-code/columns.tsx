@@ -7,6 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconDots } from '@tabler/icons-react'
+import { CodeResponse } from '@/lib/promo-code/type'
+import { format } from 'date-fns'
 
 export type PromoCode = {
   id: string
@@ -17,18 +19,23 @@ export type PromoCode = {
   expiryDate: string // formatted expiry date
 }
 
-export const columns: ColumnDef<PromoCode>[] = [
+export const columns: ColumnDef<CodeResponse>[] = [
   {
-    accessorKey: 'codeTitle',
-    header: 'Code Title',
-    cell: ({ row }) => <span>{row.original.codeTitle}</span>,
+    accessorKey: 'serialId',
+    header: '#',
+    cell: ({ row }) => <span>{row.index + 1}</span>, // Displaying the serial ID based on row index
   },
   {
-    accessorKey: 'amountInNaira',
+    accessorKey: 'title',
+    header: 'Code Title',
+    cell: ({ row }) => <span>{row.original.title}</span>,
+  },
+  {
+    accessorKey: 'amount',
     header: 'Amount (₦)',
     cell: ({ row }) => (
       <span>
-        {row.original.amountInNaira.toLocaleString('en-NG', {
+        {parseFloat(row.original.amount).toLocaleString('en-NG', {
           style: 'currency',
           currency: 'NGN',
         })}
@@ -36,33 +43,52 @@ export const columns: ColumnDef<PromoCode>[] = [
     ),
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'usage',
+    header: 'Usage',
+    cell: ({ row }) => <span>{row.original.usage}</span>,
+  },
+  // {
+  //   accessorKey: 'expirationDate',
+  //   header: 'Expiration Date',
+  //   // cell: ({ row }) => (
+  //   //   <span>{new Date(row.original.expirationDate).toLocaleDateString()}</span>
+  //   // ),
+  //   cell: ({ row }) => {
+  //     const createdAt = row.original.expirationDate
+  //     return (
+  //       <span>
+  //         {createdAt ? format(new Date(createdAt), 'MMMM dd, yyyy') : 'N/A'}
+  //       </span>
+  //     )
+  //   },
+  // },
+  {
+    accessorKey: 'expirationDate',
+    header: 'Expiration Date',
     cell: ({ row }) => {
-      const isActive = row.original.status.toLowerCase() === 'active'
+      const expirationDate = row.original.expirationDate
+      if (!expirationDate) return <span>N/A</span>
+
+      // Format the date
+      const formattedDate = format(new Date(expirationDate), 'MMM dd, yyyy')
+
+      // Extract the day and year parts
+      const [month, day, year] = formattedDate.split(' ')
+
       return (
-        <span
-          className={`rounded px-2 py-1 text-sm font-medium ${
-            isActive
-              ? 'border border-green-500 bg-green-100 text-green-700'
-              : 'border border-red-500 bg-red-100 text-red-700'
-          }`}
-        >
-          {row.original.status}
+        <span className='uppercase'>
+          {month} <span className='font-geist-mono'>{day}</span> {year}
         </span>
       )
     },
   },
-  {
-    accessorKey: 'dateCreated',
-    header: 'Date Created',
-    cell: ({ row }) => <span>{row.original.dateCreated}</span>,
-  },
-  {
-    accessorKey: 'expiryDate',
-    header: 'Expiry Date',
-    cell: ({ row }) => <span>{row.original.expiryDate}</span>,
-  },
+  // {
+  //   accessorKey: 'createdAt',
+  //   header: 'Created At',
+  //   cell: ({ row }) => (
+  //     <span>{new Date(row.original.createdAt).toLocaleDateString()}</span>
+  //   ),
+  // },
   {
     id: 'actions',
     header: '',

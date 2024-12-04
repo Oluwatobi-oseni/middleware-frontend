@@ -144,7 +144,7 @@ export function CreateCodeDialog() {
                       />
                       <span className='absolute right-2 top-1/2 mr-8 flex -translate-y-1/2 transform items-center gap-1 text-muted-foreground'>
                         <img
-                          src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg' // Replace with actual path
+                          src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg'
                           alt='Nigerian flag'
                           className='h-6 w-6'
                         />

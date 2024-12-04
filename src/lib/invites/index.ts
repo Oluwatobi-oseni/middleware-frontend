@@ -37,14 +37,13 @@ export async function createPassword(payload: {
   password: string
 }) {
   try {
-    const token = sessionStorage.getItem('accessToken')
+    const token = sessionStorage.getItem('onboardingToken')
     const res = await client.post(
-      `/api/sharedServices/v1/invites/createPassword`,
+      `/api/sharedServices/v1/invites/createPassword?token=${token}`,
       payload,
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       }

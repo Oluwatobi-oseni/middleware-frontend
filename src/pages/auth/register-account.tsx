@@ -16,20 +16,40 @@ export default function RegisterAccount() {
 
   return (
     <>
-      <div className='container grid h-svh flex-col items-center justify-center bg-primary-foreground lg:max-w-none lg:px-0'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[480px] lg:p-8'>
-          <div className='mb-4 flex items-center justify-center'>
+      <div className='container relative grid h-svh flex-col items-center justify-center bg-black lg:max-w-none lg:grid-cols-2 lg:px-0'>
+        <div className='relative hidden h-full flex-col bg-muted p-10  dark:border-r lg:flex'>
+          <div className='absolute inset-0 bg-black' />
+          <div className='relative z-20 flex items-center text-lg font-medium'>
             <img
               src='https://alertmfb.com.ng/Logo.svg'
               alt='AlertLogo'
-              className='h-20 w-20'
+              className='mr-2 h-6 w-6'
+              style={{ filter: 'invert(1)' }}
             />
+            Alert MFB
           </div>
-          <div className='mb-4 flex items-center justify-center'>
-            <h1 className='text-3xl font-bold'>Welcome !</h1>{' '}
+
+          <img
+            src='https://alertmfb.com.ng/Logo.svg'
+            className='relative m-auto'
+            width={301}
+            height={60}
+            alt='Alert MFB'
+            // style={{ filter: 'invert(1)' }}
+          />
+
+          <div className='relative z-20 mt-auto'>
+            <blockquote className='space-y-2 text-muted'>
+              <p className='text-lg'>
+                &ldquo;We fix it even if its not broken&rdquo;
+              </p>
+              <footer className='text-sm'>Alert group</footer>
+            </blockquote>
           </div>
-          <Card className='p-6'>
-            <div className='mb-2 flex flex-col space-y-2 text-left'>
+        </div>
+        <div className='mx-auto flex flex-col justify-center space-y-2 sm:w-[640px]'>
+          <Card className='p-14'>
+            {/* <div className='mb-2 flex flex-col space-y-2 text-left'>
               <h1 className='text-md font-semibold tracking-tight'>
                 Set Your Password
               </h1>
@@ -37,7 +57,7 @@ export default function RegisterAccount() {
                 Please set and confirm your password to complete your
                 registration.
               </p>
-            </div>
+            </div> */}
             <RegisterForm />
           </Card>
         </div>

@@ -1,7 +1,5 @@
 import { Separator } from '@/components/ui/separator'
-// import { CreateAdminActionDialog } from './admin-action-dialog'  // A new dialog component for general admin actions
-// import { adminData } from './adminData'  // Data specific to admin actions or entities
-import { IconUser } from '@tabler/icons-react' // Use a more general icon for the admin page
+import { IconUser } from '@tabler/icons-react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
 import { useAdminUserData } from './data'
@@ -15,13 +13,21 @@ type DecodedToken = {
 
 const AdminPage = () => {
   const { data } = useAdminUserData()
-  const hasAdminData = data?.length
+  // const hasAdminData = data?.length
+
+  console.log('Original Data', data)
 
   // Decode access token to get the user's role
   const accessToken = sessionStorage.getItem('accessToken')
   const userRole = accessToken
     ? jwtDecode<DecodedToken>(accessToken).role
     : null
+
+  // Filter data to include only emails with "alert"
+  const filteredData =
+    data?.filter((user) => user.email.includes('alert')) || []
+
+  console.log('Filtered Data', filteredData)
 
   return (
     <div className='h-screen overflow-y-auto hide-scrollbar'>
@@ -34,10 +40,10 @@ const AdminPage = () => {
         {userRole === 'SUPER_ADMIN' && <AddTeamMemberDialog />}
       </div>
       <Separator />
-      {hasAdminData ? (
+      {filteredData.length > 0 ? (
         <DataTable
           columns={columns}
-          data={data}
+          data={filteredData} // Use filtered data here
           inputPlaceHolder='Search...'
           filterColumn='email'
           showButton={false}

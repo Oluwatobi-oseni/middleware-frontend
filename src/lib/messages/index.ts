@@ -5,7 +5,7 @@ import { AxiosError } from 'axios'
 
 export async function fetchMessages() {
   try {
-    const response = await client.get<MessageResponse>(
+    const response = await client.get<MessageResponse[]>(
       '/api/sharedServices/v1/messages',
       {
         headers: {

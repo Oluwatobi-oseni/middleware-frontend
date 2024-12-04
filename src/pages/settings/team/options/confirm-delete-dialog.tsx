@@ -27,14 +27,14 @@ export function DeleteUserDialog({ username, onClose }: DeleteUserDialogProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Button type='button' variant={'destructive'} className='w-full'>
-          Yes, Remove
+          Yes, Suspend
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-xs'>
         <DialogHeader>
-          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogTitle>Confirm Suspension</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete {username}? This action cannot be
+            Are you sure you want to suspend {username}? This action cannot be
             undone.
           </DialogDescription>
         </DialogHeader>

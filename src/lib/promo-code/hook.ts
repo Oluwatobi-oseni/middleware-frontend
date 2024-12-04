@@ -5,13 +5,13 @@ import { handleError } from '../auth/utilities/errorhandler'
 import { toast } from '@/components/ui/use-toast'
 import { CodeResponse, CreateCodeRequest } from './type'
 
-const fetchCodesAsync = async (): Promise<CodeResponse> => {
+const fetchCodesAsync = async (): Promise<CodeResponse[]> => {
   const data = await fetchCodes()
   return data
 }
 
 export const useCodes = () => {
-  return useQuery<CodeResponse>({
+  return useQuery<CodeResponse[]>({
     queryKey: ['codes'],
     queryFn: fetchCodesAsync,
     // onSuccess: (data) => { handleSuccess(...); },
