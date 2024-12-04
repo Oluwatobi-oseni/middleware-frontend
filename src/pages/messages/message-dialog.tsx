@@ -118,24 +118,24 @@ export function NewMessageDialog() {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='alert-savings' className='text-xs'>
+                      <SelectItem value='ALERT_SAVINGS' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <AlertCircle size={18} />
                           Alert Savings
                         </div>
                       </SelectItem>
-                      <SelectItem value='mobile-app' className='text-xs'>
+                      <SelectItem value='MOBILE_APP' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Smartphone size={18} />
                           Mobile App
                         </div>
                       </SelectItem>
-                      <SelectItem value='consumer-banking' className='text-xs'>
+                      <SelectItem value='CONSUMER_BANKING' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Banknote size={18} /> Consumer Banking Product
                         </div>
                       </SelectItem>
-                      <SelectItem value='business-banking' className='text-xs'>
+                      <SelectItem value='BUSINESS_BANKING' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Briefcase size={18} />
                           Business Banking Product
@@ -159,7 +159,7 @@ export function NewMessageDialog() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem
-                        value='mobile-notification'
+                        value='MOBILE_NOTIFICATION'
                         className='text-xs'
                       >
                         <div className='flex items-center gap-2'>
@@ -167,7 +167,7 @@ export function NewMessageDialog() {
                           Mobile Notification
                         </div>
                       </SelectItem>
-                      <SelectItem value='in-app-message' className='text-xs'>
+                      <SelectItem value='IN_APP_MESSAGES' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <MessageCircle size={18} />
                           In-App Messages
