@@ -11,9 +11,9 @@ const fetchMessagesAsync = async () => {
 }
 
 export const useMessages = () => {
-  return useQuery<MessageResponse>({
-    queryKey: ['messages'],
+  return useQuery<MessageResponse[]>({
     queryFn: fetchMessagesAsync,
+    queryKey: ['messages'],
     // onSuccess: (data) => {
     //   handleSuccess('Messages fetched successfully', `You have ${data.length} messages.`);
     // },

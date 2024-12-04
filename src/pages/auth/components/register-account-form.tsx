@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -7,16 +7,14 @@ import { Button } from '@/components/custom/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-// import { Switch } from '@/components/ui/switch'
 import { PasswordInput } from '@/components/custom/password-input'
-import { CalendarIcon, InfoIcon } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import { useCreatePassword } from '@/lib/invites/hook'
 import {
   Popover,
@@ -65,15 +63,15 @@ const formSchema = z
   })
 
 export function RegisterForm({ className, ...props }: RegisterFormProps) {
+  const [email, setEmail] = useState('')
+  useEffect(() => {
+    const onboardingToken = sessionStorage.getItem('onboardingToken')
+    if (onboardingToken) {
+      const decodedToken: { email?: string } = jwtDecode(onboardingToken)
+      setEmail(decodedToken.email || '')
+    }
+  }, [])
   const registerMutation = useCreatePassword()
-
-  // Decode email from onboardingToken
-  const onboardingToken = sessionStorage.getItem('onboardingToken')
-  let email = ''
-  if (onboardingToken) {
-    const decodedToken: { email?: string } = jwtDecode(onboardingToken)
-    email = decodedToken.email || ''
-  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -102,9 +100,27 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
 
   return (
     <div className={cn('grid gap-6', className)} {...props}>
+      <h1 className='text-2xl font-bold'>
+        Welcome{' '}
+        {email ? (
+          <span>
+            {email
+              .split('@')[0] // Take everything before the "@".
+              .split('.') // Split the username by ".".
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(' ')}{' '}
+          </span>
+        ) : (
+          'Guest'
+        )}
+        !
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='grid gap-2'>
+          <div className='grid gap-4'>
             <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
@@ -113,7 +129,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   <FormItem className='space-y-1'>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder='Ayo' {...field} />
+                      <Input placeholder='' {...field} className='py-4' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -126,7 +142,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   <FormItem className='space-y-1'>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder='Bamidele' {...field} />
+                      <Input placeholder='' {...field} className='py-4' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,8 +150,43 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
               />
             </div>
 
-            {/* Date of Birth and Phone Number */}
-            <div className='grid grid-cols-1 gap-2'>
+            <div className='grid grid-cols-1 gap-4'>
+              {/* Phone Number Field with Nigerian Flag */}
+              <FormField
+                control={form.control}
+                name='phoneNumber'
+                render={({ field }) => (
+                  <FormItem className='space-y-1'>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <div className='relative w-full'>
+                        {/* Flag Icon and Country Code */}
+                        <div className='absolute left-3 top-1/2 flex -translate-y-1/2 transform items-center space-x-2'>
+                          <img
+                            src='https://www.svgrepo.com/show/401711/flag-for-nigeria.svg'
+                            alt='Nigerian flag'
+                            className='h-6 w-6'
+                          />
+                          <span className='text-lg text-gray-700'>+234</span>
+                        </div>
+                        {/* Phone Number Input */}
+                        <Input
+                          type='tel'
+                          inputMode='numeric'
+                          pattern='[0-9]*'
+                          maxLength={11}
+                          onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            e.target.value = e.target.value.replace(/\D/g, '')
+                          }}
+                          className='w-full rounded-md border py-6 pl-[90px] pr-4 text-lg text-gray-700'
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name='dateOfBirth'
@@ -148,7 +199,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                           <Button
                             variant={'outline'}
                             className={cn(
-                              'w-[240px] pl-3 text-left font-normal',
+                              'w-full py-4 pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
@@ -177,40 +228,8 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='space-y-1'>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='tel'
-                        placeholder='+234 123 456 789'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* Email Field */}
-              <FormItem className='space-y-1'>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type='email'
-                    value={email}
-                    readOnly
-                    className='cursor-not-allowed bg-gray-100 text-muted-foreground'
-                  />
-                </FormControl>
-                <FormDescription className='text-sm text-muted-foreground'>
-                  This email is associated with your account and cannot be
-                  changed.
-                </FormDescription>
-              </FormItem>
             </div>
+
             {/* Password Field */}
             <FormField
               control={form.control}
@@ -221,6 +240,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   <FormControl>
                     <PasswordInput
                       placeholder='Enter your password'
+                      className='py-4'
                       {...field}
                     />
                   </FormControl>
@@ -239,6 +259,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
                   <FormControl>
                     <Input
                       type='password'
+                      className='py-4'
                       placeholder='Confirm your password'
                       {...field}
                     />
@@ -248,17 +269,21 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
               )}
             />
 
-            {/* Enable 2FA Switch */}
-            <FormItem className='mt-2 flex items-center space-x-2 rounded bg-blue-50 p-2'>
-              <InfoIcon className='text-blue-500' /> {/* Important Info Icon */}
+            {/* Enable 2FA Switch
+            <div className='mt-2 flex items-center space-x-2 rounded bg-blue-50 p-4'>
+              <InfoIcon className='text-blue-500 ' />
               <FormDescription className='text-sm'>
                 <strong>Note:</strong> Two-factor authentication is required for
                 enhanced security.
               </FormDescription>
-            </FormItem>
+            </div> */}
 
-            <Button className='mt-8' loading={registerMutation.isPending}>
-              Continue
+            <Button
+              className='mt-4 py-4'
+              type='submit'
+              disabled={!form.formState.isValid}
+            >
+              Sign Up
             </Button>
           </div>
         </form>

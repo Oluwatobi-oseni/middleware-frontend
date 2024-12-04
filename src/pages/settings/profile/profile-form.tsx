@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/custom/button'
@@ -23,6 +24,7 @@ import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
+import { useFetchUserDetails } from '@/lib/settings/hook'
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required.'),
@@ -44,29 +46,44 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  firstName: 'Victor',
-  lastName: 'Chukwuma',
-  email: sessionStorage.getItem('userEmail') || '',
-  phoneNumber: '08012345678',
-  dob: new Date('2023-01-23'),
-  bio: 'Team manager.',
-}
-
 export default function ProfileForm() {
+  const { data } = useFetchUserDetails()
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      dob: new Date(),
+      bio: '',
+    },
     mode: 'onChange',
   })
 
-  function onSubmit(data: ProfileFormValues) {
+  const { reset } = form
+
+  // Update form default values when data changes
+  useEffect(() => {
+    if (data) {
+      reset({
+        firstName: data.firstname || '',
+        lastName: data.lastname || '',
+        email: data.email || '',
+        phoneNumber: data.phoneNumber || '',
+        dob: data.dob ? new Date(data.dob) : new Date(),
+        bio: data.role || '',
+      })
+    }
+  }, [data, reset])
+
+  function onSubmit(values: ProfileFormValues) {
     toast({
       title: 'You submitted the following values:',
       description: (
         <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
+          <code className='text-white'>{JSON.stringify(values, null, 2)}</code>
         </pre>
       ),
     })
@@ -96,12 +113,7 @@ export default function ProfileForm() {
                 <FormItem className='flex-1'>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='First Name'
-                      {...field}
-                      disabled
-                      // className='border-none shadow-none outline-none'
-                    />
+                    <Input {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,19 +126,13 @@ export default function ProfileForm() {
                 <FormItem className='flex-1'>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='Last Name'
-                      {...field}
-                      disabled
-                      // className='border-none shadow-none outline-none'
-                    />
+                    <Input {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
           <div className='grid grid-cols-2 gap-2'>
             <FormField
               control={form.control}
@@ -135,19 +141,12 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type='email'
-                      placeholder='you@alertgroup.com.ng'
-                      {...field}
-                      disabled
-                      // className='border-none shadow-none outline-none'
-                    />
+                    <Input {...field} type='email' disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* Phone Number Field */}
             <FormField
               control={form.control}
               name='phoneNumber'
@@ -155,12 +154,7 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='Enter phone number'
-                      {...field}
-                      disabled
-                      // className='border-none shadow-none outline-none'
-                    />
+                    <Input {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -181,7 +175,7 @@ export default function ProfileForm() {
                           variant={'outline'}
                           disabled
                           className={cn(
-                            'w-[240px] pl-3 text-left font-normal',
+                            'w-full pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
@@ -209,7 +203,6 @@ export default function ProfileForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name='bio'
@@ -217,15 +210,8 @@ export default function ProfileForm() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      disabled
-                      // className='border-none shadow-none outline-none'
-                    />
+                    <Input {...field} disabled />
                   </FormControl>
-                  {/* <FormDescription>
-                  Brief description of your profile. URLs are hyperlinked
-                </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
