@@ -46,7 +46,6 @@ export function AddTeamMemberDialog() {
       email: '',
       role: '',
       // designation: '',
-      // designation: '',
     },
   })
 
