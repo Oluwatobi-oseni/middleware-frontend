@@ -32,7 +32,7 @@ const AddTeamMemberSchema = z.object({
   //   { message: 'Email must be from @alertgroup.com.ng or @alertmfb.com.ng' }
   // ),
   role: z.string().min(1, { message: 'Please select a role.' }),
-  designation: z.string().min(1, { message: 'Please enter a designation.' }),
+  designation: z.string().min(1, { message: 'Please enter a designation.' }).optional(),
 })
 
 type AddTeamMemberFormValues = z.infer<typeof AddTeamMemberSchema>
