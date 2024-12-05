@@ -46,6 +46,7 @@ export function AddTeamMemberDialog() {
       email: '',
       role: '',
       // designation: '',
+      // designation: '',
     },
   })
 
@@ -149,6 +150,7 @@ export function AddTeamMemberDialog() {
           <Button
             type='submit'
             className='mt-4 w-full'
+            // loading={inviteUserMutation.isPending}
             // loading={inviteUserMutation.isPending}
           >
             Add Member
