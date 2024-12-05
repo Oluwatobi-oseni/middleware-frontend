@@ -16,10 +16,11 @@ export default function CompleteRegistration() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem('theme-ui')
-    if (currentTheme !== 'light') {
-      localStorage.setItem('theme-ui', 'light')
-    }
+    // Force the light theme for this page
+    // localStorage.setItem('theme-ui', 'light')
+    // localStorage.setItem('vite-ui-theme', 'light')
+    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
   }, [])
   const handleContinue = () => {
     navigate('/sign-in')
@@ -32,7 +33,7 @@ export default function CompleteRegistration() {
 
   return (
     <>
-      <div className='container grid h-svh flex-col items-center justify-center bg-primary-foreground  lg:max-w-none lg:px-0'>
+      <div className='container grid h-svh flex-col items-center justify-center bg-primary-foreground lg:max-w-none lg:px-0'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[480px] lg:p-8'>
           <div className='mb-4 flex items-center justify-center'>
             <img
@@ -41,7 +42,7 @@ export default function CompleteRegistration() {
               className='h-20 w-20'
             />
           </div>
-          <Card className='mx-auto mt-4 max-w-md p-6'>
+          <Card className='mx-auto mt-4 max-w-md  p-6'>
             <h2 className='mb-2 text-center text-lg font-bold'>
               Complete 2FA Signup
             </h2>
