@@ -32,7 +32,10 @@ const AddTeamMemberSchema = z.object({
   //   { message: 'Email must be from @alertgroup.com.ng or @alertmfb.com.ng' }
   // ),
   role: z.string().min(1, { message: 'Please select a role.' }),
-  designation: z.string().min(1, { message: 'Please enter a designation.' }).optional(),
+  // designation: z
+  //   .string()
+  //   .min(1, { message: 'Please enter a designation.' })
+  //   .optional(),
 })
 
 type AddTeamMemberFormValues = z.infer<typeof AddTeamMemberSchema>
@@ -45,7 +48,7 @@ export function AddTeamMemberDialog() {
       // lastName: '',
       email: '',
       role: '',
-      designation: '',
+      // designation: '',
     },
   })
 
@@ -149,7 +152,7 @@ export function AddTeamMemberDialog() {
           <Button
             type='submit'
             className='mt-4 w-full'
-            loading={inviteUserMutation.isPending}
+            // loading={inviteUserMutation.isPending}
           >
             Add Member
           </Button>
