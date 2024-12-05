@@ -15,7 +15,7 @@ const AdminPage = () => {
   const { data } = useAdminUserData()
   // const hasAdminData = data?.length
 
-  console.log('Original Data', data)
+  // console.log('Original Data', data)
 
   // Decode access token to get the user's role
   const accessToken = sessionStorage.getItem('accessToken')
@@ -27,7 +27,7 @@ const AdminPage = () => {
   const filteredData =
     data?.filter((user) => user.email.includes('alert')) || []
 
-  console.log('Filtered Data', filteredData)
+  // console.log('Filtered Data', filteredData)
 
   return (
     <div className='h-screen overflow-y-auto hide-scrollbar'>
