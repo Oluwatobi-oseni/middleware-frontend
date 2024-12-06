@@ -32,10 +32,7 @@ const AddTeamMemberSchema = z.object({
   //   { message: 'Email must be from @alertgroup.com.ng or @alertmfb.com.ng' }
   // ),
   role: z.string().min(1, { message: 'Please select a role.' }),
-  // designation: z
-  //   .string()
-  //   .min(1, { message: 'Please enter a designation.' })
-  //   .optional(),
+  // designation: z.string().min(1, { message: 'Please enter a designation.' }),
 })
 
 type AddTeamMemberFormValues = z.infer<typeof AddTeamMemberSchema>
@@ -116,23 +113,6 @@ export function AddTeamMemberDialog() {
             />
           </div>
           <div className='grid grid-cols-2 gap-4'>
-            {/* Role Selection */}
-            <div className='mb-4'>
-              <Label htmlFor='role' className='text-xs font-light'>
-                Role
-              </Label>
-              <Select onValueChange={(value) => form.setValue('role', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder='Select a role' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='SENIOR'>Senior</SelectItem>
-                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
-                  <SelectItem value='JUNIOR'>Junior</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Designation Input */}
             <div>
               <Label htmlFor='designation' className='text-xs font-light'>
@@ -145,6 +125,22 @@ export function AddTeamMemberDialog() {
                 autoComplete='off'
                 // {...form.register('designation')}
               />
+            </div>
+            {/* Role Selection */}
+            <div className='mb-4'>
+              <Label htmlFor='role' className='text-xs font-light'>
+                Level
+              </Label>
+              <Select onValueChange={(value) => form.setValue('role', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder='Select a role' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='SENIOR'>Senior</SelectItem>
+                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+                  <SelectItem value='JUNIOR'>Junior</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

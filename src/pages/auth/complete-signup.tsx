@@ -9,16 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
 export default function CompleteRegistration() {
-  // Use the hook to handle the registration completion
   const onboardingToken = sessionStorage.getItem('onboardingToken')
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Force the light theme for this page
-    // localStorage.setItem('theme-ui', 'light')
-    // localStorage.setItem('vite-ui-theme', 'light')
     document.documentElement.classList.remove('dark')
     document.documentElement.classList.add('light')
   }, [])
@@ -26,7 +22,7 @@ export default function CompleteRegistration() {
     navigate('/sign-in')
   }
 
-  if (!isLoading && !data) {
+  if (!onboardingToken || (!isLoading && !data)) {
     navigate('/sign-in')
     return null
   }
@@ -78,8 +74,8 @@ export default function CompleteRegistration() {
                   size={180}
                   value={data.otpauth}
                   // value={'34'}
-                  fgColor='#000000'
-                  bgColor='#ffffff'
+                  // fgColor='#000000'
+                  // bgColor='#ffffff'
                 />
               )}
 
