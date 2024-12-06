@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BackupCodeDialog } from '@/components/backupcode-dialog'
+// import { BackupCodeDialog } from '@/components/backupcode-dialog'
 
 export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
   const [isCopied, setIsCopied] = useState(false)
@@ -32,7 +32,7 @@ export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
           />
           <button
             onClick={handleCopy}
-            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-muted hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-muted-foreground hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
             aria-label='Copy setup key'
           >
             {isCopied ? (
@@ -70,7 +70,7 @@ export default function SetupKeyInput({ setupKey }: { setupKey: string }) {
             {isCopied ? 'Copied!' : 'Copy to clipboard'}
           </div>
         </div>
-        <BackupCodeDialog />
+        {/* <BackupCodeDialog /> */}
       </div>
     </div>
   )

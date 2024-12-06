@@ -1,14 +1,17 @@
 import { Separator } from '@/components/ui/separator'
 import { CreateCodeDialog } from './promo-code-dialog'
 // import { DataTable } from '@/components/table/data-table'
-import { data } from './data'
+import { usePromoCodeData } from './data'
 // import { promoColumns } from './columns'
 import { IconGift } from '@tabler/icons-react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
 
-const promo = () => {
-  const hasPromoCodes = data.length > 0
+const Promo = () => {
+  const { data, error, isLoading } = usePromoCodeData()
+  const hasPromoCodes = data && data.length > 0
+
+  console.log('The data', data)
   return (
     <>
       <div>
@@ -20,7 +23,16 @@ const promo = () => {
         <CreateCodeDialog />
       </div>
       <Separator className='shadow' />
-      {hasPromoCodes ? (
+      {isLoading ? (
+        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+          <p className='text-xl font-semibold'>Loading promo codes...</p>
+        </div>
+      ) : error ? (
+        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+          <p className='text-xl font-semibold'>Failed to load promo codes</p>
+          <p className='text-muted-foreground'>Please try again later.</p>
+        </div>
+      ) : hasPromoCodes ? (
         <DataTable
           columns={columns}
           data={data}
@@ -28,6 +40,7 @@ const promo = () => {
           filterColumn='codeTitle'
           showButton
           buttonText='Search'
+          showDateRangePicker={false}
         />
       ) : (
         <div className='flex flex-grow flex-col items-center justify-center text-center'>
@@ -42,4 +55,4 @@ const promo = () => {
   )
 }
 
-export default promo
+export default Promo

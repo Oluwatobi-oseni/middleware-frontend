@@ -12,15 +12,15 @@ import { IconDots } from '@tabler/icons-react'
 interface AdminActionsMenuProps<T> {
   row: T
   onEdit: (row: T) => void
-  DeleteDialogComponent: React.FC<{ isOpen: boolean; onClose: () => void }>
+  SuspendDialogComponent: React.FC<{ isOpen: boolean; onClose: () => void }>
 }
 
 const AdminActionsMenu = <T,>({
   row,
   onEdit,
-  DeleteDialogComponent,
+  SuspendDialogComponent,
 }: AdminActionsMenuProps<T>) => {
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [isSuspendDialogOpen, setSuspendDialogOpen] = useState(false)
 
   return (
     <DropdownMenu>
@@ -35,19 +35,19 @@ const AdminActionsMenu = <T,>({
           onClick={() => onEdit(row)}
           className='text-muted-foreground'
         >
-          Edit
+          View
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => setDeleteDialogOpen(true)}
-          className='text-muted-foreground'
+          onClick={() => setSuspendDialogOpen(true)}
+          className='text-red-500'
         >
           Suspend
         </DropdownMenuItem>
       </DropdownMenuContent>
 
-      <DeleteDialogComponent
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
+      <SuspendDialogComponent
+        isOpen={isSuspendDialogOpen}
+        onClose={() => setSuspendDialogOpen(false)}
       />
     </DropdownMenu>
   )

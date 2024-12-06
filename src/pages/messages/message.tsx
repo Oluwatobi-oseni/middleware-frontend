@@ -1,25 +1,38 @@
 import { Separator } from '@/components/ui/separator'
 import { NewMessageDialog } from './message-dialog'
 import { IconMessages } from '@tabler/icons-react'
-import { data } from './data'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
+import { useMessageData } from './data'
 
-const message = () => {
-  const hasMessages = data.length > 0
+const Message = () => {
+  const { data, error, isLoading } = useMessageData()
+
+  // Check if messages exist
+  const hasMessages = data && data.length > 0
+
   return (
     <>
       <div>
         <p className='text-muted-foreground'>
-          Create and send messages to user and businesses
+          Create and send messages to users and businesses.
         </p>
       </div>
       <div className='my-4 flex justify-end'>
         <NewMessageDialog />
       </div>
       <Separator className='shadow' />
-      {/* <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3'></ul> */}
-      {hasMessages ? (
+
+      {isLoading ? (
+        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+          <p className='text-xl font-semibold'>Loading messages...</p>
+        </div>
+      ) : error ? (
+        <div className='flex flex-grow flex-col items-center justify-center text-center'>
+          <p className='text-xl font-semibold'>Failed to load messages</p>
+          <p className='text-muted-foreground'>Please try again later.</p>
+        </div>
+      ) : hasMessages ? (
         <DataTable
           columns={columns}
           data={data}
@@ -27,7 +40,7 @@ const message = () => {
           filterColumn='message'
           showButton
           buttonText='Search'
-          // onRowClick={(row) => console.log(row.id)}
+          showDateRangePicker={false}
         />
       ) : (
         <div className='flex flex-grow flex-col items-center justify-center text-center'>
@@ -42,4 +55,4 @@ const message = () => {
   )
 }
 
-export default message
+export default Message

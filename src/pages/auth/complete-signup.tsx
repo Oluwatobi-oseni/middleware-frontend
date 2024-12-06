@@ -1,23 +1,28 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { Button } from '@/components/custom/button'
 import { Card } from '@/components/ui/card'
-// import { SelectSeparator } from '@/components/ui/select'
+import { SelectSeparator } from '@/components/ui/select'
 
-// import SetupKeyInput from './components/setup-key'
+import SetupKeyInput from './components/setup-key'
 import { useOtpAuth } from '@/lib/invites/hook'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 export default function CompleteRegistration() {
-  // Use the hook to handle the registration completion
   const onboardingToken = sessionStorage.getItem('onboardingToken')
   const { data, isLoading } = useOtpAuth(onboardingToken as string)
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
+  }, [])
   const handleContinue = () => {
     navigate('/sign-in')
   }
 
-  if (!isLoading && !data) {
+  if (!onboardingToken || (!isLoading && !data)) {
     navigate('/sign-in')
     return null
   }
@@ -33,14 +38,14 @@ export default function CompleteRegistration() {
               className='h-20 w-20'
             />
           </div>
-          <Card className='mx-auto mt-4 max-w-md p-6'>
+          <Card className='mx-auto mt-4 max-w-md  p-6'>
             <h2 className='mb-2 text-center text-lg font-bold'>
               Complete 2FA Signup
             </h2>
 
             <p className='mb-4 text-center text-sm'>
-              To activate authentication, please scan the QR code below from an
-              authenticator app{' '}
+              To enable authentication, scan the QR code below with your
+              authenticator app.
             </p>
             {/* <div className='mb-4 flex items-center justify-center'>
                 <Tooltip>
@@ -57,24 +62,24 @@ export default function CompleteRegistration() {
                 </Tooltip>
               </div> */}
 
-            <div
-              className='mb-4 flex flex-col items-center justify-center gap-6 rounded-md border bg-white p-4 shadow-md'
+            {/* <div
+              className='mb-4 flex flex-col items-center justify-center gap-6 rounded-md border p-4 shadow-md'
               style={{
                 filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1))',
               }}
-            >
-              {/* {data && ( */}
-              <QRCodeSVG
-                size={180}
-                // value={data.otpauth}
-                value={'34'}
-                fgColor='#000000'
-                bgColor='#ffffff'
-              />
+            > */}
+            <div className='flex flex-col items-center justify-center gap-4'>
+              {data && data.otpauth && (
+                <QRCodeSVG
+                  size={180}
+                  value={data.otpauth}
+                  // value={'34'}
+                  // fgColor='#000000'
+                  // bgColor='#ffffff'
+                />
+              )}
 
-              {/* )} */}
               <Button
-                variant={'outline'}
                 className='mx-auto w-[180px]'
                 onClick={handleContinue}
                 loading={isLoading}
@@ -82,20 +87,21 @@ export default function CompleteRegistration() {
                 Continue
               </Button>
             </div>
+            {/* </div> */}
 
-            <div className='flex items-center'>
+            <div className='mt-4 flex items-center'>
               {/* <hr className='flex-grow' />
               <span className='text-xs'>OR Enter setup key manually</span>
               <hr className='flex-grow' /> */}
             </div>
             <div className='mt-2 text-center text-sm'>
               {/* <div className='mx-auto my-2 flex w-full max-w-sm'> */}
-              {/* {data && <SetupKeyInput setupKey={data.setupKey as string} />}
-              <SelectSeparator /> */}
+              {data && <SetupKeyInput setupKey={data.setupKey as string} />}
+              <SelectSeparator />
 
-              <p className='rounded-md border-l-4 border-blue-500 bg-muted-foreground p-2 text-sm font-medium '>
-                Using a laptop? Download an authenticator app on your mobile
-                device to complete setup.
+              <p className='rounded-md border-l-4 border-blue-500 bg-muted p-2 text-sm font-medium '>
+                Use the setup key to manually onboard your account in an
+                authenticator app if you encounter issues scanning the QR code.
               </p>
             </div>
           </Card>

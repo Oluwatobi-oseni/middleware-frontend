@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/use-toast'
+import { useCreateMessage } from '@/lib/messages/hook'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   AlertCircle,
@@ -53,14 +54,32 @@ export function NewMessageDialog() {
     },
   })
 
+  const createMessageMutation = useCreateMessage()
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: 'Message submitted!',
-      description: (
-        <pre className='mt-2 w-full rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    const payload = {
+      category: data.category.toUpperCase().replace(/-/g, '_'), // Convert to API-expected format
+      channel: data.channel.toUpperCase().replace(/-/g, '_'),
+      title: data.title,
+      body: data.messageBody,
+    }
+
+    createMessageMutation.mutate(payload, {
+      onSuccess: ({ data }) => {
+        toast({
+          title: 'Message Created',
+          description: `Your message (ID: ${data.id}) has been sent successfully.`,
+        })
+        form.reset() // Reset the form after success
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description:
+            error.message || 'Failed to create the message. Please try again.',
+          variant: 'destructive',
+        })
+      },
     })
   }
 
@@ -89,7 +108,9 @@ export function NewMessageDialog() {
                   <Label htmlFor='category' className='text-right text-xs'>
                     Select Category
                   </Label>
-                  <Select {...form.register('category')}>
+                  <Select
+                    onValueChange={(value) => form.setValue('category', value)}
+                  >
                     <SelectTrigger id='category' className='col-span-3'>
                       <SelectValue
                         placeholder='Select an Option'
@@ -97,24 +118,24 @@ export function NewMessageDialog() {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='alert-savings' className='text-xs'>
+                      <SelectItem value='ALERT_SAVINGS' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <AlertCircle size={18} />
                           Alert Savings
                         </div>
                       </SelectItem>
-                      <SelectItem value='mobile-app' className='text-xs'>
+                      <SelectItem value='MOBILE_APP' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Smartphone size={18} />
                           Mobile App
                         </div>
                       </SelectItem>
-                      <SelectItem value='consumer-banking' className='text-xs'>
+                      <SelectItem value='CONSUMER_BANKING' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Banknote size={18} /> Consumer Banking Product
                         </div>
                       </SelectItem>
-                      <SelectItem value='business-banking' className='text-xs'>
+                      <SelectItem value='BUSINESS_BANKING' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Briefcase size={18} />
                           Business Banking Product
@@ -127,7 +148,9 @@ export function NewMessageDialog() {
                   <Label htmlFor='channel' className='text-right text-xs'>
                     Select Channel
                   </Label>
-                  <Select {...form.register('channel')}>
+                  <Select
+                    onValueChange={(value) => form.setValue('channel', value)}
+                  >
                     <SelectTrigger id='channel' className='col-span-3'>
                       <SelectValue
                         placeholder='Select an Option'
@@ -136,7 +159,7 @@ export function NewMessageDialog() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem
-                        value='mobile-notification'
+                        value='MOBILE_NOTIFICATION'
                         className='text-xs'
                       >
                         <div className='flex items-center gap-2'>
@@ -144,7 +167,7 @@ export function NewMessageDialog() {
                           Mobile Notification
                         </div>
                       </SelectItem>
-                      <SelectItem value='in-app-message' className='text-xs'>
+                      <SelectItem value='IN_APP_MESSAGES' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <MessageCircle size={18} />
                           In-App Messages

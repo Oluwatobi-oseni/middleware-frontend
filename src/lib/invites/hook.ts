@@ -31,7 +31,10 @@ export const useInviteUser = () => {
 }
 
 const createPasswordAsync = async (payload: {
-  token: string
+  firstname: string
+  lastname: string
+  dob: string
+  phoneNumber: string
   password: string
 }) => {
   const data = await createPassword(payload)
