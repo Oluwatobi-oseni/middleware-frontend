@@ -113,23 +113,6 @@ export function AddTeamMemberDialog() {
             />
           </div>
           <div className='grid grid-cols-2 gap-4'>
-            {/* Role Selection */}
-            <div className='mb-4'>
-              <Label htmlFor='role' className='text-xs font-light'>
-                Role
-              </Label>
-              <Select onValueChange={(value) => form.setValue('role', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder='Select a role' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='SENIOR'>Senior</SelectItem>
-                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
-                  <SelectItem value='JUNIOR'>Junior</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Designation Input */}
             <div>
               <Label htmlFor='designation' className='text-xs font-light'>
@@ -143,13 +126,28 @@ export function AddTeamMemberDialog() {
                 // {...form.register('designation')}
               />
             </div>
+            {/* Role Selection */}
+            <div className='mb-4'>
+              <Label htmlFor='role' className='text-xs font-light'>
+                Level
+              </Label>
+              <Select onValueChange={(value) => form.setValue('role', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder='Select a role' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='SENIOR'>Senior</SelectItem>
+                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+                  <SelectItem value='JUNIOR'>Junior</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Add Member Button */}
           <Button
             type='submit'
             className='mt-4 w-full'
-            // loading={inviteUserMutation.isPending}
             // loading={inviteUserMutation.isPending}
           >
             Add Member

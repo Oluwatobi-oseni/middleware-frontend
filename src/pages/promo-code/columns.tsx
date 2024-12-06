@@ -77,7 +77,11 @@ export const columns: ColumnDef<CodeResponse>[] = [
 
       return (
         <span className='uppercase'>
-          {month} <span className='font-geist-mono'>{day}</span> {year}
+          {month}{' '}
+          <span className='font-geist-mono'>
+            {day}
+            {year}
+          </span>
         </span>
       )
     },

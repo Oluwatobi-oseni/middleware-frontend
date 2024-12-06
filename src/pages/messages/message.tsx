@@ -40,6 +40,7 @@ const Message = () => {
           filterColumn='message'
           showButton
           buttonText='Search'
+          showDateRangePicker={false}
         />
       ) : (
         <div className='flex flex-grow flex-col items-center justify-center text-center'>

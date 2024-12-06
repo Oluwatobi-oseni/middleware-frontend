@@ -40,6 +40,7 @@ const Promo = () => {
           filterColumn='codeTitle'
           showButton
           buttonText='Search'
+          showDateRangePicker={false}
         />
       ) : (
         <div className='flex flex-grow flex-col items-center justify-center text-center'>
