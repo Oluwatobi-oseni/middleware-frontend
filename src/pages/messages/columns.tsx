@@ -18,13 +18,13 @@ export const columns: ColumnDef<MessageResponse>[] = [
     header: 'Channel',
     cell: ({ row }) => {
       const channelStyles = {
-        IN_APP_MESSAGE: 'bg-green-50 text-green-700 border border-green-300',
+        IN_APP_MESSAGES: 'bg-green-50 text-green-700 border border-green-300',
         MOBILE_NOTIFICATION:
           'bg-purple-50 text-purple-700 border border-purple-300',
       }
 
       const channelLabels = {
-        IN_APP_MESSAGE: 'In App Messages',
+        IN_APP_MESSAGES: 'In App Messages',
         MOBILE_NOTIFICATION: 'Mobile Notifications',
       }
 

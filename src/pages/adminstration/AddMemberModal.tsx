@@ -21,6 +21,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useInviteUser } from '@/lib/invites/hook'
+import { useDesignations } from '@/lib/users/hook'
+
+// Utility function to format designations
+function formatDesignation(designation: string): string {
+  return designation
+    .toLowerCase()
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
 
 // Schema for form validation
 const AddTeamMemberSchema = z.object({
@@ -50,6 +60,7 @@ export function AddTeamMemberDialog() {
   })
 
   const inviteUserMutation = useInviteUser()
+  const { data: designations, isLoading, isError } = useDesignations()
 
   function onSubmit(data: AddTeamMemberFormValues) {
     inviteUserMutation.mutate(data)
@@ -118,13 +129,26 @@ export function AddTeamMemberDialog() {
               <Label htmlFor='designation' className='text-xs font-light'>
                 Designation
               </Label>
-              <Input
-                id='designation'
-                placeholder='Enter designation'
-                className='w-full placeholder:text-xs'
-                autoComplete='off'
-                // {...form.register('designation')}
-              />
+              <Select
+              // onValueChange={(value) => form.setValue('designation', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder='Select a designation' />
+                </SelectTrigger>
+                <SelectContent>
+                  {isLoading && <SelectItem value=''>Loading...</SelectItem>}
+                  {isError && (
+                    <SelectItem value=''>
+                      Failed to load designations
+                    </SelectItem>
+                  )}
+                  {designations?.map((designation) => (
+                    <SelectItem key={designation.id} value={designation.name}>
+                      {formatDesignation(designation.name)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             {/* Role Selection */}
             <div className='mb-4'>
@@ -137,7 +161,7 @@ export function AddTeamMemberDialog() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='SENIOR'>Senior</SelectItem>
-                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+                  {/* <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem> */}
                   <SelectItem value='JUNIOR'>Junior</SelectItem>
                 </SelectContent>
               </Select>

@@ -6,9 +6,18 @@ import { usePromoCodeData } from './data'
 import { IconGift } from '@tabler/icons-react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
+import { CodeResponse } from '@/lib/promo-code/type'
 
 const Promo = () => {
   const { data, error, isLoading } = usePromoCodeData()
+
+  const sortedData = data
+    ? data.sort((a: CodeResponse, b: CodeResponse) => {
+        const dateA = new Date(a.createdAt)
+        const dateB = new Date(b.createdAt)
+        return dateB.getTime() - dateA.getTime()
+      })
+    : []
   const hasPromoCodes = data && data.length > 0
 
   console.log('The data', data)
@@ -35,7 +44,7 @@ const Promo = () => {
       ) : hasPromoCodes ? (
         <DataTable
           columns={columns}
-          data={data}
+          data={sortedData}
           inputPlaceHolder='Search Promo Codes'
           filterColumn='codeTitle'
           showButton

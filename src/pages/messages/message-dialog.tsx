@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -44,6 +45,8 @@ const FormSchema = z.object({
 })
 
 export function NewMessageDialog() {
+  const [isDialogOpen, setDialogOpen] = useState(false)
+  const [isSubmitting, setSubmitting] = useState(false)
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -57,6 +60,7 @@ export function NewMessageDialog() {
   const createMessageMutation = useCreateMessage()
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setSubmitting(true)
     const payload = {
       category: data.category.toUpperCase().replace(/-/g, '_'), // Convert to API-expected format
       channel: data.channel.toUpperCase().replace(/-/g, '_'),
@@ -66,11 +70,13 @@ export function NewMessageDialog() {
 
     createMessageMutation.mutate(payload, {
       onSuccess: ({ data }) => {
+        const title = data.title || payload.title
         toast({
           title: 'Message Created',
-          description: `Your message (ID: ${data.id}) has been sent successfully.`,
+          description: `${title} message has been sent successfully.`,
         })
         form.reset() // Reset the form after success
+        setDialogOpen(false)
       },
       onError: (error) => {
         toast({
@@ -80,11 +86,14 @@ export function NewMessageDialog() {
           variant: 'destructive',
         })
       },
+      onSettled: () => {
+        setSubmitting(false)
+      },
     })
   }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
           <Plus size={16} />
@@ -130,15 +139,16 @@ export function NewMessageDialog() {
                           Mobile App
                         </div>
                       </SelectItem>
-                      <SelectItem value='CONSUMER_BANKING' className='text-xs'>
+                      <SelectItem value='CONSUMER_BANKING' className=' text-xs'>
                         <div className='flex items-center gap-2'>
-                          <Banknote size={18} /> Consumer Banking Product
+                          <Banknote size={18} />{' '}
+                          <span className='trucate'>Consumer Banking</span>
                         </div>
                       </SelectItem>
                       <SelectItem value='BUSINESS_BANKING' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <Briefcase size={18} />
-                          Business Banking Product
+                          <span className=''>Business Banking</span>
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -203,8 +213,12 @@ export function NewMessageDialog() {
               </div>
             </div>
             <DialogFooter>
-              <Button type='submit' className='w-full'>
-                Send Message
+              <Button
+                type='submit'
+                className='w-full'
+                disabled={isSubmitting || !form.formState.isValid}
+              >
+                {isSubmitting ? 'Message is Sending...' : 'Send Message'}
               </Button>
             </DialogFooter>
           </form>

@@ -361,26 +361,26 @@ export const useSignOut = () => {
   }, [navigate])
 
   // Auto sign-out after 5 minutes of inactivity
-  useEffect(() => {
-    const inactivityTime = 5 * 60 * 1000
-    let timeoutId: NodeJS.Timeout
+  // useEffect(() => {
+  //   const inactivityTime = 5 * 60 * 1000
+  //   let timeoutId: NodeJS.Timeout
 
-    const resetTimeout = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(signOut, inactivityTime)
-    }
+  //   const resetTimeout = () => {
+  //     clearTimeout(timeoutId)
+  //     timeoutId = setTimeout(signOut, inactivityTime)
+  //   }
 
-    resetTimeout()
+  //   resetTimeout()
 
-    window.addEventListener('mousemove', resetTimeout)
-    window.addEventListener('keypress', resetTimeout)
+  //   window.addEventListener('mousemove', resetTimeout)
+  //   window.addEventListener('keypress', resetTimeout)
 
-    return () => {
-      clearTimeout(timeoutId)
-      window.removeEventListener('mousemove', resetTimeout)
-      window.removeEventListener('keypress', resetTimeout)
-    }
-  }, [signOut])
+  //   return () => {
+  //     clearTimeout(timeoutId)
+  //     window.removeEventListener('mousemove', resetTimeout)
+  //     window.removeEventListener('keypress', resetTimeout)
+  //   }
+  // }, [signOut])
 
   return signOut
 }

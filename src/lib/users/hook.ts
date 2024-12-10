@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { userDetails } from '.'
+import { fetchDesignations, userDetails } from '.'
 
 const fetchUsersAsync = async () => {
   const data = await userDetails()
@@ -10,5 +10,16 @@ export const useUsers = () => {
   return useQuery({
     queryFn: fetchUsersAsync,
     queryKey: ['users'],
+  })
+}
+
+const fetchDesignationsAsync = async () => {
+  const data = await fetchDesignations()
+  return data
+}
+export const useDesignations = () => {
+  return useQuery({
+    queryFn: fetchDesignationsAsync,
+    queryKey: ['designations'],
   })
 }

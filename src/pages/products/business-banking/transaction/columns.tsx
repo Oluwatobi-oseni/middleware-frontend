@@ -45,7 +45,9 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'amount',
     header: 'Amount',
-    cell: ({ row }) => <div className='font-medium'>{row.original.amount}</div>,
+    cell: ({ row }) => (
+      <div className='font-medium'>₦ {row.original.amount}</div>
+    ),
   },
   {
     accessorKey: 'referenceId',

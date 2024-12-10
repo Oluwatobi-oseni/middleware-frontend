@@ -23,7 +23,7 @@ export const columns: ColumnDef<CodeResponse>[] = [
   {
     accessorKey: 'serialId',
     header: '#',
-    cell: ({ row }) => <span>{row.index + 1}</span>, // Displaying the serial ID based on row index
+    cell: ({ row }) => <span className='font-geist-mono'>{row.index + 1}</span>, // Displaying the serial ID based on row index
   },
   {
     accessorKey: 'title',
@@ -34,7 +34,7 @@ export const columns: ColumnDef<CodeResponse>[] = [
     accessorKey: 'amount',
     header: 'Amount (₦)',
     cell: ({ row }) => (
-      <span>
+      <span className='font-geist-mono'>
         {parseFloat(row.original.amount).toLocaleString('en-NG', {
           style: 'currency',
           currency: 'NGN',
@@ -45,7 +45,9 @@ export const columns: ColumnDef<CodeResponse>[] = [
   {
     accessorKey: 'usage',
     header: 'Usage',
-    cell: ({ row }) => <span>{row.original.usage}</span>,
+    cell: ({ row }) => (
+      <span className='font-geist-mono'>{row.original.usage}</span>
+    ),
   },
   // {
   //   accessorKey: 'expirationDate',

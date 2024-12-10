@@ -6,3 +6,8 @@ export type userDetailsType = {
   role: 'SUPER_ADMIN' | 'MEMBER'
   createdAt: string
 }
+
+export type designationType = {
+  id: number
+  name: string
+}
