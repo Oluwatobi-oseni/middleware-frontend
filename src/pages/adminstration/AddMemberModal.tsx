@@ -34,15 +34,15 @@ function formatDesignation(designation: string): string {
 
 // Schema for form validation
 const AddTeamMemberSchema = z.object({
-  // firstName: z.string().min(1, { message: 'Please enter the first name.' }),
-  // lastName: z.string().min(1, { message: 'Please enter the last name.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   // .refine(
   //   (email) => /@(alertgroup\.com\.ng|alertmfb\.com\.ng)$/i.test(email),
   //   { message: 'Email must be from @alertgroup.com.ng or @alertmfb.com.ng' }
   // ),
   role: z.string().min(1, { message: 'Please select a role.' }),
-  // designation: z.string().min(1, { message: 'Please enter a designation.' }),
+  designationId: z
+    .number()
+    .int({ message: 'Please select a valid designation.' }),
 })
 
 type AddTeamMemberFormValues = z.infer<typeof AddTeamMemberSchema>
@@ -55,7 +55,7 @@ export function AddTeamMemberDialog() {
       // lastName: '',
       email: '',
       role: '',
-      // designation: '',
+      designationId: undefined,
     },
   })
 
@@ -64,6 +64,7 @@ export function AddTeamMemberDialog() {
 
   function onSubmit(data: AddTeamMemberFormValues) {
     inviteUserMutation.mutate(data)
+    // console.log(data)
   }
 
   return (
@@ -130,7 +131,9 @@ export function AddTeamMemberDialog() {
                 Designation
               </Label>
               <Select
-              // onValueChange={(value) => form.setValue('designation', value)}
+                onValueChange={(value) =>
+                  form.setValue('designationId', parseInt(value, 10))
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder='Select a designation' />
@@ -143,7 +146,10 @@ export function AddTeamMemberDialog() {
                     </SelectItem>
                   )}
                   {designations?.map((designation) => (
-                    <SelectItem key={designation.id} value={designation.name}>
+                    <SelectItem
+                      key={designation.id}
+                      value={designation.id.toString()}
+                    >
                       {formatDesignation(designation.name)}
                     </SelectItem>
                   ))}

@@ -3,7 +3,11 @@ import client from '../axios'
 import { AxiosErrorResponse, OtpAuthResponse } from './types'
 
 // Invite User API function
-export async function inviteUser(payload: { email: string; role: string }) {
+export async function inviteUser(payload: {
+  email: string
+  role: string
+  designationId: number
+}) {
   try {
     const token = sessionStorage.getItem('accessToken')
     const res = await client.post(
