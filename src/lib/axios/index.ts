@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  // baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: 'https://api-middleware-staging.alertmfb.com.ng',
   timeout: 10000,
   headers: {},
 })
