@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { MemberDialog } from '@/pages/settings/team/MemberModal'
+import { AddTeamMemberDialog } from '@/pages/adminstration/AddMemberModal'
 
 type AccountName = {
   name: string
@@ -189,7 +189,7 @@ export default function BasicTable() {
             <IconViewfinder className='h-4 w-4' />
             <span>Manage Roles</span>
           </Button>
-          <MemberDialog />
+          <AddTeamMemberDialog />
         </div>
         <div className='mb-4 flex items-center rounded-lg border border-gray-300 p-2'>
           <IconSearch className='mr-2 text-gray-500' />
