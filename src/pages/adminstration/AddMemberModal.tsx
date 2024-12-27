@@ -21,18 +21,28 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useInviteUser } from '@/lib/invites/hook'
+import { useDesignations } from '@/lib/users/hook'
+
+// Utility function to format designations
+function formatDesignation(designation: string): string {
+  return designation
+    .toLowerCase()
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
 
 // Schema for form validation
 const AddTeamMemberSchema = z.object({
-  // firstName: z.string().min(1, { message: 'Please enter the first name.' }),
-  // lastName: z.string().min(1, { message: 'Please enter the last name.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   // .refine(
   //   (email) => /@(alertgroup\.com\.ng|alertmfb\.com\.ng)$/i.test(email),
   //   { message: 'Email must be from @alertgroup.com.ng or @alertmfb.com.ng' }
   // ),
   role: z.string().min(1, { message: 'Please select a role.' }),
-  // designation: z.string().min(1, { message: 'Please enter a designation.' }),
+  designationId: z
+    .number()
+    .int({ message: 'Please select a valid designation.' }),
 })
 
 type AddTeamMemberFormValues = z.infer<typeof AddTeamMemberSchema>
@@ -45,14 +55,16 @@ export function AddTeamMemberDialog() {
       // lastName: '',
       email: '',
       role: '',
-      // designation: '',
+      designationId: undefined,
     },
   })
 
   const inviteUserMutation = useInviteUser()
+  const { data: designations, isLoading, isError } = useDesignations()
 
   function onSubmit(data: AddTeamMemberFormValues) {
     inviteUserMutation.mutate(data)
+    // console.log(data)
   }
 
   return (
@@ -118,13 +130,31 @@ export function AddTeamMemberDialog() {
               <Label htmlFor='designation' className='text-xs font-light'>
                 Designation
               </Label>
-              <Input
-                id='designation'
-                placeholder='Enter designation'
-                className='w-full placeholder:text-xs'
-                autoComplete='off'
-                // {...form.register('designation')}
-              />
+              <Select
+                onValueChange={(value) =>
+                  form.setValue('designationId', parseInt(value, 10))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder='Select a designation' />
+                </SelectTrigger>
+                <SelectContent>
+                  {isLoading && <SelectItem value=''>Loading...</SelectItem>}
+                  {isError && (
+                    <SelectItem value=''>
+                      Failed to load designations
+                    </SelectItem>
+                  )}
+                  {designations?.map((designation) => (
+                    <SelectItem
+                      key={designation.id}
+                      value={designation.id.toString()}
+                    >
+                      {formatDesignation(designation.name)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             {/* Role Selection */}
             <div className='mb-4'>
@@ -137,7 +167,7 @@ export function AddTeamMemberDialog() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='SENIOR'>Senior</SelectItem>
-                  <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem>
+                  {/* <SelectItem value='SUPER_ADMIN'>Super Admin</SelectItem> */}
                   <SelectItem value='JUNIOR'>Junior</SelectItem>
                 </SelectContent>
               </Select>

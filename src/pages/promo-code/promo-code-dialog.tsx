@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -40,7 +41,7 @@ const formSchema = z.object({
 })
 
 export function CreateCodeDialog() {
-  //   const [date, setDate] = useState<Date | undefined>(new Date())
+  const [dialogOpen, setDialogOpen] = useState(false)
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,22 +51,30 @@ export function CreateCodeDialog() {
       usageLimit: '',
       expirationDate: new Date(),
     },
+    mode: 'onChange',
   })
 
   const { mutate, isPending } = useCreateCode()
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    mutate({
-      title: data.codeTitle,
-      key: data.code,
-      amount: data.amount,
-      usage: parseInt(data.usageLimit),
-      expirationDate: data.expirationDate.toISOString(),
-    })
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      await mutate({
+        title: data.codeTitle,
+        key: data.code,
+        amount: data.amount,
+        usage: parseInt(data.usageLimit),
+        expirationDate: data.expirationDate.toISOString(),
+      })
+      setDialogOpen(false)
+      // Reset the form on success
+      form.reset()
+    } catch (error) {
+      console.error('Error creating code:', error)
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
           <Plus size={16} />
@@ -211,9 +220,7 @@ export function CreateCodeDialog() {
                           mode='single'
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date('1900-01-01')
-                          }
+                          disabled={(date) => date < new Date('1900-01-01')}
                           initialFocus
                         />
                       </PopoverContent>
@@ -228,7 +235,7 @@ export function CreateCodeDialog() {
             <Button
               type='submit'
               className='w-full'
-              // disabled={!form.formState.isValid || isPending}
+              disabled={!form.formState.isValid || isPending}
             >
               {isPending ? 'Creating...' : 'Create Code'}
             </Button>

@@ -5,6 +5,7 @@ import AdminActionsMenu from '@/components/custom/admin-action-menu'
 import { DeleteMemberDialog } from '../settings/team/options/delete-dialog'
 import { format } from 'date-fns'
 // import { IconCheck, IconClock } from '@tabler/icons-react'
+// import { IconCheck, IconClock } from '@tabler/icons-react'
 
 export const columns: ColumnDef<userDetailsType>[] = [
   {
@@ -62,10 +63,27 @@ export const columns: ColumnDef<userDetailsType>[] = [
   //     )
   //   },
   // },
-
+  {
+    id: 'designation',
+    header: 'Designation',
+    cell: ({ row }) => {
+      const designation = row.original.Designation
+        ? row.original.Designation.name === 'IT_OFFICE'
+          ? 'IT Office'
+          : row.original.Designation.name
+              .split('_')
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(' ')
+        : 'N/A' // Default value
+      return <span>{designation}</span>
+    },
+  },
   {
     accessorKey: 'role',
-    header: 'Role',
+    header: 'Level',
     cell: ({ row }) => {
       const roleStyles = {
         SUPER_ADMIN: 'bg-blue-100 text-blue-800 border border-blue-300',
@@ -97,25 +115,25 @@ export const columns: ColumnDef<userDetailsType>[] = [
     },
   },
 
-  // {
-  //   id: 'twoFactorAuth',
-  //   header: '2FA Status',
-  //   cell: ({ row }) => {
-  //     const [is2FAEnabled, setIs2FAEnabled] = useState(true) // Default to ON
-  //     const statusClass = is2FAEnabled
-  //       ? 'bg-green-100 text-green-800 border border-green-300'
-  //       : 'bg-red-100 text-red-800 border border-red-300'
+  {
+    id: 'twoFactorAuth',
+    header: '2FA Status',
+    cell: ({ row }) => {
+      const is2FAEnabled = row.original.has2FAEnabled ?? false
+      const statusClass = is2FAEnabled
+        ? 'bg-green-100 text-green-800 border border-green-300'
+        : 'bg-red-100 text-red-800 border border-red-300'
 
-  //     return (
-  //       <button
-  //         onClick={() => setIs2FAEnabled((prev) => !prev)}
-  //         className={`inline-block rounded-full px-3 py-1 text-xs font-bold uppercase shadow-sm ${statusClass}`}
-  //       >
-  //         {is2FAEnabled ? 'ON' : 'OFF'}
-  //       </button>
-  //     )
-  //   },
-  // },
+      return (
+        <span
+          className={`inline-block rounded-full px-3 py-1 text-xs font-bold uppercase shadow-sm ${statusClass}`}
+        >
+          {is2FAEnabled ? 'ON' : 'OFF'}
+        </span>
+      )
+    },
+  },
+
   {
     accessorKey: 'createdAt',
     header: 'Date Created',
@@ -131,7 +149,11 @@ export const columns: ColumnDef<userDetailsType>[] = [
 
       return (
         <span className='uppercase'>
-          {month} <span className='font-geist-mono'>{day}</span> {year}
+          {month}{' '}
+          <span className='font-geist-mono'>
+            {day}
+            {year}
+          </span>
         </span>
       )
     },

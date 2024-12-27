@@ -45,8 +45,9 @@ import {
 import { ChevronsUpDown } from 'lucide-react'
 import WalletCards from './components/wallet'
 import { DataTable } from '@/components/table/data-table'
-import { columns } from './transaction/columns'
+import { columns, User } from './transaction/columns'
 import { data } from './transaction/data'
+import TransactionDetailsDialog from './transaction/transactionDetailsDialog'
 
 const FormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
@@ -55,6 +56,21 @@ const FormSchema = z.object({
 })
 
 const UserDetails = () => {
+  const [selectedTransaction, setSelectedTransaction] = useState<User | null>(
+    null
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // Handler to open the dialog with selected row data
+  const handleRowClick = (transaction: User) => {
+    setSelectedTransaction(transaction)
+    setIsDialogOpen(true)
+  }
+
+  // Handler to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false)
+    setSelectedTransaction(null)
+  }
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -620,8 +636,15 @@ const UserDetails = () => {
             inputPlaceHolder='Search Transactions'
             filterColumn='accountName'
             showDateRangePicker={false}
+            onRowClick={handleRowClick}
           />
         </div>
+        {isDialogOpen && selectedTransaction && (
+          <TransactionDetailsDialog
+            transaction={selectedTransaction}
+            onClose={closeDialog}
+          />
+        )}
       </div>
     </>
   )

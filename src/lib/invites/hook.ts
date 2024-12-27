@@ -5,7 +5,11 @@ import { handleError } from '../auth/utilities/errorhandler'
 import { toast } from '@/components/ui/use-toast'
 import { useNavigate } from 'react-router-dom'
 
-const inviteUserAsync = async (payload: { email: string; role: string }) => {
+const inviteUserAsync = async (payload: {
+  email: string
+  role: string
+  designationId: number
+}) => {
   const data = await inviteUser(payload)
   return { data, payload }
 }

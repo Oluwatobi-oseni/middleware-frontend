@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import {
   AuthState,
   SES_TOKEN_NAME,
@@ -24,8 +24,9 @@ import { RequestPasswordResetResponse } from './types'
 export const useAuth = (): AuthState => {
   const token = cookies.get(SES_TOKEN_NAME)
   const is2FAVerified = sessionStorage.getItem('is2FAVerified') === 'true'
+  const accessToken = sessionStorage.getItem('accessToken')
   // return { isSignedIn: !!token && is2FAVerified }
-  return { isSignedIn: Boolean(token && is2FAVerified) }
+  return { isSignedIn: Boolean(token && is2FAVerified) || Boolean(accessToken) }
 }
 
 // Complete Registration Hook
@@ -89,12 +90,23 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: signInAsync,
     onSuccess: ({ data, payload }) => {
-      if (data.success) {
+      if (data?.isAuthenticated && data.access_token) {
+        sessionStorage.setItem('accessToken', data.access_token)
+        // Navigate directly to the dashboard
+        navigate('/dashboard', { replace: true })
+        handleSuccess('Welcome back!', 'You have been successfully signed in.')
+        return
+      }
+      if (data?.success) {
         const { email } = payload
+        const id = data.id
+        if (!id) {
+          return
+        }
 
         // Store token temporarily in state
         sessionStorage.setItem('hasPassedLogin', 'true')
-        sessionStorage.setItem('userId', data.id.toString())
+        sessionStorage.setItem('userId', id.toString())
         sessionStorage.setItem('userEmail', email)
 
         // client.defaults.headers.common['Authorization'] =
@@ -122,13 +134,15 @@ export const useSignIn = () => {
           description: 'Invalid credentials. Please try again.',
           variant: 'destructive',
         })
-      } else {
-        toast({
-          title: 'Error',
-          description: 'Something went wrong. Please try again.',
-          variant: 'destructive',
-        })
       }
+      // else {
+      //   console.log(error)
+      //   toast({
+      //     title: 'Error',
+      //     description: 'Something went wrong. Please try again please.',
+      //     variant: 'destructive',
+      //   })
+      // }
     },
   })
 }
@@ -345,8 +359,107 @@ export const useUpdatePassword = () => {
 }
 
 // Sign Out Hook
+// export const useSignOut = () => {
+//   const navigate = useNavigate()
+
+//   const signOut = useCallback(() => {
+//     cookies.remove(SES_TOKEN_NAME, { path: '/' })
+//     sessionStorage.removeItem('accessToken')
+//     delete client.defaults.headers.common['Authorization']
+//     sessionStorage.removeItem('hasPassedLogin')
+
+//     handleSuccess('Signed Out', 'You have been successfully signed out.')
+
+//     navigate('/sign-in')
+//     window.location.reload()
+//   }, [navigate])
+
+//   // Auto sign-out after 5 minutes of inactivity
+//   // useEffect(() => {
+//   //   const inactivityTime = 5 * 60 * 1000
+//   //   let timeoutId: NodeJS.Timeout
+
+//   //   const resetTimeout = () => {
+//   //     clearTimeout(timeoutId)
+//   //     timeoutId = setTimeout(signOut, inactivityTime)
+//   //   }
+
+//   //   resetTimeout()
+
+//   //   window.addEventListener('mousemove', resetTimeout)
+//   //   window.addEventListener('keypress', resetTimeout)
+
+//   //   return () => {
+//   //     clearTimeout(timeoutId)
+//   //     window.removeEventListener('mousemove', resetTimeout)
+//   //     window.removeEventListener('keypress', resetTimeout)
+//   //   }
+//   // }, [signOut])
+
+//   return signOut
+// }
+// export const useSignOut = ():JSX.Element => {
+//   const navigate = useNavigate();
+//   const [isDialogOpen, setIsDialogOpen] = useState(false);
+//   const [extendSession, setExtendSession] = useState(false);
+
+//   const signOut = useCallback(() => {
+//     cookies.remove('SES_TOKEN_NAME', { path: '/' });
+//     sessionStorage.removeItem('accessToken');
+//     delete client.defaults.headers.common['Authorization'];
+//     sessionStorage.removeItem('hasPassedLogin');
+//     navigate('/sign-in');
+//     window.location.reload();
+//   }, [navigate]);
+
+//   const extendSessionHandler = useCallback(() => {
+//     setExtendSession(true);
+//     setIsDialogOpen(false);
+//   }, []);
+
+//   useEffect(() => {
+//     const inactivityTime = 5 * 60 * 1000;
+//     let timeoutId: NodeJS.Timeout;
+
+//     const showDialog = () => {
+//       setIsDialogOpen(true);
+//     };
+
+//     const resetTimeout = () => {
+//       clearTimeout(timeoutId);
+//       setExtendSession(false);
+//       timeoutId = setTimeout(showDialog, inactivityTime);
+//     };
+
+//     resetTimeout();
+
+//     window.addEventListener('mousemove', resetTimeout);
+//     window.addEventListener('keypress', resetTimeout);
+
+//     return () => {
+//       clearTimeout(timeoutId);
+//       window.removeEventListener('mousemove', resetTimeout);
+//       window.removeEventListener('keypress', resetTimeout);
+//     };
+//   }, []);
+
+//   return (
+//     <InactivitySignOutDialog
+//       // isOpen={isDialogOpen}
+//       // onSignOut={signOut}
+//       // onExtendSession={extendSessionHandler}
+//     />
+//   );
+// };
+
+const INACTIVITY_TIME = 5 * 60 * 1000 // 5 minutes
+const COUNTDOWN_TIME = 5 * 60 // 5 minutes in seconds
+
 export const useSignOut = () => {
   const navigate = useNavigate()
+  const [showDialog, setShowDialog] = useState(false)
+  const [countdown, setCountdown] = useState(COUNTDOWN_TIME)
+  let timeoutId: NodeJS.Timeout | null = null
 
   const signOut = useCallback(() => {
     cookies.remove(SES_TOKEN_NAME, { path: '/' })
@@ -355,32 +468,45 @@ export const useSignOut = () => {
     sessionStorage.removeItem('hasPassedLogin')
 
     handleSuccess('Signed Out', 'You have been successfully signed out.')
-
     navigate('/sign-in')
     window.location.reload()
   }, [navigate])
 
-  // Auto sign-out after 5 minutes of inactivity
+  const startCountdown = useCallback(() => {
+    setShowDialog(true)
+    setCountdown(COUNTDOWN_TIME)
+
+    const intervalId = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalId)
+          signOut() // Log out when countdown reaches 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }, [signOut])
+
+  const resetTimeout = useCallback(() => {
+    if (timeoutId) clearTimeout(timeoutId)
+    setShowDialog(false) // Hide dialog on user activity
+    timeoutId = setTimeout(startCountdown, INACTIVITY_TIME)
+  }, [startCountdown])
+
   useEffect(() => {
-    const inactivityTime = 5 * 60 * 1000
-    let timeoutId: NodeJS.Timeout
-
-    const resetTimeout = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(signOut, inactivityTime)
-    }
-
-    resetTimeout()
-
+    // Set up inactivity timeout
     window.addEventListener('mousemove', resetTimeout)
     window.addEventListener('keypress', resetTimeout)
 
+    // Initialize the timeout
+    resetTimeout()
+
     return () => {
-      clearTimeout(timeoutId)
+      if (timeoutId) clearTimeout(timeoutId)
       window.removeEventListener('mousemove', resetTimeout)
       window.removeEventListener('keypress', resetTimeout)
     }
-  }, [signOut])
+  }, [resetTimeout])
 
-  return signOut
+  return { signOut, showDialog, countdown }
 }

@@ -6,6 +6,9 @@ import { useAdminUserData } from './data'
 import RolesModal from '../settings/team/RolesModal'
 import { AddTeamMemberDialog } from './AddMemberModal'
 import { jwtDecode } from 'jwt-decode'
+import { useState } from 'react'
+import UserDetailsModal from './UserDetailsModal'
+import { userDetailsType } from '@/lib/users/types'
 
 type DecodedToken = {
   role: string
@@ -13,11 +16,9 @@ type DecodedToken = {
 
 const AdminPage = () => {
   const { data } = useAdminUserData()
-  // const hasAdminData = data?.length
-
-  // console.log('Original Data', data)
-
-  // Decode access token to get the user's role
+  const [selectedUser, setSelectedUser] = useState<userDetailsType | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  console.log('The data we working on is' + data)
   const accessToken = sessionStorage.getItem('accessToken')
   const userRole = accessToken
     ? jwtDecode<DecodedToken>(accessToken).role
@@ -27,7 +28,15 @@ const AdminPage = () => {
   const filteredData =
     data?.filter((user) => user.email.includes('alert')) || []
 
-  // console.log('Filtered Data', filteredData)
+  const handleRowClick = (User: userDetailsType) => {
+    setSelectedUser(User)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedUser(null)
+  }
 
   return (
     <div className='h-screen overflow-y-auto hide-scrollbar'>
@@ -49,6 +58,7 @@ const AdminPage = () => {
           showButton={false}
           showDateRangePicker={false}
           showModalComponent
+          onRowClick={handleRowClick}
           ModalComponent={<RolesModal />}
           buttonText='Search'
         />
@@ -60,6 +70,15 @@ const AdminPage = () => {
             Administrative data and user management options will appear here.
           </p>
         </div>
+      )}
+
+      {/* Render UserDetailsModal */}
+      {isModalOpen && selectedUser && (
+        <UserDetailsModal
+          // isOpen={isModalOpen}
+          onClose={closeModal}
+          userDetails={selectedUser}
+        />
       )}
     </div>
   )

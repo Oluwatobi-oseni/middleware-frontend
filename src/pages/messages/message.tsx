@@ -4,9 +4,18 @@ import { IconMessages } from '@tabler/icons-react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from './columns'
 import { useMessageData } from './data'
+import { MessageResponse } from '@/lib/messages/types'
 
 const Message = () => {
   const { data, error, isLoading } = useMessageData()
+
+  const sortedData = data
+    ? data.sort((a: MessageResponse, b: MessageResponse) => {
+        const dateA = new Date(a.createdAt)
+        const dateB = new Date(b.createdAt)
+        return dateB.getTime() - dateA.getTime()
+      })
+    : []
 
   // Check if messages exist
   const hasMessages = data && data.length > 0
@@ -35,9 +44,9 @@ const Message = () => {
       ) : hasMessages ? (
         <DataTable
           columns={columns}
-          data={data}
+          data={sortedData}
           inputPlaceHolder='Search Messages'
-          filterColumn='message'
+          filterColumn='channel'
           showButton
           buttonText='Search'
           showDateRangePicker={false}

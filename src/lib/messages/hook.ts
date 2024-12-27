@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createMessage, fetchMessages } from '.'
 import { CreateMessageRequest, MessageResponse } from './types'
 import { handleSuccess } from '../auth/utilities/successHandler'
@@ -35,11 +35,13 @@ const createMessageAsync = async (payload: CreateMessageRequest) => {
 }
 
 export const useCreateMessage = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createMessageAsync,
     onSuccess: ({ data }) => {
       if (data.success) {
         handleSuccess('Message created successfully', `Message ID: ${data.id}`)
+        queryClient.invalidateQueries({ queryKey: ['messages'] })
       } else {
         handleError(null, 'Failed to create message. Please try again.')
       }

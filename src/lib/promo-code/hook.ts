@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createCode, fetchCodes } from '.'
 import { handleSuccess } from '../auth/utilities/successHandler'
 import { handleError } from '../auth/utilities/errorhandler'
@@ -25,11 +25,16 @@ const createCodeAsync = async (payload: CreateCodeRequest) => {
 }
 
 export const useCreateCode = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createCodeAsync,
     onSuccess: ({ data }) => {
       if (data.success) {
-        handleSuccess('Promo code created successfully', `Code ID: ${data.id}`)
+        handleSuccess(
+          'Promo code created successfully',
+          `'The new promo code has been created.`
+        )
+        queryClient.invalidateQueries({ queryKey: ['codes'] })
       } else {
         handleError(null, 'Failed to create promocode. Please try again.')
       }

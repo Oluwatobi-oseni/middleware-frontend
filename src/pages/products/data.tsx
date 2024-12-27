@@ -20,7 +20,7 @@ export const products = [
     name: 'POS',
     logo: <IconCreditCard />,
     desc: 'Facilitate seamless point-of-sale transactions to improve customer experience and increase sales efficiency.',
-    path: '/',
+    path: '/products/pos',
   },
   // {
   //   id: '3',
