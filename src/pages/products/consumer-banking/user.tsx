@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import pdf from '../../../assets/pdf.svg'
 // import { DataTable } from '@/components/table/data-table'
-import { columns } from './transaction/columns'
+import { columns, User } from './transaction/columns'
 import { data } from './transaction/data'
 import UserForm from './components/user-form'
 
@@ -10,10 +10,27 @@ import WalletCards from './components/wallet-card'
 // import { columns } from './columns'
 // import { data } from './data'
 import { DataTable } from '@/components/table/data-table'
+import TransactionDetailsDialog from './transaction/transactionDetailsDialog'
+import { useState } from 'react'
 
 const UserDetails = () => {
   const { id } = useParams()
   console.log('The user id is', id)
+  const [selectedTransaction, setSelectedTransaction] = useState<User | null>(
+    null
+  )
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // Handler to open the dialog with selected row data
+  const handleRowClick = (transaction: User) => {
+    setSelectedTransaction(transaction)
+    setIsDialogOpen(true)
+  }
+
+  // Handler to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false)
+    setSelectedTransaction(null)
+  }
 
   // Sample user data
   // const userData = {
@@ -66,8 +83,15 @@ const UserDetails = () => {
           filterColumn='transactionName'
           showButton
           buttonText='Done'
+          onRowClick={handleRowClick}
         />
       </div>
+      {isDialogOpen && selectedTransaction && (
+        <TransactionDetailsDialog
+          transaction={selectedTransaction}
+          onClose={closeDialog}
+        />
+      )}
     </div>
   )
 }

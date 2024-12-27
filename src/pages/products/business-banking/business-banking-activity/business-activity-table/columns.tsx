@@ -32,10 +32,13 @@ export const columns: ColumnDef<BusinessActivity>[] = [
       const formattedTime = format(date, 'HH:mm')
 
       return (
-        <span className='font-geist-mono font-medium'>
-          {formattedDate} at
-          <span className='text-xs text-red-500'> {formattedTime}</span>
-        </span>
+        <div className='flex flex-col '>
+          <span className='font-geist-mono font-medium'>{formattedDate}</span>
+          <span className='font-geist-mono text-xs text-red-500'>
+            {' '}
+            {formattedTime}
+          </span>
+        </div>
       )
     },
   },

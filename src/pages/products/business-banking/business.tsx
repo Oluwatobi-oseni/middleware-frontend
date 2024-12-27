@@ -62,7 +62,6 @@ const UserDetails = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   // Handler to open the dialog with selected row data
   const handleRowClick = (transaction: User) => {
-    console.log('Idea')
     setSelectedTransaction(transaction)
     setIsDialogOpen(true)
   }

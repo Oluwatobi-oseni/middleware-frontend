@@ -165,6 +165,21 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+          {
+            path: 'pos',
+            lazy: async () => ({
+              Component: (await import('@/pages/products/pos/index.tsx'))
+                .default,
+            }),
+          },
+          {
+            path: 'pos/:posName/:posId', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/products/pos/POS/posDetailsPage.tsx')
+              ).default,
+            }),
+          },
         ],
       },
       {
@@ -252,8 +267,32 @@ const router = createBrowserRouter([
       {
         path: 'switches',
         lazy: async () => ({
-          Component: (await import('@/pages/switches/index.tsx')).default,
+          Component: (await import('@/pages/switches')).default,
         }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/switches/kyc-providers'))
+                .default,
+            }),
+          },
+          {
+            path: 'sms-providers',
+            lazy: async () => ({
+              Component: (await import('./pages/switches/sms-providers'))
+                .default,
+            }),
+          },
+          {
+            path: 'intra-bank-transfer',
+            lazy: async () => ({
+              Component: (await import('./pages/switches/intra-bank-transfer'))
+                .default,
+            }),
+          },
+        ],
       },
       {
         path: 'messages',

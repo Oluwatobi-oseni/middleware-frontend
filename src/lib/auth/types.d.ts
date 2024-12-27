@@ -11,9 +11,11 @@ export interface VerifyTOTPResponse {
 
 // Response for signing in with password
 export interface SignInWithPasswordResponse {
-  success: boolean
-  id: number
-  message: string // e.g., "complete signup with otp verification"
+  success?: boolean
+  id?: number
+  message?: string // e.g., "complete signup with otp verification"
+  isAuthenticated?: boolean // Indicates if 2FA is off and user is authenticated directly
+  access_token?: string
 }
 
 // Response for verifying sign-in OTP

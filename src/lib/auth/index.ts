@@ -112,12 +112,13 @@ export async function signIn(payload: { email: string; password: string }) {
       }
     )
 
-    if (res.data.success) {
+    if (!res?.data) {
       // cookies.set(SES_TOKEN_NAME, res.data.access_token, { path: '/' })
-      return res.data
+      throw new Error('Sign in was not successful')
     }
+    return res.data
 
-    throw new Error('Sign in was not successful')
+    // throw new Error('Sign in was not successful')
   } catch (error) {
     throw new Error(JSON.stringify(error))
   }
