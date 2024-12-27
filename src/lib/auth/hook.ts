@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState } from 'react'
 import {
   AuthState,
   SES_TOKEN_NAME,
@@ -359,45 +359,45 @@ export const useUpdatePassword = () => {
 }
 
 // Sign Out Hook
-// export const useSignOut = () => {
-//   const navigate = useNavigate()
+export const useSignOut = () => {
+  const navigate = useNavigate()
 
-//   const signOut = useCallback(() => {
-//     cookies.remove(SES_TOKEN_NAME, { path: '/' })
-//     sessionStorage.removeItem('accessToken')
-//     delete client.defaults.headers.common['Authorization']
-//     sessionStorage.removeItem('hasPassedLogin')
+  const signOut = useCallback(() => {
+    cookies.remove(SES_TOKEN_NAME, { path: '/' })
+    sessionStorage.removeItem('accessToken')
+    delete client.defaults.headers.common['Authorization']
+    sessionStorage.removeItem('hasPassedLogin')
 
-//     handleSuccess('Signed Out', 'You have been successfully signed out.')
+    handleSuccess('Signed Out', 'You have been successfully signed out.')
 
-//     navigate('/sign-in')
-//     window.location.reload()
-//   }, [navigate])
+    navigate('/sign-in')
+    window.location.reload()
+  }, [navigate])
 
-//   // Auto sign-out after 5 minutes of inactivity
-//   // useEffect(() => {
-//   //   const inactivityTime = 5 * 60 * 1000
-//   //   let timeoutId: NodeJS.Timeout
+  // Auto sign-out after 5 minutes of inactivity
+  // useEffect(() => {
+  //   const inactivityTime = 5 * 60 * 1000
+  //   let timeoutId: NodeJS.Timeout
 
-//   //   const resetTimeout = () => {
-//   //     clearTimeout(timeoutId)
-//   //     timeoutId = setTimeout(signOut, inactivityTime)
-//   //   }
+  //   const resetTimeout = () => {
+  //     clearTimeout(timeoutId)
+  //     timeoutId = setTimeout(signOut, inactivityTime)
+  //   }
 
-//   //   resetTimeout()
+  //   resetTimeout()
 
-//   //   window.addEventListener('mousemove', resetTimeout)
-//   //   window.addEventListener('keypress', resetTimeout)
+  //   window.addEventListener('mousemove', resetTimeout)
+  //   window.addEventListener('keypress', resetTimeout)
 
-//   //   return () => {
-//   //     clearTimeout(timeoutId)
-//   //     window.removeEventListener('mousemove', resetTimeout)
-//   //     window.removeEventListener('keypress', resetTimeout)
-//   //   }
-//   // }, [signOut])
+  //   return () => {
+  //     clearTimeout(timeoutId)
+  //     window.removeEventListener('mousemove', resetTimeout)
+  //     window.removeEventListener('keypress', resetTimeout)
+  //   }
+  // }, [signOut])
 
-//   return signOut
-// }
+  return signOut
+}
 // export const useSignOut = ():JSX.Element => {
 //   const navigate = useNavigate();
 //   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -451,62 +451,3 @@ export const useUpdatePassword = () => {
 //     />
 //   );
 // };
-
-const INACTIVITY_TIME = 5 * 60 * 1000 // 5 minutes
-const COUNTDOWN_TIME = 5 * 60 // 5 minutes in seconds
-
-export const useSignOut = () => {
-  const navigate = useNavigate()
-  const [showDialog, setShowDialog] = useState(false)
-  const [countdown, setCountdown] = useState(COUNTDOWN_TIME)
-  let timeoutId: NodeJS.Timeout | null = null
-
-  const signOut = useCallback(() => {
-    cookies.remove(SES_TOKEN_NAME, { path: '/' })
-    sessionStorage.removeItem('accessToken')
-    delete client.defaults.headers.common['Authorization']
-    sessionStorage.removeItem('hasPassedLogin')
-
-    handleSuccess('Signed Out', 'You have been successfully signed out.')
-    navigate('/sign-in')
-    window.location.reload()
-  }, [navigate])
-
-  const startCountdown = useCallback(() => {
-    setShowDialog(true)
-    setCountdown(COUNTDOWN_TIME)
-
-    const intervalId = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalId)
-          signOut() // Log out when countdown reaches 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-  }, [signOut])
-
-  const resetTimeout = useCallback(() => {
-    if (timeoutId) clearTimeout(timeoutId)
-    setShowDialog(false) // Hide dialog on user activity
-    timeoutId = setTimeout(startCountdown, INACTIVITY_TIME)
-  }, [startCountdown])
-
-  useEffect(() => {
-    // Set up inactivity timeout
-    window.addEventListener('mousemove', resetTimeout)
-    window.addEventListener('keypress', resetTimeout)
-
-    // Initialize the timeout
-    resetTimeout()
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId)
-      window.removeEventListener('mousemove', resetTimeout)
-      window.removeEventListener('keypress', resetTimeout)
-    }
-  }, [resetTimeout])
-
-  return { signOut, showDialog, countdown }
-}
