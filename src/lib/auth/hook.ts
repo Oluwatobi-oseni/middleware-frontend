@@ -90,7 +90,7 @@ export const useSignIn = () => {
   return useMutation({
     mutationFn: signInAsync,
     onSuccess: ({ data, payload }) => {
-      if (data?.isAuthenticated && data.access_token) {
+      if (data?.access_token) {
         sessionStorage.setItem('accessToken', data.access_token)
         // Navigate directly to the dashboard
         navigate('/dashboard', { replace: true })
