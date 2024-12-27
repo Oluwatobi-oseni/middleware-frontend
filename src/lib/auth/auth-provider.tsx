@@ -103,8 +103,11 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   const resetTimeout = useCallback(() => {
     if (timeoutId) clearTimeout(timeoutId)
     setShowDialog(false) // Hide dialog on user activity
-    timeoutId = setTimeout(startCountdown, INACTIVITY_TIME)
-  }, [startCountdown])
+
+    if (authState.isSignedIn) {
+      timeoutId = setTimeout(startCountdown, INACTIVITY_TIME)
+    }
+  }, [startCountdown, authState.isSignedIn])
 
   useEffect(() => {
     const token = cookies.get(SES_TOKEN_NAME)
@@ -115,19 +118,19 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     }
     setLoading(false)
 
-    // Set up inactivity timeout
-    window.addEventListener('mousemove', resetTimeout)
-    window.addEventListener('keypress', resetTimeout)
-
-    // Initialize the timeout
-    resetTimeout()
+    // Set up inactivity timeout only for signed-in users
+    if (authState.isSignedIn) {
+      window.addEventListener('mousemove', resetTimeout)
+      window.addEventListener('keypress', resetTimeout)
+      resetTimeout() // Initialize the timeout
+    }
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId)
       window.removeEventListener('mousemove', resetTimeout)
       window.removeEventListener('keypress', resetTimeout)
     }
-  }, [resetTimeout, timeoutId])
+  }, [resetTimeout, timeoutId, authState.isSignedIn])
 
   const handleContinueSession = () => {
     setShowDialog(false)
@@ -137,11 +140,13 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   return (
     <AuthContext.Provider value={{ ...authState, signOut }}>
       {!loading && children}
-      <InactivityDialog
-        showDialog={showDialog}
-        countdown={countdown}
-        onContinue={handleContinueSession}
-      />
+      {authState.isSignedIn && (
+        <InactivityDialog
+          showDialog={showDialog}
+          countdown={countdown}
+          onContinue={handleContinueSession}
+        />
+      )}
     </AuthContext.Provider>
   )
 }

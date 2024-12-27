@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator'
-import { MemberDialog } from '../team/MemberModal'
+import { AddTeamMemberDialog } from '@/pages/adminstration/AddMemberModal'
 
 interface ContentSectionProps {
   title: string
@@ -21,7 +21,7 @@ export default function ContentSection({
           <h3 className='text-[18px] text-lg font-semibold'>{title}</h3>
           <p className='text-sm text-muted-foreground'>{desc}</p>
         </div>
-        {showMemberDialog && <MemberDialog />}
+        {showMemberDialog && <AddTeamMemberDialog />}
       </div>
       <Separator className='my-4 flex-none' />
       <div className='faded-bottom -mx-4 flex-1 overflow-auto scroll-smooth px-4 md:pb-16'>
