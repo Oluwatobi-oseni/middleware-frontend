@@ -20,7 +20,6 @@ const Promo = () => {
     : []
   const hasPromoCodes = data && data.length > 0
 
-  console.log('The data', data)
   return (
     <>
       <div>

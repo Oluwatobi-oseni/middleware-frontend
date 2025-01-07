@@ -25,14 +25,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import { UptimeOverview } from '@/pages/switches/components/switches-overview'
 // import { IconLayoutDashboardFilled, IconWashMachine } from '@tabler/icons-react'
 import { Clock, Users } from 'lucide-react'
-import { columns } from './Business/columns'
-import { data } from './Business/data'
+import { columns as businessColumns } from './Business/columns'
+import { useBusinessData } from './Business/data'
 import { columns as POSColumns, PosDevice } from './POS/columns'
 import { data as POSData } from './POS/data'
 import { AssignPOS } from './POS/assign-pos-modal'
-import { IconWashMachine } from '@tabler/icons-react'
+import { IconFidgetSpinner, IconWashMachine } from '@tabler/icons-react'
 // import POSDialog from './POS/POSDialog'
 import { useNavigate } from 'react-router-dom'
+import { BusinessResponse } from '@/lib/pos/type'
 // const provider = {
 //   customerActivity: 'Dojah',
 //   status: 'Active',
@@ -43,8 +44,12 @@ import { useNavigate } from 'react-router-dom'
 // }
 
 export default function PosPage() {
-  // const [selectedPOS, setSelectedPOS] = useState<PosDevice | null>(null)
-  // const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const {
+    data: businessData,
+    error: businessError,
+    isLoading: businessLoading,
+  } = useBusinessData()
+  // const { data: posData, error: posError, isLoading: posLoading } = usePosData()
 
   const navigate = useNavigate()
 
@@ -52,6 +57,12 @@ export default function PosPage() {
     const posId = rowData.id
     const posName = encodeURIComponent(rowData.posName)
     navigate(`/products/pos/${posName}/${posId}`) // Navigate to the user detail page
+  }
+
+  const handleBusinessRowClick = (rowData: BusinessResponse) => {
+    const businessId = rowData.id
+    const businessName = encodeURIComponent(rowData.name)
+    navigate(`/products/business/${businessName}/${businessId}`) // Navigate to the user detail page
   }
   // const handlePOSRowClick = (pos: PosDevice) => {
   //   setSelectedPOS(pos)
@@ -67,8 +78,22 @@ export default function PosPage() {
   //   const toggleProvider = () => {
   //     setIsActive((prevState) => !prevState)
   //   }
+
+  // const sortedBusinessData = businessData
+  //   ? businessData.sort(
+  //       (a, b) =>
+  //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //     )
+  //   : []
+
+  // const sortedPosData = posData
+  //   ? posData.sort(
+  //       (a, b) =>
+  //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //     )
+  //   : []
   return (
-    <div className='w-full'>
+    <div className='h-screen w-full overflow-y-auto hide-scrollbar'>
       {/* <div className='mb-2 flex justify-between'>
         <h2 className='text-xl font-semibold tracking-tighter'>
           KYC Providers
@@ -92,7 +117,7 @@ export default function PosPage() {
 
         <TabsContent
           value='business'
-          className='flex h-full flex-col space-y-4 overflow-y-scroll hide-scrollbar'
+          className='flex h-full flex-col space-y-4 overflow-y-auto hide-scrollbar'
         >
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
             <div className='flex flex-col justify-center rounded-lg border border-l-0 border-t-0 px-4 py-6'>
@@ -169,16 +194,39 @@ export default function PosPage() {
               </CardContent>
             </Card>
           </div> */}
-          <DataTable
-            columns={columns}
-            data={data}
-            inputPlaceHolder='Search...'
-            filterColumn='businessName'
-            onRowClick={(row) => console.log(`Row clicked: ${row.id}`)}
-            showButton
-            buttonText='Search'
-            showDateRangePicker={false}
-          />
+          {businessLoading ? (
+            <div className='mt-20 flex flex-grow flex-col items-center justify-center text-center'>
+              {/* <p className='text-xl font-semibold'>Loading business data...</p> */}
+              <IconFidgetSpinner className='h-6 w-6 animate-spin text-xl' />
+            </div>
+          ) : businessError ? (
+            <div className='mt-20 flex flex-grow flex-col items-center justify-center text-center'>
+              <p className='text-xl font-semibold'>
+                Failed to load business data
+              </p>
+              <p className='text-muted-foreground'>Please try again later.</p>
+            </div>
+          ) : businessData.length > 0 ? (
+            <DataTable
+              columns={businessColumns}
+              data={businessData}
+              inputPlaceHolder='Search Business'
+              filterColumn='businessName'
+              onRowClick={handleBusinessRowClick}
+              showButton
+              buttonText='Search'
+              showDateRangePicker={false}
+            />
+          ) : (
+            <div className='flex flex-grow flex-col items-center justify-center text-center'>
+              <p className='text-xl font-semibold'>
+                No business data available
+              </p>
+              <p className='text-muted-foreground'>
+                Businesses will appear here once created.
+              </p>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent
