@@ -1,3 +1,5 @@
+import { useTheme } from '@/components/theme-provider'
+
 function WalletCard({
   currency,
   amount,
@@ -7,8 +9,13 @@ function WalletCard({
   amount: number
   isActive: boolean
 }) {
+  const { theme } = useTheme()
+  const cardBg =
+    theme === 'dark' ? 'bg-muted-foreground/45 ' : 'bg-muted-foreground/5'
   return (
-    <div className='w-64 rounded-lg border border-muted bg-white p-4 text-center shadow-md'>
+    <div
+      className={`${cardBg} w-64 rounded-lg border border-muted p-4 text-center shadow-md`}
+    >
       {/* Country and Status */}
       <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center gap-2'>
@@ -17,7 +24,9 @@ function WalletCard({
             alt='Nigerian flag'
             className='h-3 w-5'
           />
-          <span className='text-xs font-medium text-gray-600'>Nigeria</span>
+          <span className='text-xs font-medium text-muted-foreground'>
+            Nigeria
+          </span>
         </div>
         <span
           className={`rounded-full px-2 py-0.5 text-xs font-semibold ${isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
@@ -28,8 +37,10 @@ function WalletCard({
 
       {/* Currency and Amount */}
       <div className='text-left'>
-        <span className='text-sm font-medium text-gray-500'>{currency}</span>
-        <p className='text-xl font-bold text-gray-900'>
+        <span className='text-sm font-medium text-muted-foreground'>
+          {currency}
+        </span>
+        <p className='text-xl font-bold text-muted-foreground'>
           {new Intl.NumberFormat('en-NG', {
             style: 'currency',
             currency: 'NGN',
