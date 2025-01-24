@@ -1,9 +1,10 @@
 // import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { userDetailsType } from '@/lib/users/types'
-import AdminActionsMenu from '@/components/custom/admin-action-menu'
-import { DeleteMemberDialog } from '../settings/team/options/delete-dialog'
+// import AdminActionsMenu from '@/components/custom/admin-action-menu'
+// import { DeleteMemberDialog } from '../settings/team/options/delete-dialog'
 import { format } from 'date-fns'
+import { DataTableRowActions } from './dataTableRowActions'
 // import { IconCheck, IconClock } from '@tabler/icons-react'
 // import { IconCheck, IconClock } from '@tabler/icons-react'
 
@@ -158,18 +159,22 @@ export const columns: ColumnDef<userDetailsType>[] = [
       )
     },
   },
-
   {
     id: 'actions',
-    header: '',
-    cell: ({ row }) => (
-      <AdminActionsMenu
-        row={row.original}
-        onEdit={() => {}}
-        SuspendDialogComponent={(props) => (
-          <DeleteMemberDialog {...props} teamMember={row.original} />
-        )}
-      />
-    ),
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
+
+  // {
+  //   id: 'actions',
+  //   header: '',
+  //   cell: ({ row }) => (
+  //     <AdminActionsMenu
+  //       row={row.original}
+  //       onEdit={() => {}}
+  //       SuspendDialogComponent={(props) => (
+  //         <DeleteMemberDialog {...props} teamMember={row.original} />
+  //       )}
+  //     />
+  //   ),
+  // },
 ]

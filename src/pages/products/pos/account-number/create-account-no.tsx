@@ -15,16 +15,23 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
+// import PhoneInput from 'react-phone-number-input'
 import { useCreateBusinessAccount } from '@/lib/pos/hook'
 import { BusinessDetailsResponse } from '@/lib/pos/type'
-import { CheckCircleIcon } from 'lucide-react'
+import { CircleCheck } from 'lucide-react'
 
 const formSchema = z.object({
   FirstName: z.string().min(1, 'First Name is required'),
   LastName: z.string().min(1, 'Last Name is required'),
   Email: z.string().email('Invalid email address'),
-  PhoneNo: z.string().min(1, 'Phone Number is required'),
+  PhoneNo: z
+    .string()
+    // .regex(
+    //   /^(?:\+234|0)(70|80|81|90|91)\d{8}$/,
+    //   'Invalid phone number. Please enter a valid Nigerian phone number.'
+    // )
+    .min(10, 'Phone Number must be at least 11 digits')
+    .max(11, 'Phone Number must be at most 11 digits'),
 })
 
 export function CreateAccountNo({
@@ -41,23 +48,26 @@ export function CreateAccountNo({
       Email: '',
       PhoneNo: '',
     },
-    mode: 'onChange',
+    // mode: 'onChange',
   })
 
-  const { mutate, isPending } = useCreateBusinessAccount()
+  const { mutate, isPending, data } = useCreateBusinessAccount()
   // const [firstName, setFirstName] = useState('')
   // const [lastName, setLastName] = useState('')
   // const [email, setEmail] = useState('')
   // const [phoneNumber, setPhoneNumber] = useState<string | undefined>()
 
   // const createBusinessAccount = useCreateBusinessAccount()
+  const res = data?.data
+  // console.log('French', data)
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const payload = {
-        Gender: business.Gender === 'male' ? 1 : 2,
-        CustomerId: business.CustomerId || '',
-        BVN: business.BVN || '',
+        Gender: business.Gender === 'male' ? 0 : 1,
+        // CustomerId: business.CustomerId || '',
+        CustomerId: '006363',
+        // BVN: business.BVN || '',
         FirstName: data.FirstName,
         LastName: data.LastName,
         PlaceOfBirth: business.PlaceOfBirth || '',
@@ -65,11 +75,14 @@ export function CreateAccountNo({
         PhoneNo: data.PhoneNo,
         Address: business.Address || '',
         Email: data.Email,
-        ProductId: '0193d868-2a38-76c6-925b-3cc3004e940d',
+        ProductId: '0193a96f-0a7c-722f-8af7-18cf7s361re2',
       }
       await mutate(payload)
+      console.log(payload)
       form.reset()
-      setShowSuccessDialog(true)
+      {
+        res?.IsSuccessful && setShowSuccessDialog(true)
+      }
     } catch (error) {
       console.error('Error creating account:', error)
     }
@@ -88,6 +101,7 @@ export function CreateAccountNo({
               Please enter the required information accurately.
             </DialogDescription>
           </DialogHeader>
+
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className='grid gap-4 py-4'
@@ -109,6 +123,7 @@ export function CreateAccountNo({
                   Last Name <span className='text-red-600'>*</span>
                 </Label>
                 <Input
+                  autoComplete='off'
                   type='text'
                   id='lastName'
                   placeholder='Enter last name'
@@ -121,6 +136,7 @@ export function CreateAccountNo({
                 Email Address <span className='text-red-600'>*</span>
               </Label>
               <Input
+                autoComplete='off'
                 type='email'
                 id='email'
                 placeholder='Enter email address'
@@ -131,36 +147,44 @@ export function CreateAccountNo({
               <Label htmlFor='phoneNumber'>
                 Phone Number <span className='text-red-600'>*</span>
               </Label>
-              <PhoneInput
-                defaultCountry='NG'
-                id='phoneNumber'
-                placeholder='Enter phone number'
-                value={form.watch('PhoneNo') ?? ''}
-                onChange={(value) => form.setValue('PhoneNo', value as string)}
-                className='w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-200'
-              />
+              <div className='relative'>
+                <span className='absolute left-3 top-1/2 -translate-y-1/2 text-lg'>
+                  🇳🇬 +234
+                </span>
+                <Input
+                  autoComplete='off'
+                  type='tel'
+                  {...form.register('PhoneNo')}
+                  className='w-full rounded-lg border border-gray-300 bg-white p-3 pl-20 text-lg shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200'
+                />
+              </div>
             </div>
+            <DialogFooter>
+              <Button
+                type='submit'
+                className='w-full'
+                disabled={!form.formState.isValid || isPending}
+              >
+                {isPending ? 'Creating...' : 'Create Account'}
+              </Button>
+            </DialogFooter>
           </form>
-          <DialogFooter>
-            <Button
-              type='submit'
-              className='w-full'
-              disabled={!form.formState.isValid || isPending}
-            >
-              {isPending ? 'Creating...' : 'Create Account'}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className='flex flex-col items-center justify-center gap-4'>
-          <CheckCircleIcon className='h-16 w-16 text-green-500' />
-          <DialogTitle>Success</DialogTitle>
-          <DialogDescription>
-            Account number has been successfully created under {business.name}.
+        <DialogContent className='flex flex-col items-center justify-center gap-4 sm:max-w-[425px]'>
+          <CircleCheck className='h-16 w-16 text-green-500' />
+          <DialogTitle>Account Number Created Successfully</DialogTitle>
+          <DialogDescription className='text-center'>
+            Account number has been successfully Created Under {business.name}.
           </DialogDescription>
-          <Button onClick={() => setShowSuccessDialog(false)}>OK</Button>
+          <Button
+            className='w-full'
+            onClick={() => setShowSuccessDialog(false)}
+          >
+            Done
+          </Button>
         </DialogContent>
       </Dialog>
     </>

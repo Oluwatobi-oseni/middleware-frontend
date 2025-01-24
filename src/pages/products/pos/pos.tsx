@@ -93,7 +93,7 @@ export default function PosPage() {
   //     )
   //   : []
   return (
-    <div className='h-screen w-full overflow-y-auto hide-scrollbar'>
+    <div className='h-auto w-full overflow-y-auto hide-scrollbar'>
       {/* <div className='mb-2 flex justify-between'>
         <h2 className='text-xl font-semibold tracking-tighter'>
           KYC Providers
@@ -207,6 +207,7 @@ export default function PosPage() {
               <p className='text-muted-foreground'>Please try again later.</p>
             </div>
           ) : businessData.length > 0 ? (
+            // <div className='overflow-scroll'>
             <DataTable
               columns={businessColumns}
               data={businessData}
@@ -218,6 +219,7 @@ export default function PosPage() {
               showDateRangePicker={false}
             />
           ) : (
+            // </div>
             <div className='flex flex-grow flex-col items-center justify-center text-center'>
               <p className='text-xl font-semibold'>
                 No business data available
@@ -292,6 +294,7 @@ export default function PosPage() {
               </div>
             </div>
           </div>
+
           <DataTable
             columns={POSColumns}
             data={POSData}
@@ -302,6 +305,7 @@ export default function PosPage() {
             showDateRangePicker={false}
             onRowClick={(rowData) => handlePOSRowClick(rowData)}
           />
+
           {/* {isDialogOpen && selectedPOS && (
             <POSDialog pos={selectedPOS} onClose={closeDialog} />
           )} */}

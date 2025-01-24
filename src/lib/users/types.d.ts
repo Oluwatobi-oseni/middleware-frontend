@@ -1,5 +1,5 @@
 export type userDetailsType = {
-  id: number
+  id: string
   email: string
   firstname: string | null
   lastname: string | null

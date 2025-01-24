@@ -23,7 +23,7 @@ const BusinessBanking = () => {
         filterColumn='name'
         onRowClick={(row) => handleRowClick(row.id)}
         showButton
-        buttonText='Search'
+        buttonText='Filter'
       />
     </ContentSection>
   )

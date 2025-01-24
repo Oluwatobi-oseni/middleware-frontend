@@ -9,6 +9,8 @@ const Pos = () => {
     >
       <PosPage />
     </ContentSection>
+    // <div className='h-22'>
+    // </div>
   )
 }
 

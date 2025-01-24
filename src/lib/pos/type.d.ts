@@ -30,7 +30,6 @@ export type BusinessDetailsResponse = BusinessResponse & {
 export type CreateBusinessAccountRequest = {
   Gender: number
   CustomerId: string
-  BVN: string
   FirstName: string
   LastName: string
   PlaceOfBirth: string

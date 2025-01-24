@@ -1,10 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { IconDots } from '@tabler/icons-react'
 import { BusinessResponse } from '@/lib/pos/type'
@@ -97,28 +96,36 @@ export const columns: ColumnDef<BusinessResponse>[] = [
     id: 'actions',
     header: '',
     cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0'>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant='ghost'
+            className='h-8 w-8 p-0'
+            onClick={(e) => e.stopPropagation()}
+          >
             <span className='sr-only'>Open menu</span>
             <IconDots className='h-4 w-4' />
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          <DropdownMenuItem
-            className='text-muted-foreground'
-            onClick={() => handleView(row.original.id)}
-          >
-            View
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className='text-destructive'
-            onClick={() => handleDeactivate(row.original.id)}
-          >
-            Deactivate
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </PopoverTrigger>
+        <PopoverContent className='w-40 p-0'>
+          <div className='flex flex-col'>
+            <Button
+              variant='ghost'
+              onClick={() => handleView(row.original.id)}
+              className='justify-start px-4 py-2 text-sm text-muted-foreground hover:bg-gray-100'
+            >
+              View
+            </Button>
+            <Button
+              variant='ghost'
+              onClick={() => handleDeactivate(row.original.id)}
+              className='justify-start px-4 py-2 text-sm text-destructive hover:bg-red-100'
+            >
+              Deactivate
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
     ),
   },
 ]
