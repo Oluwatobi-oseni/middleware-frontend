@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select'
 import { useInviteUser } from '@/lib/invites/hook'
 import { useDesignations } from '@/lib/users/hook'
+import { useState } from 'react'
 
 // Utility function to format designations
 function formatDesignation(designation: string): string {
@@ -61,14 +62,23 @@ export function AddTeamMemberDialog() {
 
   const inviteUserMutation = useInviteUser()
   const { data: designations, isLoading, isError } = useDesignations()
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   function onSubmit(data: AddTeamMemberFormValues) {
-    inviteUserMutation.mutate(data)
+    inviteUserMutation.mutate(data, {
+      onSuccess: () => {
+        form.reset()
+        setIsDialogOpen(false)
+      },
+      onError: () => {
+        form.reset()
+      },
+    })
+
     // console.log(data)
   }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button variant='default' className='flex gap-1 font-[Geist] text-xs'>
           <IconPlus className='h-4 w-4' />
@@ -175,12 +185,8 @@ export function AddTeamMemberDialog() {
           </div>
 
           {/* Add Member Button */}
-          <Button
-            type='submit'
-            className='mt-4 w-full'
-            // loading={inviteUserMutation.isPending}
-          >
-            Add Member
+          <Button type='submit' className='mt-4 w-full'>
+            {inviteUserMutation.isPending ? 'Adding...' : ' Add Member'}
           </Button>
         </form>
       </DialogContent>

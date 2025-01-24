@@ -70,13 +70,16 @@ const UserDetailsModal = ({ onClose, userDetails }: UserDetailsModalProps) => {
           <div className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Level</span>
             <UserRoleSelector
-              userDetails={{ role: userDetails.role, id: userDetails.id }}
+              userDetails={{
+                role: userDetails.role,
+                id: Number(userDetails.id),
+              }}
             />
           </div>
           <div className='flex items-center justify-between'>
             <span className='text-muted-foreground'>2FA Status</span>
             <Disable2FAComponent
-              userId={userDetails.id}
+              userId={Number(userDetails.id)}
               has2FAEnabled={userDetails.has2FAEnabled}
             />
             {/* <button

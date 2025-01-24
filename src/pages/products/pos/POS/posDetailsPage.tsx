@@ -13,11 +13,29 @@ import {
 } from '@/components/ui/select'
 import { DataTable } from '@/components/table/data-table'
 import { transactionData } from './PosTransactionDetails/data'
-import { transactionColumns } from './PosTransactionDetails/columns'
+import {
+  Transaction,
+  transactionColumns,
+} from './PosTransactionDetails/columns'
 import { format } from 'date-fns'
 import { POSStatusConfirmationDialog } from './components/posStatusConfirmationDialog'
+import { ActivityDetailsDialog } from '../activity/activityDetailsDialog'
 
 const POSDetailsPage = () => {
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // Handler to open the dialog with selected row data
+  const handleRowClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction)
+    setIsDialogOpen(true)
+  }
+
+  // Handler to close the dialog
+  const closeDialog = () => {
+    setIsDialogOpen(false)
+    setSelectedTransaction(null)
+  }
   const { posId } = useParams() // Extract posId from URL
   const posData = POSData.find((pos) => pos.id === Number(posId)) // Find the specific data
 
@@ -177,8 +195,14 @@ const POSDetailsPage = () => {
             inputPlaceHolder='Search Transactions'
             filterColumn='accountName'
             showDateRangePicker={false}
-            // onRowClick={handleRowClick}
+            onRowClick={handleRowClick}
           />
+          {isDialogOpen && selectedTransaction && (
+            <ActivityDetailsDialog
+              transaction={selectedTransaction}
+              onClose={closeDialog}
+            />
+          )}
         </div>
       </div>
     </div>

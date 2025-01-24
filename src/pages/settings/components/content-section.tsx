@@ -15,7 +15,7 @@ export default function ContentSection({
   showMemberDialog = false,
 }: ContentSectionProps) {
   return (
-    <div className='flex flex-1 flex-col'>
+    <div className='flex flex-1 flex-col overflow-y-auto'>
       <div className='flex flex-none flex-row items-center justify-between'>
         <div>
           <h3 className='text-[18px] text-lg font-semibold'>{title}</h3>

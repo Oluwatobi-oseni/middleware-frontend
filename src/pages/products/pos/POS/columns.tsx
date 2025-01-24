@@ -1,6 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table'
-// import { useState } from 'react'
-// import { DeactivatePOSDialog } from './components/deactivatePOSDialog'
+import { format } from 'date-fns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { IconDots } from '@tabler/icons-react'
 
 export type PosDevice = {
   id: number
@@ -9,6 +16,7 @@ export type PosDevice = {
   serialNumber: string
   status: 'Activated' | 'Pending' | 'Deactivated'
   lastSynced: string // formatted date and time
+  vendors: string
 }
 
 export const columns: ColumnDef<PosDevice>[] = [
@@ -21,6 +29,11 @@ export const columns: ColumnDef<PosDevice>[] = [
     accessorKey: 'posName',
     header: 'POS Name',
     cell: ({ row }) => <span>{row.original.posName}</span>,
+  },
+  {
+    accessorKey: 'vendors',
+    header: 'Vendors',
+    cell: ({ row }) => <span>{row.original.vendors}</span>,
   },
   {
     accessorKey: 'deviceType',
@@ -52,74 +65,55 @@ export const columns: ColumnDef<PosDevice>[] = [
   {
     accessorKey: 'lastSynced',
     header: 'Last Synced',
-    cell: ({ row }) => row.original.lastSynced,
+    cell: ({ row }) => {
+      const date = new Date(row.original.lastSynced)
+      return (
+        <div>
+          <span className='font-geist-mono'>
+            {format(date, 'dd MMM, yyyy')}
+          </span>
+          <br />
+          <span className='font-geist-mono text-xs text-red-500'>
+            {format(date, 'hh:mm')}
+          </span>
+        </div>
+      )
+    },
   },
   {
     id: 'actions',
     header: '',
-    // cell: ({ row }) => <ActionButtons posDevice={row.original} />,
     cell: ({ row }) => (
-      <div className='flex gap-2'>
-        <button
-          className='rounded-md bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600 hover:bg-blue-200'
-          onClick={() => handleView(row.original.id)}
-        >
-          View
-        </button>
-        <button
-          className='rounded-md bg-red-100 px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-200'
-          onClick={(e) => {
-            e.stopPropagation()
-            handleDeactivate(row.original.id)
-          }}
-        >
-          Deactivate
-        </button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='h-8 w-8 p-0'>
+            <span className='sr-only'>Open menu</span>
+            <IconDots className='h-4 w-4' />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end'>
+          <DropdownMenuItem
+            className='text-muted-foreground'
+            onClick={() => handleView(row.original.id)}
+          >
+            View
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className='text-destructive'
+            onClick={() => handleDeactivate(row.original.id)}
+          >
+            Deactivate
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     ),
   },
 ]
-// const ActionButtons: React.FC<{ posDevice: PosDevice }> = ({ posDevice }) => {
-//   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-//   const handleDeactivate = () => {
-//     console.log(`Deactivating POS with ID: ${posDevice.id}`)
-//     setIsDialogOpen(false) // Close the dialog after action
-//   }
-
-//   const handleCancel = () => {
-//     setIsDialogOpen(false) // Close the dialog without action
-//   }
-
-//   return (
-//     <>
-//       <button
-//         className='rounded-md bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600 hover:bg-blue-200'
-//         onClick={() => handleView(posDevice.id)}
-//       >
-//         View
-//       </button>
-//       <button
-//         className='rounded-md bg-red-100 px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-200'
-//         onClick={() => setIsDialogOpen(true)}
-//       >
-//         Deactivate
-//       </button>
-//       {isDialogOpen && (
-//         <DeactivatePOSDialog
-//           onDeactivate={handleDeactivate}
-//           onCancel={handleCancel}
-//         />
-//       )}
-//     </>
-//   )
-// }
 
 const handleView = (id: number) => {
   console.log(`Viewing details for POS with ID: ${id}`)
 }
 
 const handleDeactivate = (id: number) => {
-  // ;<DeactivatePOSDialog onDeactivate={} onCancel={} />
-  alert(id)
+  alert(`Deactivating POS with ID: ${id}`)
 }

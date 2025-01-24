@@ -8,6 +8,7 @@ export const data: PosDevice[] = [
     serialNumber: 'POS123456',
     status: 'Activated',
     lastSynced: '2023-10-10T14:30:00.000Z',
+    vendors: 'Vendor A',
   },
   {
     id: 2,
@@ -15,7 +16,8 @@ export const data: PosDevice[] = [
     deviceType: 'Android',
     serialNumber: 'POS654321',
     status: 'Pending',
-    lastSynced: '2023-10-10T14:30:00.000Z',
+    lastSynced: '2023-10-11T10:15:00.000Z',
+    vendors: 'Vendor B',
   },
   {
     id: 3,
@@ -23,6 +25,7 @@ export const data: PosDevice[] = [
     deviceType: 'Semi-android',
     serialNumber: 'POS789012',
     status: 'Deactivated',
-    lastSynced: '2023-10-10T14:30:00.000Z',
+    lastSynced: '2023-10-12T16:00:00.000Z',
+    vendors: 'Vendor C',
   },
 ]

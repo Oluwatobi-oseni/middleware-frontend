@@ -18,7 +18,6 @@ const AdminPage = () => {
   const { data } = useAdminUserData()
   const [selectedUser, setSelectedUser] = useState<userDetailsType | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  console.log('The data we working on is' + data)
   const accessToken = sessionStorage.getItem('accessToken')
   const userRole = accessToken
     ? jwtDecode<DecodedToken>(accessToken).role
@@ -28,10 +27,10 @@ const AdminPage = () => {
   const filteredData =
     data?.filter((user) => user.email.includes('alert')) || []
 
-  const handleRowClick = (User: userDetailsType) => {
-    setSelectedUser(User)
-    setIsModalOpen(true)
-  }
+  // const handleRowClick = (User: userDetailsType) => {
+  //   setSelectedUser(User)
+  //   setIsModalOpen(true)
+  // }
 
   const closeModal = () => {
     setIsModalOpen(false)
@@ -58,7 +57,7 @@ const AdminPage = () => {
           showButton={false}
           showDateRangePicker={false}
           showModalComponent
-          onRowClick={handleRowClick}
+          // onRowClick={handleRowClick}
           ModalComponent={<RolesModal />}
           buttonText='Search'
         />

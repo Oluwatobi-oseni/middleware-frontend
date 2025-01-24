@@ -180,6 +180,16 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+          {
+            path: 'business/:businessName/:businessId', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/products/pos/Business/businessDetailsPage.tsx'
+                )
+              ).default,
+            }),
+          },
         ],
       },
       {

@@ -12,7 +12,7 @@ const formSchema = z.object({
   cardId: z.string(),
 })
 
-export default function DeleteForm({
+export default function EditForm({
   userDetails,
   setIsOpen,
 }: {
@@ -22,12 +22,12 @@ export default function DeleteForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // defaultValues: {
-    //   cardId: cardId,
+    //   userDetails,
     // },
   })
 
   const isLoading = form.formState.isSubmitting
-  console.log(userDetails)
+  console.log('Good news', userDetails)
 
   const onSubmit = async () => {
     try {
