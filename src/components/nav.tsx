@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils'
 import useCheckActiveNav from '@/hooks/use-check-active-nav'
 import { SideLink } from '@/data/sidelinks'
 import { useSignOut } from '@/lib/auth/hook'
+import { useTheme } from './theme-provider'
 
 interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean
@@ -38,6 +39,7 @@ export default function Nav({
   closeNav,
 }: NavProps) {
   const signOut = useSignOut()
+
   const renderLink = ({ sub, ...rest }: SideLink) => {
     const key = `${rest.title}-${rest.href}`
     if (isCollapsed && sub)
@@ -122,13 +124,18 @@ function NavLink({
   subLink = false,
 }: NavLinkProps) {
   const { checkActiveNav } = useCheckActiveNav()
+  const { theme } = useTheme()
   return (
     <Link
       to={href}
       onClick={closeNav}
       className={cn(
         buttonVariants({
-          variant: checkActiveNav(href) ? 'customDefault' : 'ghost',
+          variant: checkActiveNav(href)
+            ? theme === 'dark'
+              ? 'secondary'
+              : 'customDefault'
+            : 'ghost',
           size: 'sm',
         }),
         'h-12 justify-start text-wrap rounded-none px-6',

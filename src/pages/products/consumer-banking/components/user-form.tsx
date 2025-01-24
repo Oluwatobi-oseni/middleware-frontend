@@ -45,7 +45,7 @@ export default function UserForm() {
         <div className='flex items-center space-x-4'>
           {/* KYC Status */}
           <div className='flex items-center space-x-1'>
-            <span className='text-sm text-gray-600'>KYC:</span>
+            <span className='text-sm text-muted-foreground'>KYC:</span>
             <CheckCircleIcon className='h-5 w-5 text-green-500' />
             <span className='text-green-600'>Verified</span>
           </div>
@@ -55,7 +55,7 @@ export default function UserForm() {
 
           {/* User Status Toggle */}
           <div className='flex items-center space-x-2'>
-            <span className='text-sm text-gray-600'>Lein Status</span>
+            <span className='text-sm text-muted-foreground'>Lein Status</span>
             <Switch checked={isLein} onClick={toggleLeinStatus} />
           </div>
 
@@ -118,7 +118,7 @@ export default function UserForm() {
                 id='firstName'
                 placeholder='Victor'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -130,7 +130,7 @@ export default function UserForm() {
                 id='lastName'
                 placeholder='Bassey'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -141,7 +141,7 @@ export default function UserForm() {
                 id='email'
                 placeholder='Victor@alertgroup.com.ng'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -152,7 +152,7 @@ export default function UserForm() {
                 type='date'
                 id='dob'
                 readOnly
-                className='cursor-not-allowed bg-gray-100 text-muted-foreground'
+                className='cursor-not-allowed bg-muted text-muted-foreground'
               />
             </div>
 
@@ -164,7 +164,7 @@ export default function UserForm() {
                 id='phone'
                 placeholder='08012345678'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -175,7 +175,7 @@ export default function UserForm() {
                 type='date'
                 id='joinedDate'
                 readOnly
-                className='cursor-not-allowed bg-gray-100 text-muted-foreground'
+                className='cursor-not-allowed bg-muted text-muted-foreground'
               />
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function UserForm() {
                 id='address'
                 placeholder='No 132 Herbert Macaulay way, Yaba'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -204,7 +204,7 @@ export default function UserForm() {
                 id='postalcode'
                 placeholder='LA 24B'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
@@ -216,7 +216,7 @@ export default function UserForm() {
                 id='country'
                 placeholder='NG'
                 readOnly
-                className='cursor-not-allowed bg-gray-100'
+                className='cursor-not-allowed bg-muted'
               />
             </div>
 
