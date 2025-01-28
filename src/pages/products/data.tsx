@@ -38,17 +38,17 @@ export const products = [
   },
   {
     id: '3',
-    name: 'Alert Savings',
+    name: 'Gold Box',
     logo: <IconLock />,
     desc: 'Encourage savings and financial growth through a comprehensive savings program tailored for customers.',
     path: '/',
   },
   {
     id: '4',
-    name: 'Consumer Banking',
+    name: 'Mobile Banking',
     logo: <IconUser />,
     desc: 'Enhance personal banking services to meet individual customer needs and strengthen client relationships.',
-    path: '/products/consumer-banking',
+    path: '/products/mobile-banking',
   },
   // {
   //   name: 'Stripe',

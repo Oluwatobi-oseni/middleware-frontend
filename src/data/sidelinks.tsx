@@ -81,7 +81,7 @@ export const sidelinks: SideLink[] = [
     icon: <IconToggleLeft size={18} />,
   },
   {
-    title: 'Messages',
+    title: 'Notifications',
     label: '',
     href: '/messages',
     icon: <IconMessage size={18} />,
@@ -137,7 +137,7 @@ export const sidelinks: SideLink[] = [
   //   ],
   // },
   {
-    title: 'Settings',
+    title: 'My Profile',
     label: '',
     href: '/settings',
     icon: <IconSettings size={18} />,

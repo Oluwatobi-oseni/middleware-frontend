@@ -34,9 +34,7 @@ export function RecentSales() {
         </Avatar>
         <div className='ml-4 space-y-1'>
           <p className='text-sm font-medium leading-none'>Isabella Nguyen</p>
-          <p className='text-sm text-muted-foreground'>
-            isabella.nguyen@email.com
-          </p>
+          <p className='text-sm text-muted-foreground'>isabella@email.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦299.00</div>
       </div>

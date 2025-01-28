@@ -27,7 +27,6 @@ import { useState } from 'react'
 // Utility function to format designations
 function formatDesignation(designation: string): string {
   return designation
-    .toLowerCase()
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')

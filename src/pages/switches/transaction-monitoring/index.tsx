@@ -1,8 +1,5 @@
-// import { Layout } from '@/components/custom/layout'
-// import { useState } from 'react'
-// import { SwitchProviderDialog } from '../components/switch-dialog'
-import { useAuth } from '@/lib/auth/hook'
-import { Navigate } from 'react-router-dom'
+import { Button } from '@/components/custom/button'
+import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
@@ -10,28 +7,25 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import {
+  Dialog,
   DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/custom/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  //   IconCircleCheck,
-  //   IconGift,
-  IconLayoutDashboardFilled,
-} from '@tabler/icons-react'
-// import { Overview } from '@/pages/dashboard/components/overview'
-// import { RecentSales } from '@/pages/dashboard/components/recent-sales'
-import { UptimeOverview } from '../components/switches-overview'
-import { Clock, Users } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { RecentSales } from '@/pages/dashboard/components/recent-sales'
-import { Badge } from '@/components/ui/badge'
+import { IconLayoutDashboardFilled } from '@tabler/icons-react'
+import { Clock, Users } from 'lucide-react'
+import { UptimeOverview } from '../components/switches-overview'
+// import { useState } from 'react'
+import { useAuth } from '@/lib/auth/hook'
+import { Navigate } from 'react-router-dom'
+// import { SwitchProviderDialog } from '../components/switch-dialog'
 
 const provider = {
   customerActivity: 'Dojah',
@@ -43,21 +37,22 @@ const provider = {
 }
 
 const chartData = [
-  { name: 'Verified Customers', value: 12350, fill: '#4299E1' },
-  { name: 'Pending Verifications', value: 12972, fill: '#E53E3E' },
+  { name: 'Customers Profiled', value: 2021, fill: '#4299E1' },
+  { name: 'Flagged Transactions', value: 11, fill: '#E53E3E' },
 ]
 
 const chartConfig = {
   uptime: {
-    label: 'Verified Customers',
+    label: 'Customers Profiled',
     color: '#4299E1', // Blue
   },
   downtime: {
-    label: 'Pending Verifications',
+    label: 'Flagged Transactions',
     color: '#E53E3E', // Red
   },
 }
-export default function KYCProviders() {
+
+const TransactionMonitoring = () => {
   // const [isActive, setIsActive] = useState(false)
 
   const { isSignedIn } = useAuth()
@@ -72,23 +67,20 @@ export default function KYCProviders() {
     <div className='w-full'>
       <div className='mb-2 flex justify-between'>
         <h2 className='text-xl font-semibold tracking-tighter'>
-          KYB / KYC Providers
+          Transaction Monitoring
         </h2>
         {/* <SwitchProviderDialog
           isActive={isActive}
           toggleProvider={toggleProvider}
         /> */}
       </div>
-      <Tabs orientation='vertical' defaultValue='dojah' className='space-y-4'>
-        {/* <div className='flex w-full flex-col items-center justify-between space-y-4 overflow-x-auto pb-2 sm:flex-row sm:space-y-0'> */}
+      <Tabs orientation='vertical' defaultValue='regfyl' className='space-y-4'>
         <TabsList className='w-full sm:w-auto'>
-          <TabsTrigger value='dojah'>Dojah</TabsTrigger>
-          {/* <TabsTrigger value='regfyl'>Regfyl</TabsTrigger> */}
+          {/* <TabsTrigger value='dojah'>Dojah</TabsTrigger> */}
+          <TabsTrigger value='regfyl'>Regfyl</TabsTrigger>
         </TabsList>
-        {/* </div> */}
-
         <TabsContent
-          value='dojah'
+          value='regfyl'
           className='flex h-full flex-col space-y-4 overflow-y-scroll hide-scrollbar'
         >
           <div className='col-span-2 flex h-full'>
@@ -98,13 +90,13 @@ export default function KYCProviders() {
               </DialogTrigger>
               <DialogContent className='sm:max-w-[425px]'>
                 <DialogHeader>
-                  <DialogTitle>KYC Provider</DialogTitle>
+                  <DialogTitle>Transaction Monitoring Provider</DialogTitle>
                 </DialogHeader>
                 <Separator />
                 <div className='flex flex-col gap-4'>
                   <div className='flex justify-between'>
                     <span className='text-muted-foreground'>Provider Name</span>
-                    <span>{provider.customerActivity}</span>
+                    <span>Refyl</span>
                   </div>
                   <div className='flex items-center justify-between'>
                     <span className='text-muted-foreground'>Status</span>
@@ -176,9 +168,8 @@ export default function KYCProviders() {
                 </div>
                 <div>
                   <div className='font-geist-mono text-2xl font-bold sm:text-lg'>
-                    Dojah
+                    Regfyl
                   </div>
-                  {/* <p className='text-xs text-muted-foreground'>kyc Status</p> */}
                 </div>
               </div>
             </div>
@@ -189,10 +180,10 @@ export default function KYCProviders() {
                 </div>
                 <div>
                   <div className='font-geist-mono text-2xl font-bold sm:text-lg'>
-                    2,021
+                    {chartData[0].value}
                   </div>
                   <p className='text-xs text-muted-foreground'>
-                    Customer Verified
+                    Customers Profiled
                   </p>
                 </div>
               </div>
@@ -204,9 +195,11 @@ export default function KYCProviders() {
                 </div>
                 <div>
                   <div className='font-geist-mono text-2xl font-bold sm:text-lg'>
-                    11
+                    {chartData[1].value}
                   </div>
-                  <p className='text-xs text-muted-foreground'>Pending</p>
+                  <p className='text-xs text-muted-foreground'>
+                    Flagged Transaction
+                  </p>
                 </div>
               </div>
             </div>
@@ -240,17 +233,27 @@ export default function KYCProviders() {
           </div>
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             <UptimeOverview
-              provider="Customers (Dojah's)"
+              provider="Customers (Regfyl's)"
               chartData={chartData}
               chartConfig={chartConfig}
             />
+
+            {/* <CardFooter className='flex-col gap-2 text-sm'>
+                <div className='flex items-center gap-2 font-medium leading-none'>
+                  Trending up by 5.2% this month{' '}
+                  <TrendingUp className='h-4 w-4' />
+                </div>
+                <div className='leading-none text-muted-foreground'>
+                  Showing total visitors for the last 6 months
+                </div>
+              </CardFooter> */}
+
             <Card className='col-span-1 h-96 lg:col-span-3'>
               <CardHeader>
-                <CardTitle>Recent KYC Provided</CardTitle>
+                <CardTitle>Recent Profiled Customers</CardTitle>
                 <CardDescription>
-                  There are currently{' '}
-                  <span className='font-geist-mono'>2021</span> KYC
-                  verifications.
+                  Showing last <span className='font-geist-mono'>24</span>{' '}
+                  Hours.
                 </CardDescription>
               </CardHeader>
               <CardContent className='h-72'>
@@ -266,3 +269,5 @@ export default function KYCProviders() {
     </div>
   )
 }
+
+export default TransactionMonitoring

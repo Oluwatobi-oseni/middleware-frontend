@@ -105,23 +105,8 @@ export const columns: ColumnDef<MessageResponse>[] = [
   //   },
   // },
   {
-    id: 'actions',
-    header: '',
-    cell: ({ row }) => (
-      <div className='flex space-x-2'>
-        <button
-          className='text-blue-500 hover:underline'
-          onClick={() => alert(`Editing message: ${row.original.id}`)}
-        >
-          Edit
-        </button>
-        <button
-          className='text-red-500 hover:underline'
-          onClick={() => alert(`Deleting message: ${row.original.id}`)}
-        >
-          Delete
-        </button>
-      </div>
-    ),
+    id: 'author',
+    header: 'Author',
+    cell: () => <span>Keneth</span>,
   },
 ]
