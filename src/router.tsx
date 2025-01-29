@@ -343,6 +343,91 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: 'price-control',
+        lazy: async () => ({
+          Component: (await import('@/pages/price-control/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/data')).default,
+            }),
+          },
+          {
+            path: 'cable-tv',
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/cableTv'))
+                .default,
+            }),
+          },
+          {
+            path: 'electricity',
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/electricity'))
+                .default,
+            }),
+          },
+          {
+            path: 'card-issuance',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/card/card-issuance')
+              ).default,
+            }),
+          },
+          {
+            path: 'card-termination',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/card/card-termination')
+              ).default,
+            }),
+          },
+          {
+            path: 'payout/bank-transfer',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payout/index.tsx')
+              ).default,
+            }),
+          },
+          {
+            path: 'payin/bank-transfer',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payin/bank-transfer')
+              ).default,
+            }),
+          },
+          {
+            path: 'direct-debit',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payin/direct-debit')
+              ).default,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'compliance',
+        lazy: async () => ({
+          Component: (await import('@/pages/compliance/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/compliance/compliance.tsx'))
+                .default,
+            }),
+          },
+        ],
+      },
+      {
         path: 'settings',
         lazy: async () => ({
           Component: (await import('./pages/settings')).default,

@@ -130,7 +130,7 @@ export function NewMessageDialog() {
                       <SelectItem value='GOLD_BOX' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <AlertCircle size={18} />
-                          Gold Box
+                          Gold Bucks
                         </div>
                       </SelectItem>
                       <SelectItem value='MOBILE_APP' className='text-xs'>

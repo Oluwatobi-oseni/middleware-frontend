@@ -44,7 +44,7 @@ export default function Analytics() {
         >
           {/* <div className='flex w-full flex-col items-center justify-between space-y-4 overflow-x-auto pb-2 sm:flex-row sm:space-y-0'> */}
           <TabsList className='w-full sm:w-auto'>
-            <TabsTrigger value='alert-savings'>Gold Box</TabsTrigger>
+            <TabsTrigger value='alert-savings'>Gold Bucks</TabsTrigger>
             <TabsTrigger value='business-banking'>Business Banking</TabsTrigger>
             <TabsTrigger value='mobile-banking'>Mobile Banking</TabsTrigger>
             <TabsTrigger value='pos'>POS</TabsTrigger>
@@ -56,7 +56,7 @@ export default function Analytics() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Gold Box
+                    Gold Bucks
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -199,7 +199,7 @@ export default function Analytics() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Gold Box Transactions
+                    Gold Bucks Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'
@@ -354,7 +354,7 @@ export default function Analytics() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Gold Box Transactions
+                    Gold Bucks Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'
@@ -501,7 +501,7 @@ export default function Analytics() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Gold Box Transactions
+                    Gold Bucks Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'

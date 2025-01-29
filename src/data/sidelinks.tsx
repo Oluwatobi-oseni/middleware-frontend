@@ -8,7 +8,9 @@ import {
   IconMessage,
   IconSettings,
   IconTablePlus,
+  IconTag,
   IconToggleLeft,
+  IconUserShield,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -91,6 +93,18 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/promo-code',
     icon: <IconGift size={18} />,
+  },
+  {
+    title: 'Price Control',
+    label: '',
+    href: '/price-control',
+    icon: <IconTag size={18} />,
+  },
+  {
+    title: 'Compliance',
+    label: '',
+    href: '/compliance',
+    icon: <IconUserShield size={18} />,
   },
   {
     title: 'Adminstration',

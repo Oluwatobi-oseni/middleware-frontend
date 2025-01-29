@@ -32,8 +32,8 @@ type CardProps = React.ComponentProps<typeof Card>
 
 const controlCenterItems = [
   {
-    name: 'Gold Box',
-    description: 'Control whether users can access Gold Box.',
+    name: 'Gold Bucks',
+    description: 'Control whether users can access Gold Bucks.',
   },
   {
     name: 'Business Banking',

@@ -80,7 +80,7 @@ const TransactionDetailsDialog: React.FC<TransactionDetailsDialogProps> = ({
                   <div className='flex flex-col'>
                     <span>Alert Micro Finance Bank</span>{' '}
                     <span className='text-xs'>
-                      Gold Box - {transaction.accountName}
+                      Gold Bucks - {transaction.accountName}
                     </span>
                   </div>
                   <span className='flex flex-col'>

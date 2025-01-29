@@ -38,7 +38,7 @@ export const products = [
   },
   {
     id: '3',
-    name: 'Gold Box',
+    name: 'Gold Bucks',
     logo: <IconLock />,
     desc: 'Encourage savings and financial growth through a comprehensive savings program tailored for customers.',
     path: '/',
