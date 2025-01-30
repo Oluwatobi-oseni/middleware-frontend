@@ -173,6 +173,14 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'pos/:posName', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/products/pos/POS/posProvider/index.tsx')
+              ).default,
+            }),
+          },
+          {
             path: 'pos/:posName/:posId', // Add dynamic route here
             lazy: async () => ({
               Component: (
