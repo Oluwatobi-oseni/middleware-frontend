@@ -10,14 +10,14 @@ import { IconDots } from '@tabler/icons-react'
 import { CodeResponse } from '@/lib/promo-code/type'
 import { format } from 'date-fns'
 
-export type PromoCode = {
-  id: string
-  codeTitle: string
-  amountInNaira: number
-  status: string
-  dateCreated: string // formatted date (e.g., 'October 29, 2024')
-  expiryDate: string // formatted expiry date
-}
+// export type PromoCode = {
+//   id: string
+//   codeTitle: string
+//   amountInNaira: number
+//   status: string
+//   dateCreated: string // formatted date (e.g., 'October 29, 2024')
+//   expiryDate: string // formatted expiry date
+// }
 
 export const columns: ColumnDef<CodeResponse>[] = [
   {

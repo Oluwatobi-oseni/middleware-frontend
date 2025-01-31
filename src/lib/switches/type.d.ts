@@ -8,6 +8,7 @@ export type Provider = {
 export type ProvidersResponse = {
   verificationProviders: Provider[]
   messagingProviders: Provider[]
+  complianceProviders: Provider[]
 }
 
 export interface Recents {
@@ -34,4 +35,27 @@ export interface ProviderMessagingResponse {
   totalMessages: number
   whatsappTotal: number
   smsTotal: number
+}
+
+export interface ProviderComplianceResponse {
+  provider: {
+    id: string
+    name: string
+    isEnabled: boolean
+    logoUrl: string
+  }
+  profiledCustomers: number
+  flaggedTransactions: FlaggedTransaction[]
+  recentProfiledCustomers: RecentProfiledCustomer[]
+}
+
+export interface FlaggedTransaction {
+  transactionId: string
+  reason: string
+  dateFlagged: string // ISO date format
+}
+
+export interface RecentProfiledCustomer {
+  rcNumber: string
+  companyName: string
 }

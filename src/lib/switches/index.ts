@@ -2,6 +2,7 @@ import client from '../axios'
 import { AxiosError } from 'axios'
 import { AxiosErrorResponse } from '../invites/types'
 import {
+  ProviderComplianceResponse,
   ProviderMessagingResponse,
   ProvidersResponse,
   ProviderVerificationResponse,
@@ -43,6 +44,20 @@ export async function fetchProviderMessagingById(
   try {
     const response = await client.get<ProviderMessagingResponse>(
       `/api/sharedServices/v1/providers/messaging/${id}`
+    )
+    return response.data
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message: string }>
+    throw new Error(axiosError.response?.data?.message || 'An error occurred')
+  }
+}
+
+export async function fetchProviderComplianceById(
+  id: string
+): Promise<ProviderComplianceResponse> {
+  try {
+    const response = await client.get<ProviderComplianceResponse>(
+      `/api/sharedServices/v1/providers/compliance/${id}`
     )
     return response.data
   } catch (error) {
