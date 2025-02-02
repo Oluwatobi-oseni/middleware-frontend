@@ -1,4 +1,11 @@
-import { Business } from './columns'
+export type Business = {
+  id: string
+  name: string
+  phoneNumber: string
+  lastActive: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
+  dateJoined: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
+  kybStatus: 'completed' | 'pending' | 'rejected'
+}
 // Example data for businesses
 export const businessData: Business[] = [
   {

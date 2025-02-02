@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { PosDevice } from './columns'
+import { PosDevice } from './posDevice/columns'
 import {
   Select,
   SelectTrigger,
