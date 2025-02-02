@@ -9,12 +9,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { IconChevronDown, IconChevronRight } from '@tabler/icons-react'
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
     href: string
     title: string
     icon: JSX.Element
+    items?: { title: string; url: string }[] // Optional nested items
   }[]
 }
 
@@ -26,10 +28,15 @@ export default function SidebarNav({
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [val, setVal] = useState(pathname ?? '/settings')
+  const [openItem, setOpenItem] = useState<string | null>(null) // Track open item
 
   const handleSelect = (e: string) => {
     setVal(e)
     navigate(e)
+  }
+
+  const toggleSubItems = (title: string) => {
+    setOpenItem((prev) => (prev === title ? null : title)) // Toggle the open state of the clicked item
   }
 
   return (
@@ -61,20 +68,55 @@ export default function SidebarNav({
           {...props}
         >
           {items.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                buttonVariants({ variant: 'ghost' }),
-                pathname === item.href
-                  ? 'bg-muted hover:bg-muted'
-                  : 'hover:bg-transparent hover:underline',
-                'justify-start'
+            <div key={item.href}>
+              <Link
+                to={item.href}
+                className={cn(
+                  buttonVariants({ variant: 'ghost' }),
+                  pathname === item.href
+                    ? 'bg-muted hover:bg-muted'
+                    : 'hover:bg-transparent hover:underline',
+                  'flex items-center justify-between'
+                )}
+                onClick={() => item.items && toggleSubItems(item.title)} // Call toggleSubItems on click if item has sub-items
+              >
+                <div className='flex items-center'>
+                  <span className='mr-2'>{item.icon}</span>
+                  {item.title}
+                </div>
+                {/* Render chevron icon if the item has sub-items */}
+                {item.items && (
+                  <span className='ml-auto'>
+                    {openItem === item.title ? (
+                      <IconChevronDown size={18} />
+                    ) : (
+                      <IconChevronRight size={18} />
+                    )}
+                  </span>
+                )}
+              </Link>
+
+              {/* If this item has nested items, render them */}
+              {item.items && openItem === item.title && (
+                <div className='ml-4'>
+                  {item.items.map((subItem) => (
+                    <Link
+                      key={subItem.url}
+                      to={subItem.url}
+                      className={cn(
+                        buttonVariants({ variant: 'ghost' }),
+                        pathname === subItem.url
+                          ? 'bg-muted hover:bg-muted'
+                          : 'hover:bg-transparent hover:underline',
+                        'block justify-start'
+                      )}
+                    >
+                      {subItem.title}
+                    </Link>
+                  ))}
+                </div>
               )}
-            >
-              <span className='mr-2'>{item.icon}</span>
-              {item.title}
-            </Link>
+            </div>
           ))}
         </nav>
       </div>

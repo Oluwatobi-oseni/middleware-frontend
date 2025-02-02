@@ -127,10 +127,10 @@ export function NewMessageDialog() {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='ALERT_SAVINGS' className='text-xs'>
+                      <SelectItem value='GOLD_BOX' className='text-xs'>
                         <div className='flex items-center gap-2'>
                           <AlertCircle size={18} />
-                          Alert Savings
+                          Gold Bucks
                         </div>
                       </SelectItem>
                       <SelectItem value='MOBILE_APP' className='text-xs'>
@@ -142,7 +142,7 @@ export function NewMessageDialog() {
                       <SelectItem value='CONSUMER_BANKING' className=' text-xs'>
                         <div className='flex items-center gap-2'>
                           <Banknote size={18} />{' '}
-                          <span className='trucate'>Consumer Banking</span>
+                          <span className='trucate'>Mobile Banking</span>
                         </div>
                       </SelectItem>
                       <SelectItem value='BUSINESS_BANKING' className='text-xs'>

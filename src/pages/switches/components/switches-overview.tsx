@@ -1,18 +1,5 @@
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
-import {
-  Card,
-  CardContent,
-  //   CardDescription,
-  //   CardFooter,
-} from '@/components/ui/card'
-
-// import {
-//   Card,
-//   CardContent,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   ChartConfig,
   ChartContainer,
@@ -21,28 +8,25 @@ import {
 } from '@/components/ui/chart'
 import { Separator } from '@/components/ui/separator'
 
-const chartData = [{ month: 'January', uptime: 90, downtime: 10 }]
+interface UptimeOverviewProps {
+  provider: string
+  chartData: { name: string; value: number; fill: string }[]
+  chartConfig: ChartConfig
+}
 
-const chartConfig = {
-  uptime: {
-    label: 'Uptime',
-    color: '#4299E1', // Blue for Uptime
-  },
-  downtime: {
-    label: 'Downtime',
-    color: '#E53E3E', // Red for Downtime
-  },
-} satisfies ChartConfig
-
-export function UptimeOverview({ kycProvider }: { kycProvider: string }) {
-  //   const totalPercentage = chartData[0].uptime + chartData[0].downtime
+export function UptimeOverview({
+  provider,
+  chartData,
+  chartConfig,
+}: UptimeOverviewProps) {
+  const total = chartData.reduce((sum, item) => sum + item.value, 0)
 
   return (
-    <Card className='col-span-1 h-96 gap-0 p-0 pb-0 lg:col-span-4'>
-      <CardContent className='px-4 pt-8'>
+    <Card className='col-span-1 h-full gap-0 p-4 lg:col-span-4'>
+      <CardContent className='px-4'>
         <ChartContainer
           config={chartConfig}
-          className='mx-auto flex aspect-square h-64 w-full max-w-[400px] items-center justify-center'
+          className='mx-auto flex h-[300px] w-full max-w-[400px] items-center justify-center'
         >
           <RadialBarChart
             data={chartData}
@@ -68,14 +52,14 @@ export function UptimeOverview({ kycProvider }: { kycProvider: string }) {
                           y={(viewBox.cy || 0) - 16}
                           className='font-geist-mono fill-foreground text-3xl font-extrabold'
                         >
-                          {chartData[0].uptime}%
+                          {total}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 16}
                           className='font-geist-mono fill-muted-foreground text-sm'
                         >
-                          {kycProvider} Uptime
+                          {provider}
                         </tspan>
                       </text>
                     )
@@ -84,23 +68,16 @@ export function UptimeOverview({ kycProvider }: { kycProvider: string }) {
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey='uptime'
-              stackId='a'
+              dataKey='value'
+              // nameKey='name'
               cornerRadius={5}
-              fill={chartConfig.uptime.color}
-              className='stroke-transparent stroke-2'
-            />
-            <RadialBar
-              dataKey='downtime'
-              fill={chartConfig.downtime.color}
-              stackId='a'
-              cornerRadius={5}
-              className='stroke-transparent stroke-2'
+              // barSize={15}
+              isAnimationActive
             />
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <div className='flex w-full flex-col items-center justify-center gap-2 p-12 py-0 text-sm'>
+      <div className='-mt-8 flex w-full flex-col items-center justify-center gap-2 px-12 text-sm'>
         <div className='flex w-full flex-col items-center justify-center gap-2'>
           <div className='flex w-full justify-between'>
             <div className='flex items-center gap-2'>
@@ -108,11 +85,10 @@ export function UptimeOverview({ kycProvider }: { kycProvider: string }) {
                 className='h-2 w-2 rounded-full'
                 style={{ backgroundColor: chartConfig.uptime.color }}
               ></span>
-              <span className='text-muted-foreground'>Uptime</span>
+              <span className='text-muted-foreground'>{chartData[0].name}</span>
             </div>
-            <span className='font-geist-mono'>{chartData[0].uptime}%</span>
+            <span className='font-geist-mono'>{chartData[0].value}</span>
           </div>
-          {/* <span className='text-muted-foreground'>|</span> */}
           <Separator />
           <div className='flex w-full justify-between'>
             <div className='flex items-center gap-2'>
@@ -120,16 +96,12 @@ export function UptimeOverview({ kycProvider }: { kycProvider: string }) {
                 className='h-2 w-2 rounded-full'
                 style={{ backgroundColor: chartConfig.downtime.color }}
               ></span>
-              <span className='text-muted-foreground'>Downtime</span>
+              <span className='text-muted-foreground'>{chartData[1].name}</span>
             </div>
-            <span className='font-geist-mono'>{chartData[0].downtime}%</span>
+            <span className='font-geist-mono'>{chartData[1].value}</span>
           </div>
-          {/* <Separator /> */}
         </div>
       </div>
-      {/* <CardFooter className='flex flex-col items-center justify-center gap-2 py-0 text-sm outline'>
-      </CardFooter> */}
-      {/* <CardDescription className='outline'>Hi</CardDescription> */}
     </Card>
   )
 }

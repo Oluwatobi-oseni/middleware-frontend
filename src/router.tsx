@@ -114,27 +114,27 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'consumer-banking',
+            path: 'mobile-banking',
             lazy: async () => ({
               Component: (
-                await import('@/pages/products/consumer-banking/index.tsx')
+                await import('@/pages/products/mobile-banking/index.tsx')
               ).default,
             }),
           },
           {
-            path: 'consumer-banking/user/:id', // Add dynamic route here
+            path: 'mobile-banking/user/:id', // Add dynamic route here
             lazy: async () => ({
               Component: (
-                await import('@/pages/products/consumer-banking/user.tsx')
+                await import('@/pages/products/mobile-banking/user.tsx')
               ).default,
             }),
           },
           {
-            path: 'consumer-banking/user/:id/activities', // Add dynamic route here
+            path: 'mobile-banking/user/:id/activities', // Add dynamic route here
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/products/consumer-banking/consumer-banking-user-activity/page.tsx'
+                  '@/pages/products/mobile-banking/mobile-banking-user-activity/page.tsx'
                 )
               ).default,
             }),
@@ -170,6 +170,14 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (await import('@/pages/products/pos/index.tsx'))
                 .default,
+            }),
+          },
+          {
+            path: 'pos/:posName', // Add dynamic route here
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/products/pos/POS/posProvider/index.tsx')
+              ).default,
             }),
           },
           {
@@ -289,10 +297,18 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'sms-providers',
+            path: 'message-providers',
             lazy: async () => ({
-              Component: (await import('./pages/switches/sms-providers'))
+              Component: (await import('./pages/switches/message-providers'))
                 .default,
+            }),
+          },
+          {
+            path: 'transaction-monitoring',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/switches/transaction-monitoring')
+              ).default,
             }),
           },
           {
@@ -330,6 +346,91 @@ const router = createBrowserRouter([
             index: true,
             lazy: async () => ({
               Component: (await import('@/pages/promo-code/promo.tsx')).default,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'price-control',
+        lazy: async () => ({
+          Component: (await import('@/pages/price-control/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/data')).default,
+            }),
+          },
+          {
+            path: 'cable-tv',
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/cableTv'))
+                .default,
+            }),
+          },
+          {
+            path: 'electricity',
+            lazy: async () => ({
+              Component: (await import('./pages/price-control/electricity'))
+                .default,
+            }),
+          },
+          {
+            path: 'card-issuance',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/card/card-issuance')
+              ).default,
+            }),
+          },
+          {
+            path: 'card-termination',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/card/card-termination')
+              ).default,
+            }),
+          },
+          {
+            path: 'payout/bank-transfer',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payout/index.tsx')
+              ).default,
+            }),
+          },
+          {
+            path: 'payin/bank-transfer',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payin/bank-transfer')
+              ).default,
+            }),
+          },
+          {
+            path: 'direct-debit',
+            lazy: async () => ({
+              Component: (
+                await import('./pages/price-control/payin/direct-debit')
+              ).default,
+            }),
+          },
+        ],
+      },
+      {
+        path: 'compliance',
+        lazy: async () => ({
+          Component: (await import('@/pages/compliance/index.tsx')).default,
+        }),
+        errorElement: <GeneralError />,
+        children: [
+          {
+            index: true,
+            lazy: async () => ({
+              Component: (await import('@/pages/compliance/compliance.tsx'))
+                .default,
             }),
           },
         ],

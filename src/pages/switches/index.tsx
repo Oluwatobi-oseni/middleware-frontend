@@ -13,6 +13,7 @@ import { UserNav } from '@/components/user-nav'
 // import SidebarNav from './components/sidebar-nav'
 import { useAuth } from '@/lib/auth/hook'
 import {
+  IconEye,
   IconKeyframeAlignCenter,
   IconMessage,
   IconTransfer,
@@ -60,14 +61,19 @@ export default function Settings() {
 
 const sidebarNavItems = [
   {
-    title: 'KYC Providers',
+    title: 'KYB / KYC Providers',
     icon: <IconKeyframeAlignCenter size={18} />,
     href: '/switches',
   },
   {
-    title: 'SMS Providers',
+    title: 'Messaging',
     icon: <IconMessage size={18} />,
-    href: '/switches/sms-providers',
+    href: '/switches/message-providers',
+  },
+  {
+    title: 'Transaction Monitoring',
+    icon: <IconEye size={18} />,
+    href: '/switches/transaction-monitoring',
   },
   {
     title: 'Intra-Bank Transfer',

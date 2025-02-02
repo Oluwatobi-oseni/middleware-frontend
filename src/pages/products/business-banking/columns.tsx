@@ -1,16 +1,17 @@
+import { Business } from '@/lib/products/business-banking/types'
 import { IconCheck, IconClock, IconUserCancel } from '@tabler/icons-react'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 
 // Define the Business type
-export type Business = {
-  id: string
-  name: string
-  phoneNumber: string
-  lastActive: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
-  dateJoined: string // ISO date format
-  kybStatus: 'completed' | 'pending' | 'rejected'
-}
+// export type Business = {
+//   id: string
+//   name: string
+//   phoneNumber: string
+//   lastActive: string // ISO date format (e.g., '2023-10-21T14:48:00.000Z')
+//   dateJoined: string // ISO date format
+//   kybStatus: 'completed' | 'pending' | 'rejected'
+// }
 
 // Define the columns for the Business type
 export const businessColumns: ColumnDef<Business>[] = [
@@ -18,20 +19,20 @@ export const businessColumns: ColumnDef<Business>[] = [
     accessorKey: 'name',
     header: 'Business Name',
     cell: ({ row }) => {
-      const { name } = row.original
-      return <span>{name}</span>
+      const { businessName } = row.original
+      return <span>{businessName}</span>
     },
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
-    cell: ({ row }) => row.original.phoneNumber,
+    cell: ({ row }) => row.original.businessPhone,
   },
   {
     accessorKey: 'lastActive',
     header: 'Last Active',
     cell: ({ row }) => {
-      const date = new Date(row.original.lastActive)
+      const date = new Date(row.original.updatedAt)
       return format(date, 'MMM dd, yyyy').toUpperCase() // Format as "OCT 20, 2024"
     },
   },
@@ -39,7 +40,7 @@ export const businessColumns: ColumnDef<Business>[] = [
     accessorKey: 'dateJoined',
     header: 'Date Joined',
     cell: ({ row }) => {
-      const date = new Date(row.original.dateJoined)
+      const date = new Date(row.original.createdAt)
       return format(date, 'MMM dd, yyyy').toUpperCase() // Format as "OCT 20, 2024"
     },
   },
@@ -47,15 +48,15 @@ export const businessColumns: ColumnDef<Business>[] = [
     accessorKey: 'kybStatus',
     header: 'KYB Status',
     cell: ({ row }) => {
-      const kybStatus = row.original.kybStatus
+      const kybStatus = row.original.addressVerificationStatus
 
       const getIcon = () => {
         switch (kybStatus) {
-          case 'completed':
+          case 'COMPLETED':
             return <IconCheck className='text-green-500' size={18} />
-          case 'pending':
+          case 'PENDING':
             return <IconClock className='text-yellow-500' size={18} />
-          case 'rejected':
+          case 'REJECTED':
             return <IconUserCancel className='text-red-500' size={18} />
           default:
             return null
@@ -64,11 +65,11 @@ export const businessColumns: ColumnDef<Business>[] = [
 
       const getStatusStyle = () => {
         switch (kybStatus) {
-          case 'completed':
+          case 'COMPLETED':
             return 'bg-green-100 text-green-700 border-green-500'
-          case 'pending':
+          case 'PENDING':
             return 'bg-yellow-100 text-yellow-700 border-yellow-500'
-          case 'rejected':
+          case 'REJECTED':
             return 'bg-red-100 text-red-700 border-red-500'
           default:
             return 'bg-muted-foreground text-muted-foreground border-muted-foreground'

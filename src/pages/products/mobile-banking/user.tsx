@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import pdf from '../../../assets/pdf.svg'
 // import { DataTable } from '@/components/table/data-table'
@@ -14,8 +14,7 @@ import TransactionDetailsDialog from './transaction/transactionDetailsDialog'
 import { useState } from 'react'
 
 const UserDetails = () => {
-  const { id } = useParams()
-  console.log('The user id is', id)
+  // const { id } = useParams()
   const [selectedTransaction, setSelectedTransaction] = useState<User | null>(
     null
   )

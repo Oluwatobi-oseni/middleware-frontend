@@ -1,119 +1,98 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { IconDots } from '@tabler/icons-react'
 
-export type PosDevice = {
+export type PosTransaction = {
   id: number
-  posName: string
-  deviceType: string
-  serialNumber: string
-  status: 'Activated' | 'Pending' | 'Deactivated'
-  lastSynced: string // formatted date and time
-  vendors: string
+  provider: 'Alert POS' | 'ErrandPay' | 'Grupp' | 'PayCliq'
+  narration: string
+  type: 'Virtual Account' | 'Card'
+  amount: number
+  transactionId: string
+  date: string // ISO format date
 }
 
-export const columns: ColumnDef<PosDevice>[] = [
+export const columns: ColumnDef<PosTransaction>[] = [
   {
-    accessorKey: 'id',
-    header: '#',
-    cell: ({ row }) => row.original.id,
+    accessorKey: 'provider',
+    header: 'Provider Name',
+    cell: ({ row }) => <span>{row.original.provider}</span>,
   },
   {
-    accessorKey: 'posName',
-    header: 'POS Name',
-    cell: ({ row }) => <span>{row.original.posName}</span>,
+    accessorKey: 'narration',
+    header: 'Narration',
+    cell: ({ row }) => <span>{row.original.narration}</span>,
   },
   {
-    accessorKey: 'vendors',
-    header: 'Vendors',
-    cell: ({ row }) => <span>{row.original.vendors}</span>,
-  },
-  {
-    accessorKey: 'deviceType',
-    header: 'Device Type',
-    cell: ({ row }) => row.original.deviceType,
-  },
-  {
-    accessorKey: 'serialNumber',
-    header: 'POS Serial No',
-    cell: ({ row }) => row.original.serialNumber,
-  },
-  {
-    accessorKey: 'status',
-    header: 'POS Status',
+    accessorKey: 'type',
+    header: 'Type',
     cell: ({ row }) => (
       <span
         className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-          row.original.status === 'Activated'
-            ? 'border border-green-700 bg-green-100 text-green-700'
-            : row.original.status === 'Pending'
-              ? 'border border-yellow-700 bg-yellow-100 text-yellow-700'
-              : 'border border-red-700 bg-red-100 text-red-700'
+          row.original.type === 'Virtual Account'
+            ? 'border border-blue-700 bg-blue-100 text-blue-700'
+            : 'border border-purple-700 bg-purple-100 text-purple-700'
         }`}
       >
-        {row.original.status}
+        {row.original.type}
       </span>
     ),
   },
   {
-    accessorKey: 'lastSynced',
-    header: 'Last Synced',
+    accessorKey: 'amount',
+    header: 'Amount',
+    cell: ({ row }) => (
+      <span className='font-semibold'>
+        ₦{row.original.amount.toLocaleString()}
+      </span>
+    ),
+  },
+  {
+    accessorKey: 'transactionId',
+    header: 'Transaction ID',
+    cell: ({ row }) => <span>{row.original.transactionId}</span>,
+  },
+  {
+    accessorKey: 'date',
+    header: 'Date',
     cell: ({ row }) => {
-      const date = new Date(row.original.lastSynced)
+      const date = new Date(row.original.date)
       return (
         <div>
           <span className='font-geist-mono'>
             {format(date, 'dd MMM, yyyy')}
           </span>
           <br />
-          <span className='font-geist-mono text-xs text-red-500'>
-            {format(date, 'hh:mm')}
+          <span className='font-geist-mono text-xs text-muted-foreground text-red-500'>
+            {format(date, 'hh:mm a')}
           </span>
         </div>
       )
     },
   },
-  {
-    id: 'actions',
-    header: '',
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='h-8 w-8 p-0'>
-            <span className='sr-only'>Open menu</span>
-            <IconDots className='h-4 w-4' />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          <DropdownMenuItem
-            className='text-muted-foreground'
-            onClick={() => handleView(row.original.id)}
-          >
-            View
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className='text-destructive'
-            onClick={() => handleDeactivate(row.original.id)}
-          >
-            Deactivate
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
+  // {
+  //   id: 'actions',
+  //   header: '',
+  //   cell: ({ row }) => (
+  //     <DropdownMenu>
+  //       <DropdownMenuTrigger asChild>
+  //         <Button variant='ghost' className='h-8 w-8 p-0'>
+  //           <span className='sr-only'>Open menu</span>
+  //           <IconDots className='h-4 w-4' />
+  //         </Button>
+  //       </DropdownMenuTrigger>
+  //       <DropdownMenuContent align='end'>
+  //         <DropdownMenuItem
+  //           className='text-muted-foreground'
+  //           onClick={() => handleView(row.original.transactionId)}
+  //         >
+  //           View Details
+  //         </DropdownMenuItem>
+  //       </DropdownMenuContent>
+  //     </DropdownMenu>
+  //   ),
+  // },
 ]
 
-const handleView = (id: number) => {
-  console.log(`Viewing details for POS with ID: ${id}`)
-}
-
-const handleDeactivate = (id: number) => {
-  alert(`Deactivating POS with ID: ${id}`)
-}
+// const handleView = (transactionId: string) => {
+//   console.log(`Viewing details for Transaction ID: ${transactionId}`)
+// }

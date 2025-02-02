@@ -67,7 +67,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Alert Savings
+                    Gold Bucks
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -127,7 +127,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Consumer Banking
+                    Mobile Banking
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -210,7 +210,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Alert Savings Transactions
+                    Gold Bucks Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'
@@ -272,7 +272,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Consumer Banking Transactions
+                    Mobile Banking Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'
@@ -365,7 +365,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Alert Savings Transactions
+                    Gold Bucks Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'
@@ -427,7 +427,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Consumer Banking Transactions
+                    Mobile Banking Transactions
                   </CardTitle>
                   <svg
                     id='Layer_1'

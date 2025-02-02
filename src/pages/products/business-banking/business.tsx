@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import pdf from '../../../assets/pdf.svg'
-import samplepdf from '../../../assets/sample.pdf'
 import {
   // IconBuildingBank,
   IconCopy,
@@ -48,6 +47,7 @@ import { DataTable } from '@/components/table/data-table'
 import { columns, User } from './transaction/columns'
 import { data } from './transaction/data'
 import TransactionDetailsDialog from './transaction/transactionDetailsDialog'
+import { useBusinessDetails } from '@/lib/products/business-banking/hook'
 
 const FormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
@@ -90,6 +90,9 @@ const UserDetails = () => {
   }
   const { id } = useParams()
   console.log('The user id is', id)
+  // Fetch business details using the custom hook
+  const { data: businessData, isLoading, error } = useBusinessDetails(id || '')
+
   const navigate = useNavigate()
 
   const goToActivities = () => {
@@ -129,14 +132,16 @@ const UserDetails = () => {
     ],
   }
   const [isOpen, setIsOpen] = useState(true)
-  const [kybStatus, setKybStatus] = useState(userData.kybStatus || '')
+  const [kybStatus, setKybStatus] = useState(
+    businessData?.data.addressVerificationStatus || ''
+  )
   const [isCopied, setIsCopied] = useState(false)
 
   useEffect(() => {
-    if (userData.kybStatus) {
-      setKybStatus(userData.kybStatus)
+    if (businessData?.data.addressVerificationStatus) {
+      setKybStatus(businessData?.data.addressVerificationStatus)
     }
-  }, [userData.kybStatus])
+  }, [businessData?.data.addressVerificationStatus])
 
   const handleKybStatusChange = (value: string) => {
     setKybStatus(value)
@@ -153,12 +158,6 @@ const UserDetails = () => {
             ? 'border-blue-500'
             : 'border-muted-foreground' // Default border color
 
-  const initials = userData.accountName
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
-  // const [status, setStatus] = useState('VERIFIED')
-
   const getNoteContent = () => {
     const userDetails = {
       name: 'Victor Bamidele',
@@ -168,7 +167,7 @@ const UserDetails = () => {
     }
 
     switch (kybStatus) {
-      case 'rejected':
+      case 'REJECTED':
         return {
           title: 'KYB Rejected',
           description: `${userDetails.name} (${userDetails.email}) rejected this business account's KYB application. The account was flagged for fraud on ${userDetails.actionDate} at ${userDetails.actionTime}.`,
@@ -176,7 +175,7 @@ const UserDetails = () => {
           borderColor: 'border-red-500',
           textColor: 'text-red-600',
         }
-      case 'pending':
+      case 'PENDING':
         return {
           title: 'KYB Pending',
           description:
@@ -185,7 +184,7 @@ const UserDetails = () => {
           borderColor: 'border-yellow-500',
           textColor: 'text-yellow-600',
         }
-      case 'completed':
+      case 'COMPLETED':
         return {
           title: 'KYB Approved',
           description:
@@ -194,7 +193,7 @@ const UserDetails = () => {
           borderColor: 'border-green-500',
           textColor: 'text-green-600',
         }
-      case 'in-review':
+      case 'IN-REVIEW':
         return {
           title: 'KYB In Review',
           description:
@@ -216,18 +215,36 @@ const UserDetails = () => {
   }
 
   const noteContent = getNoteContent()
+  if (isLoading) {
+    return (
+      <div className='flex h-48 w-48 animate-pulse items-center justify-center rounded-3xl border border-gray-300 bg-gray-100'>
+        <span className='text-gray-500'>Loading...</span>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='flex h-48 w-48 flex-col items-center justify-center rounded-3xl border border-red-300 bg-red-50 p-4 text-center text-red-600'>
+        <span>Failed to load business details.</span>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='h-screen overflow-y-auto hide-scrollbar'>
         <div className='flex flex-col items-center justify-between md:flex-row'>
           <div>
             <h3 className='mb-2 text-3xl font-semibold'>
-              {userData.accountName}
+              {businessData?.data.businessName}
             </h3>
             <div className='flex items-center justify-between'>
               <div className='flex items-center'>
                 <IconId className='mr-2 h-4 w-4 text-muted-foreground' />
-                <p className='text-xs text-muted-foreground'>{userData.id}</p>
+                <p className='text-xs text-muted-foreground'>
+                  {businessData?.data.id}
+                </p>
               </div>
             </div>
           </div>
@@ -235,7 +252,7 @@ const UserDetails = () => {
             <Select
               value={kybStatus}
               onValueChange={handleKybStatusChange}
-              defaultValue='completed'
+              defaultValue='PENDING'
             >
               <SelectTrigger
                 className={`w-[180px] border-2 ${borderColorClass} focus:outline-none focus:ring-transparent`}
@@ -244,9 +261,9 @@ const UserDetails = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value='completed'>KYB Approved</SelectItem>
-                  <SelectItem value='pending'>KYB Pending</SelectItem>
-                  <SelectItem value='rejected'>KYB Rejected</SelectItem>
+                  <SelectItem value='COMPLETED'>KYB Approved</SelectItem>
+                  <SelectItem value='PENDING'>KYB Pending</SelectItem>
+                  <SelectItem value='REJECTED'>KYB Rejected</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -257,21 +274,25 @@ const UserDetails = () => {
           {/* Left Section: User Information */}
           <div className='mb-4 w-1/4'>
             <div className='flex w-full flex-col items-start'>
-              <div className='flex h-48 w-48 items-center justify-center rounded-3xl bg-gradient-to-r from-teal-500 to-blue-500 text-6xl font-bold text-muted shadow-lg'>
-                {initials}
+              <div className='flex h-48 w-48 items-center justify-center rounded-3xl shadow-lg'>
+                <img
+                  src={businessData?.data.logo}
+                  alt='Logo'
+                  className='h-full w-full rounded-3xl object-cover'
+                />
               </div>
               <div className='mt-4 text-left'>
                 <p className='mb-2 flex items-center text-sm text-muted-foreground'>
                   <IconPhoneFilled className='mr-2 h-4 w-4 text-muted-foreground' />
-                  {userData.phoneNo}
+                  {businessData?.data.businessPhone}
                 </p>
                 <p className='mb-2 flex items-center text-sm text-muted-foreground'>
                   <IconMessage className='mr-2 h-4 w-4 text-muted-foreground' />
-                  {userData.email}
+                  {businessData?.data.businessEntity}
                 </p>
                 <p className='mb-2 flex items-center text-sm text-muted-foreground'>
                   <IconWorldWww className='mr-2 h-4 w-4 text-muted-foreground' />
-                  {userData.website}
+                  {businessData?.data.city}
                 </p>
               </div>
               <div className='mt-4'>
@@ -300,47 +321,53 @@ const UserDetails = () => {
 
               {/* Account Info Tab */}
               <TabsContent value='account-info'>
-                <div className='grid grid-cols-1 gap-6 p-4 text-sm'>
+                <div className='grid grid-cols-1 gap-4 p-4 text-sm'>
                   <div className='flex w-full justify-between pb-2 text-muted-foreground'>
                     <p className='text-muted-foreground'>Business Location</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.businessLocation}
+                      {businessData?.data.city}, {businessData?.data.state}
+                    </span>
+                  </div>
+                  <div className='flex w-full justify-between pb-2 text-muted-foreground'>
+                    <p className='text-muted-foreground'>Business Entity</p>
+                    <span className='w-1/2 text-left'>
+                      {businessData?.data.businessEntity}
+                    </span>
+                  </div>
+                  <div className='flex w-full justify-between pb-2 text-muted-foreground'>
+                    <p className='text-muted-foreground'>Company Type</p>
+                    <span className='w-1/2 text-left'>
+                      {businessData?.data.companyType}
                     </span>
                   </div>
                   <div className='flex justify-between pb-2 text-muted-foreground'>
                     <p>Registration Number</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.registrationNumber}
+                      {businessData?.data.cacNumber}
                     </span>
                   </div>
                   <div className='flex justify-between pb-2 text-muted-foreground'>
                     <p>Industry</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.industry}
+                      {businessData?.data.industry}
                     </span>
                   </div>
                   <div className='flex justify-between pb-2 text-muted-foreground'>
                     <p>Company Size</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.companySize}
+                      {businessData?.data.size}
                     </span>
                   </div>
                   <div className='flex justify-between pb-2 text-muted-foreground'>
                     <p>Estimated Annual Volume</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.estimatedAnnualVolume}
+                      {businessData?.data.income}
                     </span>
                   </div>
                   <div className='flex justify-between pb-2 text-muted-foreground'>
                     <p>Office Address</p>
                     <span className='w-1/2 text-left'>
-                      {userData.accountInfo.officeAddress}
-                    </span>
-                  </div>
-                  <div className='flex justify-between text-muted-foreground'>
-                    <p>About</p>
-                    <span className='w-1/2 max-w-xs text-left md:max-w-sm lg:max-w-md xl:max-w-lg'>
-                      {userData.accountInfo.about}
+                      {businessData?.data.address}
                     </span>
                   </div>
                 </div>
@@ -349,15 +376,12 @@ const UserDetails = () => {
               {/* Documents Tab */}
               <TabsContent value='documents'>
                 <div className='grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                  {/* Registration Certificate */}
                   <div className='flex flex-col items-center rounded-lg p-3 shadow-md'>
                     <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
-                    <span className='text-sm font-semibold'>
-                      Registration Certificate
-                    </span>
+                    <span className='text-sm font-semibold'>CAC document</span>
                     <a
                       className='mt-1 text-xs text-blue-500 hover:underline'
-                      href={samplepdf}
+                      href={businessData?.data.cacdoc}
                       target='_blank'
                       rel='noopener noreferrer'
                     >
@@ -365,31 +389,28 @@ const UserDetails = () => {
                     </a>
                   </div>
 
-                  {/* Tax Clearance */}
                   <div className='flex flex-col items-center rounded-lg p-3 shadow-md'>
-                    {/* PDF Icon */}
+                    {/* Moi doc */}
                     <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
-                    <span className='text-sm font-semibold'>Tax Clearance</span>
-
-                    {/* View File Link */}
+                    <span className='text-sm font-semibold'>MOI Document</span>
                     <a
                       className='mt-1 text-xs text-blue-500 hover:underline'
-                      href={samplepdf} // Link to the local PDF
-                      target='_blank' // Open in a new tab
-                      rel='noopener noreferrer' // Security improvement
+                      href={businessData?.data.moiDoc}
+                      target='_blank'
+                      rel='noopener noreferrer'
                     >
                       View File
                     </a>
                   </div>
 
-                  {/* Other Documents */}
-
                   <div className='flex flex-col items-center rounded-lg p-3 shadow-md'>
                     <img src={pdf} alt='PDF Icon' className='mb-1 h-12' />
-                    <span className='text-sm font-semibold'>Certificate A</span>
+                    <span className='text-sm font-semibold'>
+                      Scuml Document{' '}
+                    </span>
                     <a
                       className='mt-1 text-xs text-blue-500 hover:underline'
-                      href={samplepdf}
+                      href={businessData?.data.scumlDoc}
                       target='_blank'
                       rel='noopener noreferrer'
                     >

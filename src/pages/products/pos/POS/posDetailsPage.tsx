@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { data as POSData } from '../POS/data'
+import { data as POSData } from '../POS/posDevice/data'
 import { Switch } from '@/components/ui/switch'
 import { CheckCircleIcon } from 'lucide-react'
 import {

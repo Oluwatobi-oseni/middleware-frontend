@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 // import { DataTable } from '@/components/table/data-table'
 import { columns } from './activity-table/columns'
 import { data } from './activity-table/data'
-import UserForm from '../components/user-form'
+// import UserForm from '../components/user-form'
 
 import WalletCards from '../components/wallet-card'
 // import { columns } from './columns'
@@ -53,7 +53,7 @@ const UserDetails = () => {
 
   return (
     <div className='h-screen overflow-y-auto hide-scrollbar'>
-      <UserForm />
+      {/* <UserForm /> */}
       <WalletCards />
       <div className='overflow-auto'>
         <h2 className='mb-4 mt-8 border-b-2 border-gray-300 pb-2 text-xl text-muted-foreground'>

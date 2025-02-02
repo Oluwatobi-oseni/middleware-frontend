@@ -32,16 +32,16 @@ type CardProps = React.ComponentProps<typeof Card>
 
 const controlCenterItems = [
   {
-    name: 'Alert Savings',
-    description: 'Control whether users can access alert savings.',
+    name: 'Gold Bucks',
+    description: 'Control whether users can access Gold Bucks.',
   },
   {
     name: 'Business Banking',
     description: 'Control whether users can access business banking.',
   },
   {
-    name: 'Consumer Banking',
-    description: 'Control whether users can access consumer banking.',
+    name: 'Mobile Banking',
+    description: 'Control whether users can access mobile banking.',
   },
   {
     name: 'Card Withdrawal',

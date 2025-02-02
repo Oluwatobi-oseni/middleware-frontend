@@ -8,12 +8,12 @@ const ConsumerBanking = () => {
   const navigate = useNavigate()
 
   const handleRowClick = (userId: string) => {
-    navigate(`/products/consumer-banking/user/${userId}`) // Navigate to the user detail page
+    navigate(`/products/mobile-banking/user/${userId}`) // Navigate to the user detail page
   }
 
   return (
     <ContentSection
-      title='Consumer Banking'
+      title='Mobile Banking'
       desc='View and manage consumer business accounts'
     >
       <DataTable
