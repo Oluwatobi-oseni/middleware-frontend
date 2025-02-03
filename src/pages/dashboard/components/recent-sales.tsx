@@ -9,10 +9,8 @@ export function RecentSales() {
           <AvatarFallback>OM</AvatarFallback>
         </Avatar>
         <div className='ml-4 space-y-1'>
-          <p className='text-sm font-medium leading-none'>Olivia Martin</p>
-          <p className='text-sm text-muted-foreground'>
-            olivia.martin@email.com
-          </p>
+          <p className='text-sm font-medium leading-none'>Obasi Miracle</p>
+          <p className='text-sm text-muted-foreground'>obasi.mira@gmail.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦1,999.00</div>
       </div>
@@ -22,8 +20,8 @@ export function RecentSales() {
           <AvatarFallback>JL</AvatarFallback>
         </Avatar>
         <div className='ml-4 space-y-1'>
-          <p className='text-sm font-medium leading-none'>Jackson Lee</p>
-          <p className='text-sm text-muted-foreground'>jackson.lee@email.com</p>
+          <p className='text-sm font-medium leading-none'>Judas Lokoja</p>
+          <p className='text-sm text-muted-foreground'>judas.loo@gmail.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦39.00</div>
       </div>
@@ -33,8 +31,8 @@ export function RecentSales() {
           <AvatarFallback>IN</AvatarFallback>
         </Avatar>
         <div className='ml-4 space-y-1'>
-          <p className='text-sm font-medium leading-none'>Isabella Nguyen</p>
-          <p className='text-sm text-muted-foreground'>isabella@email.com</p>
+          <p className='text-sm font-medium leading-none'>Israel Victor</p>
+          <p className='text-sm text-muted-foreground'>isrealite@gmail.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦299.00</div>
       </div>
@@ -44,8 +42,8 @@ export function RecentSales() {
           <AvatarFallback>WK</AvatarFallback>
         </Avatar>
         <div className='ml-4 space-y-1'>
-          <p className='text-sm font-medium leading-none'>William Kim</p>
-          <p className='text-sm text-muted-foreground'>will@email.com</p>
+          <p className='text-sm font-medium leading-none'>White Kadiri</p>
+          <p className='text-sm text-muted-foreground'>Kadiri@gmail.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦99.00</div>
       </div>
@@ -55,8 +53,8 @@ export function RecentSales() {
           <AvatarFallback>SD</AvatarFallback>
         </Avatar>
         <div className='ml-4 space-y-1'>
-          <p className='text-sm font-medium leading-none'>Sofia Davis</p>
-          <p className='text-sm text-muted-foreground'>sofia.davis@email.com</p>
+          <p className='text-sm font-medium leading-none'>Solomon David</p>
+          <p className='text-sm text-muted-foreground'>davisd.sol@gmail.com</p>
         </div>
         <div className='font-geist-mono ml-auto font-medium'>+₦39.00</div>
       </div>
