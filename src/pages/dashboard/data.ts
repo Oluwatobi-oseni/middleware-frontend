@@ -3,7 +3,7 @@ import { Transaction } from './columns'
 export const transactionData: Transaction[] = [
   {
     id: '1',
-    name: 'John Doe',
+    name: 'Blaise Pascal',
     type: 'Deposit',
     amount: '500000',
     reference: 'REF12345',
@@ -11,7 +11,7 @@ export const transactionData: Transaction[] = [
   },
   {
     id: '2',
-    name: 'Jane Smith',
+    name: 'Samuel Peter',
     type: 'Withdraw',
     amount: '200000',
     reference: 'REF67890',
@@ -19,7 +19,7 @@ export const transactionData: Transaction[] = [
   },
   {
     id: '3',
-    name: 'Emily Davis',
+    name: 'Yesufu David',
     type: 'Card deposit',
     amount: '150000',
     reference: 'REF11121',
@@ -27,7 +27,7 @@ export const transactionData: Transaction[] = [
   },
   {
     id: '4',
-    name: 'Michael Brown',
+    name: 'Bamidele Abdul',
     type: 'Deposit',
     amount: '300000',
     reference: 'REF22234',
@@ -35,7 +35,7 @@ export const transactionData: Transaction[] = [
   },
   {
     id: '5',
-    name: 'Olivia Johnson',
+    name: 'Keneth Johnson',
     type: 'Withdraw',
     amount: '100000',
     reference: 'REF55567',
